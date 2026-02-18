@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check, Edit2 } from 'lucide-react';
+import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check, Edit2, X } from 'lucide-react';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
 
@@ -7,15 +7,19 @@ function MappaCattolicoContent() {
   const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedMystery, setSelectedMystery] = useState(null);
+  const [selectedNovena, setSelectedNovena] = useState(null);
   const [rosaryProgress, setRosaryProgress] = useState({});
+  const [novenaProgress, setNovenaProgress] = useState({});
   const [userName, setUserName] = useState('');
   const [showNameModal, setShowNameModal] = useState(false);
   const [tempName, setTempName] = useState('');
 
   useEffect(() => {
     const savedProgress = JSON.parse(localStorage.getItem('rosaryProgress') || '{}');
+    const savedNovenaProgress = JSON.parse(localStorage.getItem('novenaProgress') || '{}');
     const savedName = localStorage.getItem('userName') || '';
     setRosaryProgress(savedProgress);
+    setNovenaProgress(savedNovenaProgress);
     setUserName(savedName || t('defaultName'));
   }, [t]);
 
@@ -35,6 +39,19 @@ function MappaCattolicoContent() {
   const getTodayProgress = (mysteryType) => {
     const today = new Date().toDateString();
     return rosaryProgress[today]?.[mysteryType] || 0;
+  };
+
+  const updateNovenaProgress = (novenaId, day) => {
+    const newProgress = {
+      ...novenaProgress,
+      [novenaId]: day
+    };
+    setNovenaProgress(newProgress);
+    localStorage.setItem('novenaProgress', JSON.stringify(newProgress));
+  };
+
+  const getNovenaProgress = (novenaId) => {
+    return novenaProgress[novenaId] || 0;
   };
 
   const handleEditName = () => {
@@ -121,6 +138,44 @@ function MappaCattolicoContent() {
     {
       title: t('hailHolyQueen'),
       text: t('hailHolyQueenText')
+    }
+  ];
+
+  const novenas = [
+    {
+      id: 'novena1',
+      name: t('novena1Name'),
+      purpose: t('novena1Purpose'),
+      prayer: t('novena1Prayer'),
+      color: '#8B6F47'
+    },
+    {
+      id: 'novena2',
+      name: t('novena2Name'),
+      purpose: t('novena2Purpose'),
+      prayer: t('novena2Prayer'),
+      color: '#D4AF37'
+    },
+    {
+      id: 'novena3',
+      name: t('novena3Name'),
+      purpose: t('novena3Purpose'),
+      prayer: t('novena3Prayer'),
+      color: '#A0826D'
+    },
+    {
+      id: 'novena4',
+      name: t('novena4Name'),
+      purpose: t('novena4Purpose'),
+      prayer: t('novena4Prayer'),
+      color: '#C41E3A'
+    },
+    {
+      id: 'novena5',
+      name: t('novena5Name'),
+      purpose: t('novena5Purpose'),
+      prayer: t('novena5Prayer'),
+      color: '#722F37'
     }
   ];
 
@@ -341,7 +396,7 @@ function MappaCattolicoContent() {
     </div>
   );
 
-  // Novena Page
+  // Novena List Page
   const NovenaPage = () => (
     <div className="page-content novena-page">
       <div className="page-header">
@@ -350,28 +405,142 @@ function MappaCattolicoContent() {
       </div>
 
       <div className="novena-list">
-        {[
-          'Novena a Nossa Senhora Aparecida',
-          'Novena ao Espírito Santo',
-          'Novena a São José',
-          'Novena ao Sagrado Coração de Jesus',
-          'Novena a Santa Rita de Cássia'
-        ].map((novena, i) => (
-          <div key={i} className="novena-item">
-            <span>{novena}</span>
-            <ChevronRight size={20} />
-          </div>
-        ))}
+        {novenas.map((novena) => {
+          const progress = getNovenaProgress(novena.id);
+          const completed = progress >= 9;
+          
+          return (
+            <div
+              key={novena.id}
+              className="novena-item"
+              onClick={() => setSelectedNovena(novena)}
+            >
+              <div style={{ flex: 1 }}>
+                <span className="novena-name">{novena.name}</span>
+                {progress > 0 && (
+                  <div className="novena-progress-indicator">
+                    {completed ? (
+                      <span className="novena-completed">✓ {t('completed')}</span>
+                    ) : (
+                      <span className="novena-in-progress">{t('day')} {progress} {t('dayOf')} 9</span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <ChevronRight size={20} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
+
+  // Novena Detail Page
+  const NovenaDetailPage = ({ novena }) => {
+    const currentDay = getNovenaProgress(novena.id);
+    const [showPrayer, setShowPrayer] = useState(false);
+
+    const handleDayComplete = () => {
+      if (currentDay < 9) {
+        updateNovenaProgress(novena.id, currentDay + 1);
+      }
+      setShowPrayer(false);
+    };
+
+    const handleReset = () => {
+      updateNovenaProgress(novena.id, 0);
+      setShowPrayer(false);
+    };
+
+    return (
+      <div className="page-content novena-detail-page">
+        <button className="back-button" onClick={() => setSelectedNovena(null)}>
+          ← {t('previous')}
+        </button>
+
+        <div className="novena-detail-card">
+          <h2 style={{ color: novena.color }}>{novena.name}</h2>
+          <p className="novena-purpose">{novena.purpose}</p>
+
+          {/* Progress Indicators */}
+          <div className="novena-days-grid">
+            {[...Array(9)].map((_, i) => {
+              const day = i + 1;
+              const isCompleted = day <= currentDay;
+              const isCurrent = day === currentDay + 1;
+
+              return (
+                <div
+                  key={i}
+                  className={`novena-day-badge ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}
+                  style={{
+                    borderColor: isCompleted ? novena.color : '#E5DCC8',
+                    backgroundColor: isCompleted ? novena.color : 'transparent',
+                    color: isCompleted ? '#FFF' : '#8B6F47'
+                  }}
+                >
+                  {isCompleted ? '✓' : day}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Status */}
+          {currentDay < 9 ? (
+            <>
+              <div className="novena-current-day">
+                <h3>{t('day')} {currentDay + 1} {t('dayOf')} 9</h3>
+              </div>
+
+              {!showPrayer ? (
+                <button
+                  className="pray-button"
+                  onClick={() => setShowPrayer(true)}
+                  style={{ backgroundColor: novena.color }}
+                >
+                  {currentDay === 0 ? t('startNovena') : t('continueNovena')}
+                </button>
+              ) : (
+                <div className="novena-prayer-display">
+                  <div className="prayer-scroll">
+                    <p>{novena.prayer}</p>
+                  </div>
+                  <button
+                    className="pray-button"
+                    onClick={handleDayComplete}
+                    style={{ backgroundColor: novena.color }}
+                  >
+                    <Check size={20} />
+                    {t('markComplete')}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="completion-message">
+              <div className="completion-icon" style={{ backgroundColor: novena.color }}>✓</div>
+              <h3>{t('novenaCompleted')}</h3>
+              <p>{novena.name}</p>
+              <button
+                className="pray-button"
+                onClick={handleReset}
+                style={{ backgroundColor: novena.color }}
+              >
+                {t('prayAgain')}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const pages = {
     home: <HomePage />,
     rosary: <RosaryPage />,
     gospel: <GospelPage />,
     prayers: <PrayersPage />,
-    novena: <NovenaPage />
+    novena: selectedNovena ? <NovenaDetailPage novena={selectedNovena} /> : <NovenaPage />
   };
 
   return (
@@ -432,10 +601,6 @@ function MappaCattolicoContent() {
         .edit-name-button:hover {
           background: rgba(255, 255, 255, 0.3);
           transform: scale(1.05);
-        }
-
-        .edit-name-button:active {
-          transform: scale(0.95);
         }
 
         /* Name Edit Modal */
@@ -531,10 +696,6 @@ function MappaCattolicoContent() {
 
         .modal-button-save:hover {
           background: #6F5838;
-        }
-
-        .modal-button:active {
-          transform: scale(0.98);
         }
 
         .greeting-card {
@@ -1051,6 +1212,7 @@ function MappaCattolicoContent() {
           color: #444;
         }
 
+        /* Novena Styles */
         .novena-list {
           display: flex;
           flex-direction: column;
@@ -1074,14 +1236,110 @@ function MappaCattolicoContent() {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
         }
 
-        .novena-item span {
+        .novena-name {
           font-size: 15px;
           font-weight: 500;
           color: #2C2416;
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .novena-progress-indicator {
+          font-size: 12px;
+          margin-top: 4px;
+        }
+
+        .novena-completed {
+          color: #4CAF50;
+          font-weight: 600;
+        }
+
+        .novena-in-progress {
+          color: #8B6F47;
+          font-weight: 600;
         }
 
         .novena-item svg {
           color: #8B6F47;
+          flex-shrink: 0;
+        }
+
+        .novena-detail-card {
+          background: #FFF;
+          border-radius: 20px;
+          padding: 32px 24px;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .novena-detail-card h2 {
+          font-family: 'Crimson Text', serif;
+          font-size: 28px;
+          font-weight: 700;
+          text-align: center;
+          margin-bottom: 16px;
+        }
+
+        .novena-purpose {
+          text-align: center;
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 32px;
+          font-style: italic;
+        }
+
+        .novena-days-grid {
+          display: grid;
+          grid-template-columns: repeat(9, 1fr);
+          gap: 8px;
+          margin-bottom: 32px;
+        }
+
+        .novena-day-badge {
+          aspect-ratio: 1;
+          border-radius: 50%;
+          border: 2px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          font-weight: 600;
+          transition: all 0.3s;
+        }
+
+        .novena-day-badge.current {
+          transform: scale(1.2);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .novena-current-day {
+          text-align: center;
+          margin-bottom: 24px;
+        }
+
+        .novena-current-day h3 {
+          font-family: 'Crimson Text', serif;
+          font-size: 24px;
+          color: #8B6F47;
+        }
+
+        .novena-prayer-display {
+          margin-top: 24px;
+        }
+
+        .prayer-scroll {
+          background: #F9F6F0;
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          max-height: 400px;
+          overflow-y: auto;
+        }
+
+        .prayer-scroll p {
+          font-size: 15px;
+          line-height: 1.8;
+          color: #444;
+          text-align: justify;
         }
 
         .bottom-nav {
@@ -1170,28 +1428,40 @@ function MappaCattolicoContent() {
       <div className="bottom-nav">
         <div 
           className={`nav-item ${currentPage === 'home' ? 'active' : ''}`}
-          onClick={() => setCurrentPage('home')}
+          onClick={() => {
+            setCurrentPage('home');
+            setSelectedNovena(null);
+          }}
         >
           <Home size={24} />
           <span>{t('home')}</span>
         </div>
         <div 
           className={`nav-item ${currentPage === 'rosary' ? 'active' : ''}`}
-          onClick={() => setCurrentPage('rosary')}
+          onClick={() => {
+            setCurrentPage('rosary');
+            setSelectedNovena(null);
+          }}
         >
           <span style={{ fontSize: '24px' }}>✿</span>
           <span>{t('rosary')}</span>
         </div>
         <div 
           className={`nav-item ${currentPage === 'gospel' ? 'active' : ''}`}
-          onClick={() => setCurrentPage('gospel')}
+          onClick={() => {
+            setCurrentPage('gospel');
+            setSelectedNovena(null);
+          }}
         >
           <Book size={24} />
           <span>{t('gospel')}</span>
         </div>
         <div 
           className={`nav-item ${currentPage === 'prayers' ? 'active' : ''}`}
-          onClick={() => setCurrentPage('prayers')}
+          onClick={() => {
+            setCurrentPage('prayers');
+            setSelectedNovena(null);
+          }}
         >
           <Heart size={24} />
           <span>{t('prayers')}</span>
