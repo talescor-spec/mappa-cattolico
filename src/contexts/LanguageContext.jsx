@@ -10,6 +10,13 @@ export const translations = {
     appSubtitle: "Il tuo compagno quotidiano di fede",
     greeting: "Ciao",
     peaceBless: "La pace di Gesù e l'amore di Maria ✨",
+    defaultName: "Amico",
+    
+    // Name Edit
+    editName: "Modifica Nome",
+    enterYourName: "Inserisci il tuo nome",
+    save: "Salva",
+    cancel: "Annulla",
     
     // Navigation
     home: "Home",
@@ -141,6 +148,13 @@ export const translations = {
     appSubtitle: "Your daily faith companion",
     greeting: "Hello",
     peaceBless: "The peace of Jesus and the love of Mary ✨",
+    defaultName: "Friend",
+    
+    // Name Edit
+    editName: "Edit Name",
+    enterYourName: "Enter your name",
+    save: "Save",
+    cancel: "Cancel",
     
     // Navigation
     home: "Home",
@@ -272,6 +286,13 @@ export const translations = {
     appSubtitle: "Seu companheiro diário de fé",
     greeting: "Olá",
     peaceBless: "A paz de Jesus e o amor de Maria ✨",
+    defaultName: "Amigo",
+    
+    // Name Edit
+    editName: "Editar Nome",
+    enterYourName: "Digite seu nome",
+    save: "Salvar",
+    cancel: "Cancelar",
     
     // Navigation
     home: "Início",
