@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check } from 'lucide-react';
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
+import LanguageSelector from './components/LanguageSelector';
 
-export default function MappaCattolico() {
+function MappaCattolicoContent() {
+  const { t } = useLanguage(); // Hook para traduções
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedMystery, setSelectedMystery] = useState(null);
   const [rosaryProgress, setRosaryProgress] = useState({});
@@ -36,51 +39,51 @@ export default function MappaCattolico() {
 
   const mysteries = {
     gozosos: {
-      name: 'Mistérios Gozosos',
-      day: 'Segunda e Sábado',
+      name: t('mysteriesJoyful'),
+      day: `${t('monday')} e ${t('saturday')}`,
       color: '#D4AF37',
       mysteries: [
-        'Anunciação do Anjo a Maria',
-        'Visitação de Maria a Isabel',
-        'Nascimento de Jesus',
-        'Apresentação de Jesus no Templo',
-        'Perda e Encontro do Menino Jesus'
+        t('joyful1'),
+        t('joyful2'),
+        t('joyful3'),
+        t('joyful4'),
+        t('joyful5')
       ]
     },
     luminosos: {
-      name: 'Mistérios Luminosos',
-      day: 'Quinta-feira',
+      name: t('mysteriesLuminous'),
+      day: t('thursday'),
       color: '#FFD700',
       mysteries: [
-        'Batismo de Jesus no Jordão',
-        'Bodas de Caná',
-        'Anúncio do Reino de Deus',
-        'Transfiguração de Jesus',
-        'Instituição da Eucaristia'
+        t('luminous1'),
+        t('luminous2'),
+        t('luminous3'),
+        t('luminous4'),
+        t('luminous5')
       ]
     },
     dolorosos: {
-      name: 'Mistérios Dolorosos',
-      day: 'Terça e Sexta',
+      name: t('mysteriesSorrowful'),
+      day: `${t('tuesday')} e ${t('friday')}`,
       color: '#8B4513',
       mysteries: [
-        'Agonia de Jesus no Horto',
-        'Flagelação de Jesus',
-        'Coroação de Espinhos',
-        'Jesus Carrega a Cruz',
-        'Crucificação e Morte de Jesus'
+        t('sorrowful1'),
+        t('sorrowful2'),
+        t('sorrowful3'),
+        t('sorrowful4'),
+        t('sorrowful5')
       ]
     },
     gloriosos: {
-      name: 'Mistérios Gloriosos',
-      day: 'Quarta e Domingo',
+      name: t('mysteriesGlorious'),
+      day: `${t('wednesday')} e ${t('sunday')}`,
       color: '#DAA520',
       mysteries: [
-        'Ressurreição de Jesus',
-        'Ascensão de Jesus ao Céu',
-        'Vinda do Espírito Santo',
-        'Assunção de Maria',
-        'Coroação de Maria'
+        t('glorious1'),
+        t('glorious2'),
+        t('glorious3'),
+        t('glorious4'),
+        t('glorious5')
       ]
     }
   };
@@ -100,19 +103,19 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
 
   const prayers = [
     {
-      title: 'Ave Maria',
+      title: t('hailMary'),
       text: 'Ave Maria, cheia de graça, o Senhor é convosco. Bendita sois vós entre as mulheres e bendito é o fruto do vosso ventre, Jesus. Santa Maria, Mãe de Deus, rogai por nós, pecadores, agora e na hora da nossa morte. Amém.'
     },
     {
-      title: 'Pai Nosso',
+      title: t('ourFather'),
       text: 'Pai nosso, que estais no céu, santificado seja o vosso nome, venha a nós o vosso reino, seja feita a vossa vontade assim na terra como no céu. O pão nosso de cada dia nos dai hoje, perdoai as nossas ofensas assim como nós perdoamos a quem nos tem ofendido, e não nos deixeis cair em tentação, mas livrai-nos do mal. Amém.'
     },
     {
-      title: 'Glória ao Pai',
+      title: t('gloryBe'),
       text: 'Glória ao Pai, ao Filho e ao Espírito Santo. Como era no princípio, agora e sempre. Amém.'
     },
     {
-      title: 'Salve Rainha',
+      title: t('hailHolyQueen'),
       text: 'Salve, Rainha, mãe de misericórdia, vida, doçura, esperança nossa, salve! A vós bradamos, os degredados filhos de Eva. A vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia, pois, advogada nossa, esses vossos olhos misericordiosos a nós volvei, e depois deste desterro mostrai-nos Jesus, bendito fruto do vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria.'
     }
   ];
@@ -121,15 +124,20 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
   const HomePage = () => (
     <div className="page-content">
       <div className="greeting-card">
-        <h1 className="greeting">Ciao, {userName}.</h1>
-        <p className="subtitle">Benvenuto in Mappa della Bibbia</p>
-        <p className="verse">La pace di Gesù e l'amore di Maria ✨</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+          <div>
+            <h1 className="greeting">Ciao, {userName}.</h1>
+            <p className="subtitle">{t('appSubtitle')}</p>
+            <p className="verse">La pace di Gesù e l'amore di Maria ✨</p>
+          </div>
+          <LanguageSelector />
+        </div>
       </div>
 
       <div className="feature-card gospel-card" onClick={() => setCurrentPage('gospel')}>
         <div className="card-header">
           <Book size={24} />
-          <span className="card-badge">Hoje</span>
+          <span className="card-badge">{t('todayGospel')}</span>
         </div>
         <div className="gospel-preview">
           <div className="gospel-image"></div>
@@ -137,7 +145,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
             <p className="gospel-date">{gospelReading.date}</p>
             <h3 className="gospel-title">{gospelReading.reference}</h3>
             <p className="gospel-excerpt">{gospelReading.title}</p>
-            <button className="read-more">Leggi di più</button>
+            <button className="read-more">{t('reading')}</button>
           </div>
         </div>
       </div>
@@ -145,19 +153,19 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
       <div className="feature-card rosary-card" onClick={() => setCurrentPage('rosary')}>
         <div className="card-header">
           <div className="rosary-icon">✿</div>
-          <h3>Rosário Diário</h3>
+          <h3>{t('rosaryTitle')}</h3>
         </div>
-        <p className="card-description">Recita il Santo Rosario con i misteri del giorno</p>
+        <p className="card-description">{t('rosarySubtitle')}</p>
       </div>
 
       <div className="quick-links">
         <div className="quick-link" onClick={() => setCurrentPage('prayers')}>
           <Heart size={20} />
-          <span>Orações</span>
+          <span>{t('prayers')}</span>
         </div>
         <div className="quick-link" onClick={() => setCurrentPage('novena')}>
           <Calendar size={20} />
-          <span>Novenas</span>
+          <span>{t('novenas')}</span>
         </div>
       </div>
     </div>
@@ -167,8 +175,8 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
   const RosaryPage = () => (
     <div className="page-content rosary-page">
       <div className="page-header">
-        <h1>Rosário Diário</h1>
-        <p className="page-subtitle">Escolha os Mistérios para meditar</p>
+        <h1>{t('rosaryTitle')}</h1>
+        <p className="page-subtitle">{t('selectMystery')}</p>
       </div>
 
       {selectedMystery ? (
@@ -199,7 +207,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
                       />
                     ))}
                   </div>
-                  {completed && <div className="completed-badge">✓ Completo</div>}
+                  {completed && <div className="completed-badge">✓ {t('completed')}</div>}
                 </div>
               </div>
             );
@@ -221,13 +229,13 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
       setCurrentMysteryIndex(Math.floor(newBead / 11));
     };
 
-    const beadType = currentBead % 11 === 0 ? 'Pai Nosso' : 'Ave Maria';
+    const beadType = currentBead % 11 === 0 ? t('ourFather') : t('hailMary');
     const currentMystery = mystery.mysteries[currentMysteryIndex];
 
     return (
       <div className="rosary-prayer">
         <button className="back-button" onClick={() => setSelectedMystery(null)}>
-          ← Voltar
+          ← {t('previous')}
         </button>
         
         <div className="prayer-card">
@@ -236,17 +244,17 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           {currentBead < 53 ? (
             <>
               <div className="current-mystery">
-                <span className="mystery-number">{currentMysteryIndex + 1}º Mistério</span>
+                <span className="mystery-number">{currentMysteryIndex + 1}º {t('mystery')}</span>
                 <h3>{currentMystery}</h3>
               </div>
 
               <div className="prayer-display">
                 <div className="prayer-icon" style={{ backgroundColor: mystery.color }}>
-                  {beadType === 'Pai Nosso' ? '✕' : '✿'}
+                  {beadType === t('ourFather') ? '✕' : '✿'}
                 </div>
                 <h4>{beadType}</h4>
                 <p className="prayer-text">
-                  {beadType === 'Ave Maria' ? prayers[0].text : prayers[1].text}
+                  {beadType === t('hailMary') ? prayers[0].text : prayers[1].text}
                 </p>
               </div>
 
@@ -256,14 +264,14 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
 
               <button className="pray-button" onClick={advanceBead} style={{ backgroundColor: mystery.color }}>
                 <Check size={20} />
-                Rezar e Avançar
+                {t('next')}
               </button>
             </>
           ) : (
             <div className="completion-message">
               <div className="completion-icon">✓</div>
-              <h3>Rosário Completo!</h3>
-              <p>Você completou os {mystery.name} hoje.</p>
+              <h3>{t('completed')}!</h3>
+              <p>{mystery.name}</p>
               <button 
                 className="pray-button" 
                 onClick={() => {
@@ -273,7 +281,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
                 }}
                 style={{ backgroundColor: mystery.color }}
               >
-                Rezar Novamente
+                {t('reset')}
               </button>
             </div>
           )}
@@ -286,7 +294,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
   const GospelPage = () => (
     <div className="page-content gospel-page">
       <div className="page-header">
-        <h1>Evangelho do Dia</h1>
+        <h1>{t('gospelTitle')}</h1>
         <p className="page-subtitle">{gospelReading.date}</p>
       </div>
 
@@ -302,7 +310,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
       </div>
 
       <div className="reflection-section">
-        <h3>Reflexão</h3>
+        <h3>{t('reflection')}</h3>
         <p>Jesus nos ensina sobre a vida eterna e a ressurreição. A vida após a morte não é uma continuação desta vida terrena, mas uma nova realidade onde seremos como anjos, filhos de Deus na glória eterna.</p>
       </div>
     </div>
@@ -312,8 +320,8 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
   const PrayersPage = () => (
     <div className="page-content prayers-page">
       <div className="page-header">
-        <h1>Orações</h1>
-        <p className="page-subtitle">Orações tradicionais católicas</p>
+        <h1>{t('prayersTitle')}</h1>
+        <p className="page-subtitle">{t('prayersSubtitle')}</p>
       </div>
 
       {prayers.map((prayer, index) => (
@@ -329,8 +337,8 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
   const NovenaPage = () => (
     <div className="page-content novena-page">
       <div className="page-header">
-        <h1>Novenas</h1>
-        <p className="page-subtitle">Novenas e devoções especiais</p>
+        <h1>{t('novenasTitle')}</h1>
+        <p className="page-subtitle">{t('novenasSubtitle')}</p>
       </div>
 
       <div className="novena-list">
@@ -1026,23 +1034,31 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           onClick={() => setCurrentPage('rosary')}
         >
           <span style={{ fontSize: '24px' }}>✿</span>
-          <span>Rosário</span>
+          <span>{t('rosary')}</span>
         </div>
         <div 
           className={`nav-item ${currentPage === 'gospel' ? 'active' : ''}`}
           onClick={() => setCurrentPage('gospel')}
         >
           <Book size={24} />
-          <span>Evangelho</span>
+          <span>{t('gospel')}</span>
         </div>
         <div 
           className={`nav-item ${currentPage === 'prayers' ? 'active' : ''}`}
           onClick={() => setCurrentPage('prayers')}
         >
           <Heart size={24} />
-          <span>Orações</span>
+          <span>{t('prayers')}</span>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MappaCattolico() {
+  return (
+    <LanguageProvider>
+      <MappaCattolicoContent />
+    </LanguageProvider>
   );
 }
