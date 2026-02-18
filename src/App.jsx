@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check } from 'lucide-react';
+import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check, Edit2 } from 'lucide-react';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
 
@@ -9,13 +9,15 @@ function MappaCattolicoContent() {
   const [selectedMystery, setSelectedMystery] = useState(null);
   const [rosaryProgress, setRosaryProgress] = useState({});
   const [userName, setUserName] = useState('');
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [tempName, setTempName] = useState('');
 
   useEffect(() => {
     const savedProgress = JSON.parse(localStorage.getItem('rosaryProgress') || '{}');
-    const savedName = localStorage.getItem('userName') || 'Amigo';
+    const savedName = localStorage.getItem('userName') || '';
     setRosaryProgress(savedProgress);
-    setUserName(savedName);
-  }, []);
+    setUserName(savedName || t('defaultName'));
+  }, [t]);
 
   const updateProgress = (mysteryType, beadIndex) => {
     const today = new Date().toDateString();
@@ -33,6 +35,23 @@ function MappaCattolicoContent() {
   const getTodayProgress = (mysteryType) => {
     const today = new Date().toDateString();
     return rosaryProgress[today]?.[mysteryType] || 0;
+  };
+
+  const handleEditName = () => {
+    setTempName(userName === t('defaultName') ? '' : userName);
+    setShowNameModal(true);
+  };
+
+  const handleSaveName = () => {
+    const newName = tempName.trim() || t('defaultName');
+    setUserName(newName);
+    localStorage.setItem('userName', newName);
+    setShowNameModal(false);
+  };
+
+  const handleCancelEdit = () => {
+    setShowNameModal(false);
+    setTempName('');
   };
 
   const mysteries = {
@@ -110,8 +129,13 @@ function MappaCattolicoContent() {
     <div className="page-content">
       <div className="greeting-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-          <div>
-            <h1 className="greeting">{t('greeting')}, {userName}.</h1>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <h1 className="greeting">{t('greeting')}, {userName}.</h1>
+              <button onClick={handleEditName} className="edit-name-button">
+                <Edit2 size={18} />
+              </button>
+            </div>
             <p className="subtitle">{t('appSubtitle')}</p>
             <p className="verse">{t('peaceBless')}</p>
           </div>
@@ -391,6 +415,128 @@ function MappaCattolicoContent() {
           }
         }
 
+        /* Edit Name Button */
+        .edit-name-button {
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 8px;
+          padding: 8px;
+          color: white;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+        }
+
+        .edit-name-button:hover {
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(1.05);
+        }
+
+        .edit-name-button:active {
+          transform: scale(0.95);
+        }
+
+        /* Name Edit Modal */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-content {
+          background: white;
+          border-radius: 20px;
+          padding: 32px 24px;
+          max-width: 360px;
+          width: 90%;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+          animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .modal-header {
+          font-family: 'Crimson Text', serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #8B6F47;
+          margin-bottom: 24px;
+          text-align: center;
+        }
+
+        .modal-input {
+          width: 100%;
+          padding: 16px;
+          border: 2px solid #E5DCC8;
+          border-radius: 12px;
+          font-size: 16px;
+          font-family: 'Inter', sans-serif;
+          margin-bottom: 24px;
+          transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+          outline: none;
+          border-color: #8B6F47;
+        }
+
+        .modal-buttons {
+          display: flex;
+          gap: 12px;
+        }
+
+        .modal-button {
+          flex: 1;
+          padding: 14px;
+          border: none;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .modal-button-cancel {
+          background: #F5F0E8;
+          color: #666;
+        }
+
+        .modal-button-cancel:hover {
+          background: #E8DCC8;
+        }
+
+        .modal-button-save {
+          background: #8B6F47;
+          color: white;
+        }
+
+        .modal-button-save:hover {
+          background: #6F5838;
+        }
+
+        .modal-button:active {
+          transform: scale(0.98);
+        }
+
         .greeting-card {
           background: linear-gradient(135deg, #8B6F47 0%, #A0826D 100%);
           padding: 32px 24px;
@@ -404,7 +550,7 @@ function MappaCattolicoContent() {
           font-family: 'Crimson Text', serif;
           font-size: 32px;
           font-weight: 700;
-          margin-bottom: 8px;
+          margin: 0;
         }
 
         .subtitle {
@@ -994,6 +1140,32 @@ function MappaCattolicoContent() {
       <div className="app-content">
         {pages[currentPage]}
       </div>
+
+      {/* Name Edit Modal */}
+      {showNameModal && (
+        <div className="modal-overlay" onClick={handleCancelEdit}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2 className="modal-header">{t('editName')}</h2>
+            <input
+              type="text"
+              className="modal-input"
+              placeholder={t('enterYourName')}
+              value={tempName}
+              onChange={(e) => setTempName(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSaveName()}
+              autoFocus
+            />
+            <div className="modal-buttons">
+              <button className="modal-button modal-button-cancel" onClick={handleCancelEdit}>
+                {t('cancel')}
+              </button>
+              <button className="modal-button modal-button-save" onClick={handleSaveName}>
+                {t('save')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="bottom-nav">
         <div 
