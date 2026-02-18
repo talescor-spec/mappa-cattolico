@@ -4,13 +4,12 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
 
 function MappaCattolicoContent() {
-  const { t } = useLanguage(); // Hook para traduções
+  const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedMystery, setSelectedMystery] = useState(null);
   const [rosaryProgress, setRosaryProgress] = useState({});
   const [userName, setUserName] = useState('');
 
-  // Initialize from memory
   useEffect(() => {
     const savedProgress = JSON.parse(localStorage.getItem('rosaryProgress') || '{}');
     const savedName = localStorage.getItem('userName') || 'Amigo';
@@ -18,7 +17,6 @@ function MappaCattolicoContent() {
     setUserName(savedName);
   }, []);
 
-  // Save progress
   const updateProgress = (mysteryType, beadIndex) => {
     const today = new Date().toDateString();
     const newProgress = {
@@ -88,35 +86,22 @@ function MappaCattolicoContent() {
     }
   };
 
-  const gospelReading = {
-    date: '16 de fevereiro de 2026',
-    reference: 'Lucas 20, 27-40',
-    title: 'A Ressurreição dos Mortos',
-    text: `Naquele tempo, aproximaram-se de Jesus alguns saduceus, que negam a ressurreição, e lhe perguntaram: "Mestre, Moisés nos deixou escrito: Se alguém morrer e deixar a mulher sem filhos, o irmão dele deve casar-se com a viúva e dar descendentes a seu irmão.
-
-Havia sete irmãos. O primeiro casou-se e morreu sem filhos. O segundo casou-se com a viúva, e também morreu sem filhos. O terceiro casou-se com ela, e da mesma forma os sete; e morreram sem deixar filhos. Por fim, morreu também a mulher. 
-
-Agora, na ressurreição, de qual deles ela será esposa? Porque os sete foram casados com ela."
-
-Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados dignos de participar do mundo futuro e da ressurreição dos mortos, não se casam mais, porque não podem mais morrer, pois são iguais aos anjos e são filhos de Deus, sendo filhos da ressurreição."`
-  };
-
   const prayers = [
     {
       title: t('hailMary'),
-      text: 'Ave Maria, cheia de graça, o Senhor é convosco. Bendita sois vós entre as mulheres e bendito é o fruto do vosso ventre, Jesus. Santa Maria, Mãe de Deus, rogai por nós, pecadores, agora e na hora da nossa morte. Amém.'
+      text: t('hailMaryText')
     },
     {
       title: t('ourFather'),
-      text: 'Pai nosso, que estais no céu, santificado seja o vosso nome, venha a nós o vosso reino, seja feita a vossa vontade assim na terra como no céu. O pão nosso de cada dia nos dai hoje, perdoai as nossas ofensas assim como nós perdoamos a quem nos tem ofendido, e não nos deixeis cair em tentação, mas livrai-nos do mal. Amém.'
+      text: t('ourFatherText')
     },
     {
       title: t('gloryBe'),
-      text: 'Glória ao Pai, ao Filho e ao Espírito Santo. Como era no princípio, agora e sempre. Amém.'
+      text: t('gloryBeText')
     },
     {
       title: t('hailHolyQueen'),
-      text: 'Salve, Rainha, mãe de misericórdia, vida, doçura, esperança nossa, salve! A vós bradamos, os degredados filhos de Eva. A vós suspiramos, gemendo e chorando neste vale de lágrimas. Eia, pois, advogada nossa, esses vossos olhos misericordiosos a nós volvei, e depois deste desterro mostrai-nos Jesus, bendito fruto do vosso ventre. Ó clemente, ó piedosa, ó doce sempre Virgem Maria.'
+      text: t('hailHolyQueenText')
     }
   ];
 
@@ -126,9 +111,9 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
       <div className="greeting-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
           <div>
-            <h1 className="greeting">Ciao, {userName}.</h1>
+            <h1 className="greeting">{t('greeting')}, {userName}.</h1>
             <p className="subtitle">{t('appSubtitle')}</p>
-            <p className="verse">La pace di Gesù e l'amore di Maria ✨</p>
+            <p className="verse">{t('peaceBless')}</p>
           </div>
           <LanguageSelector />
         </div>
@@ -142,9 +127,9 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
         <div className="gospel-preview">
           <div className="gospel-image"></div>
           <div className="gospel-info">
-            <p className="gospel-date">{gospelReading.date}</p>
-            <h3 className="gospel-title">{gospelReading.reference}</h3>
-            <p className="gospel-excerpt">{gospelReading.title}</p>
+            <p className="gospel-date">{t('gospelDate')}</p>
+            <h3 className="gospel-title">{t('gospelReference')}</h3>
+            <p className="gospel-excerpt">{t('gospelTitleSample')}</p>
             <button className="read-more">{t('reading')}</button>
           </div>
         </div>
@@ -230,6 +215,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
     };
 
     const beadType = currentBead % 11 === 0 ? t('ourFather') : t('hailMary');
+    const beadText = currentBead % 11 === 0 ? t('ourFatherText') : t('hailMaryText');
     const currentMystery = mystery.mysteries[currentMysteryIndex];
 
     return (
@@ -253,9 +239,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
                   {beadType === t('ourFather') ? '✕' : '✿'}
                 </div>
                 <h4>{beadType}</h4>
-                <p className="prayer-text">
-                  {beadType === t('hailMary') ? prayers[0].text : prayers[1].text}
-                </p>
+                <p className="prayer-text">{beadText}</p>
               </div>
 
               <div className="rosary-counter">
@@ -270,7 +254,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           ) : (
             <div className="completion-message">
               <div className="completion-icon">✓</div>
-              <h3>{t('completed')}!</h3>
+              <h3>{t('rosaryCompleted')}</h3>
               <p>{mystery.name}</p>
               <button 
                 className="pray-button" 
@@ -281,7 +265,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
                 }}
                 style={{ backgroundColor: mystery.color }}
               >
-                {t('reset')}
+                {t('prayAgain')}
               </button>
             </div>
           )}
@@ -295,15 +279,15 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
     <div className="page-content gospel-page">
       <div className="page-header">
         <h1>{t('gospelTitle')}</h1>
-        <p className="page-subtitle">{gospelReading.date}</p>
+        <p className="page-subtitle">{t('gospelDate')}</p>
       </div>
 
       <div className="gospel-card-full">
         <div className="gospel-book-icon"></div>
-        <h2>{gospelReading.reference}</h2>
-        <h3>{gospelReading.title}</h3>
+        <h2>{t('gospelReference')}</h2>
+        <h3>{t('gospelTitleSample')}</h3>
         <div className="gospel-text">
-          {gospelReading.text.split('\n\n').map((para, i) => (
+          {t('gospelTextSample').split('\n\n').map((para, i) => (
             <p key={i}>{para}</p>
           ))}
         </div>
@@ -311,7 +295,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
 
       <div className="reflection-section">
         <h3>{t('reflection')}</h3>
-        <p>Jesus nos ensina sobre a vida eterna e a ressurreição. A vida após a morte não é uma continuação desta vida terrena, mas uma nova realidade onde seremos como anjos, filhos de Deus na glória eterna.</p>
+        <p>{t('gospelReflectionSample')}</p>
       </div>
     </div>
   );
@@ -407,7 +391,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           }
         }
 
-        /* Greeting Card */
         .greeting-card {
           background: linear-gradient(135deg, #8B6F47 0%, #A0826D 100%);
           padding: 32px 24px;
@@ -436,7 +419,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           font-style: italic;
         }
 
-        /* Feature Cards */
         .feature-card {
           background: #FFF;
           border-radius: 16px;
@@ -557,7 +539,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           color: #666;
         }
 
-        /* Quick Links */
         .quick-links {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -593,7 +574,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           color: #2C2416;
         }
 
-        /* Page Header */
         .page-header {
           margin-bottom: 24px;
         }
@@ -611,7 +591,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           color: #8B6F47;
         }
 
-        /* Mysteries Grid */
         .mysteries-grid {
           display: grid;
           gap: 16px;
@@ -689,7 +668,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           font-weight: 600;
         }
 
-        /* Rosary Prayer */
         .rosary-prayer {
           max-width: 100%;
         }
@@ -835,7 +813,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           margin-bottom: 32px;
         }
 
-        /* Gospel Page */
         .gospel-card-full {
           background: #FFF;
           border-radius: 20px;
@@ -906,7 +883,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           color: #444;
         }
 
-        /* Prayers Page */
         .prayer-card-full {
           background: #FFF;
           border-radius: 16px;
@@ -929,7 +905,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           color: #444;
         }
 
-        /* Novena Page */
         .novena-list {
           display: flex;
           flex-direction: column;
@@ -963,7 +938,6 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           color: #8B6F47;
         }
 
-        /* Bottom Navigation */
         .bottom-nav {
           position: fixed;
           bottom: 0;
@@ -1027,7 +1001,7 @@ Jesus respondeu: "Os filhos deste mundo casam-se; mas os que são julgados digno
           onClick={() => setCurrentPage('home')}
         >
           <Home size={24} />
-          <span>Início</span>
+          <span>{t('home')}</span>
         </div>
         <div 
           className={`nav-item ${currentPage === 'rosary' ? 'active' : ''}`}
