@@ -1,4 +1,4 @@
-// src/contexts/LanguageContext.jsx
+// src/contexts/LanguageContext.jsx - COM NOVENAS COMPLETAS
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const LanguageContext = createContext();
@@ -127,6 +127,38 @@ export const translations = {
     novenasTitle: "Novene",
     novenasSubtitle: "9 giorni di preghiera",
     day: "Giorno",
+    dayOf: "di",
+    startNovena: "Inizia Novena",
+    continueNovena: "Continua Novena",
+    novenaCompleted: "Novena Completa!",
+    completedDays: "Giorni Completati",
+    
+    // Novena Names
+    novena1Name: "Novena alla Madonna di Fatima",
+    novena2Name: "Novena allo Spirito Santo",
+    novena3Name: "Novena a San Giuseppe",
+    novena4Name: "Novena al Sacro Cuore di Gesù",
+    novena5Name: "Novena a Santa Rita da Cascia",
+    
+    // Novena 1: Nossa Senhora Aparecida
+    novena1Purpose: "Per ottenere grazie e protezione della Madonna",
+    novena1Prayer: "O Immacolata Vergine Maria, Madre di Dio e Madre nostra, Regina del cielo e della terra, rifugio dei peccatori, noi ci consacriamo interamente a te. Siamo tuoi in spirito e corpo, e desideriamo essere sempre più tuoi. Conserva in noi un vivo ricordo delle tue misericordie, affinché possiamo ringraziare te e Dio per tutti i benefici che ci elargite. Accetta, o Madre pietosa, la nostra umile richiesta e ottienici le grazie di cui abbiamo bisogno. Soprattutto, aiutaci a vivere come veri figli tuoi, affinché, dopo questa vita, possiamo lodarti eternamente in Paradiso. Amen.",
+    
+    // Novena 2: Espírito Santo
+    novena2Purpose: "Per ricevere i doni dello Spirito Santo",
+    novena2Prayer: "Veni, Sancte Spiritus! Vieni, Santo Spirito, riempi i cuori dei tuoi fedeli e accendi in essi il fuoco del tuo amore. Manda il tuo Spirito e tutto sarà creato, e rinnoverai la faccia della terra. O Dio, che hai istruito i cuori dei tuoi fedeli con la luce dello Spirito Santo, fa' che per il medesimo Spirito Santo conosciamo ciò che è retto e godiamo sempre del suo conforto. Per Cristo nostro Signore. Amen.",
+    
+    // Novena 3: São José
+    novena3Purpose: "Per ottenere protezione e aiuto nelle necessità",
+    novena3Prayer: "O glorioso San Giuseppe, sposo della Vergine Maria e padre putativo di Gesù Cristo, intercedi per noi presso Dio. Tu che hai custodito con amore la Santa Famiglia, proteggi anche noi dalle tentazioni del male. Aiutaci nel nostro lavoro quotidiano e nelle nostre necessità. Fa' che, come te, viviamo sempre nella presenza di Dio, compiendo fedelmente la sua volontà. Ottienici le grazie di cui abbiamo bisogno, specialmente quella di una buona morte. Amen.",
+    
+    // Novena 4: Sagrado Coração
+    novena4Purpose: "Per consacrarsi al Cuore di Gesù",
+    novena4Prayer: "O Sacro Cuore di Gesù, fonte inesauribile di amore e misericordia, io mi consacro completamente a te. Prendi possesso del mio cuore e trasformalo secondo il tuo. Fa' che io ami ciò che tu ami e che eviti ciò che tu detesti. Dammi la grazia di vivere sempre unito a te, di soffrire con pazienza le prove della vita e di glorificarti in tutte le mie azioni. Sacro Cuore di Gesù, confido in te! Amen.",
+    
+    // Novena 5: Santa Rita
+    novena5Purpose: "Per i casi impossibili e difficili",
+    novena5Prayer: "O gloriosa Santa Rita, tu che davanti a Dio sei l'avvocata dei casi disperati, guarda la mia afflizione e vieni in mio aiuto. Intercedi per me presso il Signore, affinché ciò che sembra impossibile agli uomini diventi possibile per tua intercessione. O Santa delle cause impossibili, prega per me! Ottienimi la grazia di cui ho tanto bisogno [fare la richiesta]. Prometterò di diffondere la tua devozione e di ringraziare pubblicamente le grazie ricevute. Amen.",
     
     // Days of week
     monday: "Lunedì",
@@ -265,6 +297,38 @@ export const translations = {
     novenasTitle: "Novenas",
     novenasSubtitle: "9 days of prayer",
     day: "Day",
+    dayOf: "of",
+    startNovena: "Start Novena",
+    continueNovena: "Continue Novena",
+    novenaCompleted: "Novena Complete!",
+    completedDays: "Days Completed",
+    
+    // Novena Names
+    novena1Name: "Novena to Our Lady of Fatima",
+    novena2Name: "Novena to the Holy Spirit",
+    novena3Name: "Novena to Saint Joseph",
+    novena4Name: "Novena to the Sacred Heart of Jesus",
+    novena5Name: "Novena to Saint Rita of Cascia",
+    
+    // Novena 1
+    novena1Purpose: "To obtain graces and protection from Our Lady",
+    novena1Prayer: "O Immaculate Virgin Mary, Mother of God and our Mother, Queen of Heaven and Earth, refuge of sinners, we consecrate ourselves entirely to you. We are yours in spirit and body, and we desire to be ever more yours. Keep alive in us a vivid memory of your mercies, so that we may thank you and God for all the benefits you grant us. Accept, O merciful Mother, our humble request and obtain for us the graces we need. Above all, help us to live as your true children, so that after this life we may praise you eternally in Paradise. Amen.",
+    
+    // Novena 2
+    novena2Purpose: "To receive the gifts of the Holy Spirit",
+    novena2Prayer: "Come, Holy Spirit! Come, Holy Spirit, fill the hearts of your faithful and kindle in them the fire of your love. Send forth your Spirit and they shall be created, and you shall renew the face of the earth. O God, who instructed the hearts of the faithful by the light of the Holy Spirit, grant that by the same Spirit we may know what is right and always rejoice in his comfort. Through Christ our Lord. Amen.",
+    
+    // Novena 3
+    novena3Purpose: "To obtain protection and help in our needs",
+    novena3Prayer: "O glorious Saint Joseph, spouse of the Virgin Mary and foster father of Jesus Christ, intercede for us with God. You who lovingly guarded the Holy Family, protect us also from the temptations of evil. Help us in our daily work and in our needs. May we, like you, always live in God's presence, faithfully fulfilling his will. Obtain for us the graces we need, especially that of a happy death. Amen.",
+    
+    // Novena 4
+    novena4Purpose: "To consecrate ourselves to the Heart of Jesus",
+    novena4Prayer: "O Sacred Heart of Jesus, inexhaustible source of love and mercy, I consecrate myself completely to you. Take possession of my heart and transform it according to yours. May I love what you love and avoid what you detest. Give me the grace to always live united to you, to suffer patiently life's trials, and to glorify you in all my actions. Sacred Heart of Jesus, I trust in you! Amen.",
+    
+    // Novena 5
+    novena5Purpose: "For impossible and difficult cases",
+    novena5Prayer: "O glorious Saint Rita, you who before God are the advocate of desperate cases, look upon my affliction and come to my aid. Intercede for me with the Lord, so that what seems impossible to men may become possible through your intercession. O Saint of impossible causes, pray for me! Obtain for me the grace I so greatly need [make your request]. I will promise to spread your devotion and publicly thank you for graces received. Amen.",
     
     // Days of week
     monday: "Monday",
@@ -403,6 +467,38 @@ export const translations = {
     novenasTitle: "Novenas",
     novenasSubtitle: "9 dias de oração",
     day: "Dia",
+    dayOf: "de",
+    startNovena: "Iniciar Novena",
+    continueNovena: "Continuar Novena",
+    novenaCompleted: "Novena Completa!",
+    completedDays: "Dias Concluídos",
+    
+    // Novena Names
+    novena1Name: "Novena a Nossa Senhora de Fátima",
+    novena2Name: "Novena ao Espírito Santo",
+    novena3Name: "Novena a São José",
+    novena4Name: "Novena ao Sagrado Coração de Jesus",
+    novena5Name: "Novena a Santa Rita de Cássia",
+    
+    // Novena 1
+    novena1Purpose: "Para obter graças e proteção de Nossa Senhora",
+    novena1Prayer: "Ó Imaculada Virgem Maria, Mãe de Deus e Mãe nossa, Rainha do céu e da terra, refúgio dos pecadores, nós nos consagramos inteiramente a vós. Somos vossos em espírito e corpo, e desejamos ser sempre mais vossos. Conservai em nós uma viva lembrança de vossas misericórdias, a fim de podermos agradecer a vós e a Deus por todos os benefícios que nos concedeis. Aceitai, ó Mãe piedosa, o nosso humilde pedido e obtende-nos as graças de que necessitamos. Sobretudo, ajudai-nos a viver como verdadeiros filhos vossos, para que, depois desta vida, possamos louvar-vos eternamente no Paraíso. Amém.",
+    
+    // Novena 2
+    novena2Purpose: "Para receber os dons do Espírito Santo",
+    novena2Prayer: "Vinde, Espírito Santo! Vinde, Espírito Santo, enchei os corações dos vossos fiéis e acendei neles o fogo do vosso amor. Enviai o vosso Espírito e tudo será criado, e renovareis a face da terra. Ó Deus, que instruístes os corações dos vossos fiéis com a luz do Espírito Santo, fazei que pelo mesmo Espírito Santo conheçamos o que é reto e gozemos sempre de seu conforto. Por Cristo nosso Senhor. Amém.",
+    
+    // Novena 3
+    novena3Purpose: "Para obter proteção e ajuda nas necessidades",
+    novena3Prayer: "Ó glorioso São José, esposo da Virgem Maria e pai putativo de Jesus Cristo, intercedei por nós junto a Deus. Vós que guardastes com amor a Sagrada Família, protegei-nos também das tentações do mal. Ajudai-nos no nosso trabalho quotidiano e nas nossas necessidades. Fazei que, como vós, vivamos sempre na presença de Deus, cumprindo fielmente a sua vontade. Obtende-nos as graças de que necessitamos, especialmente a de uma boa morte. Amém.",
+    
+    // Novena 4
+    novena4Purpose: "Para nos consagrarmos ao Coração de Jesus",
+    novena4Prayer: "Ó Sagrado Coração de Jesus, fonte inesgotável de amor e misericórdia, eu me consagro completamente a vós. Tomai posse do meu coração e transformai-o segundo o vosso. Fazei que eu ame o que vós amais e que evite o que vós detestais. Dai-me a graça de viver sempre unido a vós, de sofrer com paciência as provas da vida e de vos glorificar em todas as minhas ações. Sagrado Coração de Jesus, em vós confio! Amém.",
+    
+    // Novena 5
+    novena5Purpose: "Para os casos impossíveis e difíceis",
+    novena5Prayer: "Ó gloriosa Santa Rita, vós que diante de Deus sois a advogada dos casos desesperados, olhai a minha aflição e vinde em meu auxílio. Intercedei por mim junto ao Senhor, para que aquilo que parece impossível aos homens se torne possível por vossa intercessão. Ó Santa das causas impossíveis, rogai por mim! Obtende-me a graça de que tanto necessito [fazer o pedido]. Prometo difundir a vossa devoção e agradecer publicamente as graças recebidas. Amém.",
     
     // Days of week
     monday: "Segunda-feira",
