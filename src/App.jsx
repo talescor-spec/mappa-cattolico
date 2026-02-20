@@ -3,128 +3,8 @@ import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check, Edit2, X } from
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
 
-// Hook para buscar liturgia do dia
-const useDailyGospel = (language) => {
-  const [gospel, setGospel] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchGospel = async () => {
-      const today = new Date().toDateString();
-      const cacheKey = `gospel_${language}_${today}`;
-      
-      // Verificar cache primeiro
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        setGospel(JSON.parse(cached));
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        let data;
-        
-        // APIs por idioma
-        if (language === 'pt') {
-          // API brasileira
-          const response = await fetch('https://liturgia.up.railway.app/');
-          data = await response.json();
-          
-          setGospel({
-            date: data.data,
-            reference: data.evangelho.referencia,
-            title: data.evangelho.titulo,
-            text: data.evangelho.texto,
-            reflection: data.evangelho.texto.split('\n\n')[0].substring(0, 200) + '...'
-          });
-        } else if (language === 'it') {
-          // Para italiano, vamos usar a mesma API e traduzir manualmente
-          // Em produção real, você usaria uma API italiana
-          const response = await fetch('https://liturgia.up.railway.app/');
-          data = await response.json();
-          
-          setGospel({
-            date: data.data,
-            reference: data.evangelho.referencia.replace('Lc', 'Luca').replace('Mt', 'Matteo').replace('Mc', 'Marco').replace('Jo', 'Giovanni'),
-            title: translateTitle(data.evangelho.titulo, 'it'),
-            text: data.evangelho.texto,
-            reflection: data.evangelho.texto.split('\n\n')[0].substring(0, 200) + '...'
-          });
-        } else {
-          // English - mesma API
-          const response = await fetch('https://liturgia.up.railway.app/');
-          data = await response.json();
-          
-          setGospel({
-            date: data.data,
-            reference: data.evangelho.referencia.replace('Lc', 'Luke').replace('Mt', 'Matthew').replace('Mc', 'Mark').replace('Jo', 'John'),
-            title: translateTitle(data.evangelho.titulo, 'en'),
-            text: data.evangelho.texto,
-            reflection: data.evangelho.texto.split('\n\n')[0].substring(0, 200) + '...'
-          });
-        }
-        
-        // Salvar no cache
-        if (gospel) {
-          localStorage.setItem(cacheKey, JSON.stringify(gospel));
-        }
-        
-        setLoading(false);
-      } catch (err) {
-        console.error('Erro ao buscar evangelho:', err);
-        setError(err);
-        setLoading(false);
-      }
-    };
-
-    fetchGospel();
-  }, [language]);
-
-  return { gospel, loading, error };
-};
-
-// Função auxiliar para traduzir títulos básicos
-const translateTitle = (title, language) => {
-  const translations = {
-    it: {
-      'Ressurreição': 'Risurrezione',
-      'Anunciação': 'Annunciazione',
-      'Visitação': 'Visitazione',
-      'Nascimento': 'Nascita',
-      'Multiplicação': 'Moltiplicazione',
-      'Transfiguração': 'Trasfigurazione',
-      'Paixão': 'Passione',
-      'Crucificação': 'Crocifissione'
-    },
-    en: {
-      'Ressurreição': 'Resurrection',
-      'Anunciação': 'Annunciation',
-      'Visitação': 'Visitation',
-      'Nascimento': 'Birth',
-      'Multiplicação': 'Multiplication',
-      'Transfiguração': 'Transfiguration',
-      'Paixão': 'Passion',
-      'Crucificação': 'Crucifixion'
-    }
-  };
-  
-  let translated = title;
-  if (translations[language]) {
-    Object.keys(translations[language]).forEach(key => {
-      translated = translated.replace(key, translations[language][key]);
-    });
-  }
-  
-  return translated;
-};
-
 function MappaCattolicoContent() {
-  const { t, getFormattedDate, language } = useLanguage();
-  const { gospel, loading, error } = useDailyGospel(language);
+  const { t, getFormattedDate } = useLanguage();
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedMystery, setSelectedMystery] = useState(null);
   const [selectedNovena, setSelectedNovena] = useState(null);
@@ -327,27 +207,8 @@ function MappaCattolicoContent() {
           <div className="gospel-image"></div>
           <div className="gospel-info">
             <p className="gospel-date">{getFormattedDate()}</p>
-            {loading ? (
-              <>
-                <h3 className="gospel-title">⏳ {t('loading') || 'Carregando...'}</h3>
-                <p className="gospel-excerpt">{t('loadingGospel') || 'Buscando evangelho do dia...'}</p>
-              </>
-            ) : error ? (
-              <>
-                <h3 className="gospel-title">{t('gospelReference')}</h3>
-                <p className="gospel-excerpt">{t('gospelTitleSample')}</p>
-              </>
-            ) : gospel ? (
-              <>
-                <h3 className="gospel-title">{gospel.reference}</h3>
-                <p className="gospel-excerpt">{gospel.title}</p>
-              </>
-            ) : (
-              <>
-                <h3 className="gospel-title">{t('gospelReference')}</h3>
-                <p className="gospel-excerpt">{t('gospelTitleSample')}</p>
-              </>
-            )}
+            <h3 className="gospel-title">{t('gospelReference')}</h3>
+            <p className="gospel-excerpt">{t('gospelTitleSample')}</p>
             <button className="read-more">{t('reading')}</button>
           </div>
         </div>
@@ -500,64 +361,21 @@ function MappaCattolicoContent() {
         <p className="page-subtitle">{getFormattedDate()}</p>
       </div>
 
-      {loading ? (
-        <div className="gospel-card-full">
-          <div className="gospel-book-icon"></div>
-          <h2>⏳ {t('loading') || 'Carregando...'}</h2>
-          <p style={{ textAlign: 'center', color: '#666' }}>
-            {t('loadingGospel') || 'Buscando evangelho do dia...'}
-          </p>
+      <div className="gospel-card-full">
+        <div className="gospel-book-icon"></div>
+        <h2>{t('gospelReference')}</h2>
+        <h3>{t('gospelTitleSample')}</h3>
+        <div className="gospel-text">
+          {t('gospelTextSample').split('\n\n').map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
         </div>
-      ) : error ? (
-        <div className="gospel-card-full">
-          <div className="gospel-book-icon"></div>
-          <h2>{t('gospelReference')}</h2>
-          <h3>{t('gospelTitleSample')}</h3>
-          <div className="gospel-text">
-            {t('gospelTextSample').split('\n\n').map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
-          <div className="reflection-section">
-            <h3>{t('reflection')}</h3>
-            <p>{t('gospelReflectionSample')}</p>
-          </div>
-          <p style={{ fontSize: '12px', color: '#999', marginTop: '20px', textAlign: 'center' }}>
-            ⚠️ {t('offlineMode') || 'Modo offline - evangelho de exemplo'}
-          </p>
-        </div>
-      ) : gospel ? (
-        <>
-          <div className="gospel-card-full">
-            <div className="gospel-book-icon"></div>
-            <h2>{gospel.reference}</h2>
-            <h3>{gospel.title}</h3>
-            <div className="gospel-text">
-              {gospel.text.split('\n\n').map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
-          </div>
+      </div>
 
-          {gospel.reflection && (
-            <div className="reflection-section">
-              <h3>{t('reflection')}</h3>
-              <p>{gospel.reflection}</p>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="gospel-card-full">
-          <div className="gospel-book-icon"></div>
-          <h2>{t('gospelReference')}</h2>
-          <h3>{t('gospelTitleSample')}</h3>
-          <div className="gospel-text">
-            {t('gospelTextSample').split('\n\n').map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="reflection-section">
+        <h3>{t('reflection')}</h3>
+        <p>{t('gospelReflectionSample')}</p>
+      </div>
     </div>
   );
 
