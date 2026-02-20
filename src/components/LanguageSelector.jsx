@@ -1,136 +1,59 @@
-// src/components/LanguageSelector.jsx
-import React, { useState } from 'react';
+// src/components/LanguageSelector.jsx - VERSÃO MINIMALISTA
+import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const LanguageSelector = () => {
   const { language, changeLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  const languages = [
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'pt', name: 'Português', flag: '🇧🇷' }
-  ];
+  const languages = {
+    it: { flag: '🇮🇹', name: 'Italiano' },
+    en: { flag: '🇺🇸', name: 'English' },
+    pt: { flag: '🇧🇷', name: 'Português' }
+  };
 
-  const currentLang = languages.find(l => l.code === language);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
 
-  const handleSelect = (code) => {
-    changeLanguage(code);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelect = (lang) => {
+    changeLanguage(lang);
     setIsOpen(false);
   };
 
   return (
-    <div style={styles.container}>
+    <div className="language-selector-mini" ref={dropdownRef}>
       <button 
+        className="language-button-mini" 
         onClick={() => setIsOpen(!isOpen)}
-        style={styles.button}
+        aria-label="Selecionar idioma"
       >
-        <span style={styles.flag}>{currentLang.flag}</span>
-        <span style={styles.name}>{currentLang.name}</span>
-        <span style={styles.arrow}>{isOpen ? '▲' : '▼'}</span>
+        <span className="flag-large">{languages[language].flag}</span>
       </button>
 
       {isOpen && (
-        <div style={styles.dropdown}>
-          {languages.map(lang => (
+        <div className="language-dropdown-mini">
+          {Object.entries(languages).map(([code, { flag, name }]) => (
             <button
-              key={lang.code}
-              onClick={() => handleSelect(lang.code)}
-              style={{
-                ...styles.option,
-                ...(language === lang.code ? styles.optionActive : {})
-              }}
+              key={code}
+              className={`language-option-mini ${code === language ? 'active' : ''}`}
+              onClick={() => handleSelect(code)}
             >
-              <span style={styles.flag}>{lang.flag}</span>
-              <span>{lang.name}</span>
-              {language === lang.code && (
-                <span style={styles.check}>✓</span>
-              )}
+              <span className="flag-mini">{flag}</span>
             </button>
           ))}
         </div>
       )}
-
-      {isOpen && (
-        <div 
-          style={styles.overlay} 
-          onClick={() => setIsOpen(false)}
-        />
-      )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    position: 'relative',
-    zIndex: 1000,
-  },
-  button: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 16px',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '8px',
-    color: 'white',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: '500',
-    transition: 'all 0.2s ease',
-  },
-  flag: {
-    fontSize: '20px',
-  },
-  name: {
-    fontSize: '14px',
-  },
-  arrow: {
-    fontSize: '10px',
-    marginLeft: '4px',
-  },
-  dropdown: {
-    position: 'absolute',
-    top: '100%',
-    right: 0,
-    marginTop: '8px',
-    backgroundColor: 'white',
-    borderRadius: '12px',
-    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-    overflow: 'hidden',
-    minWidth: '180px',
-  },
-  option: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    width: '100%',
-    padding: '12px 16px',
-    backgroundColor: 'white',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '14px',
-    color: '#333',
-    transition: 'all 0.2s ease',
-    textAlign: 'left',
-  },
-  optionActive: {
-    backgroundColor: '#f0f0f0',
-  },
-  check: {
-    marginLeft: 'auto',
-    color: '#4CAF50',
-    fontWeight: 'bold',
-  },
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: -1,
-  }
 };
 
 export default LanguageSelector;
