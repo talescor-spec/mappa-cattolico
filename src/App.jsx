@@ -183,19 +183,15 @@ function MappaCattolicoContent() {
   const HomePage = () => (
     <div className="page-content">
       <div className="greeting-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <h1 className="greeting">{t('greeting')}, {userName}.</h1>
-              <button onClick={handleEditName} className="edit-name-button">
-                <Edit2 size={18} />
-              </button>
-            </div>
-            <p className="subtitle">{t('appSubtitle')}</p>
-            <p className="verse">{t('peaceBless')}</p>
-          </div>
-          <LanguageSelector />
+        <LanguageSelector />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+          <h1 className="greeting">{t('greeting')}, {userName}.</h1>
+          <button onClick={handleEditName} className="edit-name-button">
+            <Edit2 size={18} />
+          </button>
         </div>
+        <p className="subtitle">{t('appSubtitle')}</p>
+        <p className="verse">{t('peaceBless')}</p>
       </div>
 
       <div className="feature-card gospel-card" onClick={() => setCurrentPage('gospel')}>
@@ -705,6 +701,95 @@ function MappaCattolicoContent() {
           color: #FFF;
           margin-bottom: 24px;
           box-shadow: 0 8px 24px rgba(139, 111, 71, 0.2);
+          position: relative;
+        }
+
+        /* Language Selector Mini */
+        .language-selector-mini {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 10;
+        }
+
+        .language-button-mini {
+          background: rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          border-radius: 12px;
+          padding: 8px 10px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          backdrop-filter: blur(10px);
+        }
+
+        .language-button-mini:hover {
+          background: rgba(255, 255, 255, 0.25);
+          transform: scale(1.05);
+        }
+
+        .flag-large {
+          font-size: 24px;
+          line-height: 1;
+          display: block;
+        }
+
+        .language-dropdown-mini {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          min-width: 56px;
+          animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .language-option-mini {
+          background: transparent;
+          border: none;
+          padding: 8px 10px;
+          cursor: pointer;
+          border-radius: 8px;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .language-option-mini:hover {
+          background: #F5F0E8;
+        }
+
+        .language-option-mini.active {
+          background: #8B6F47;
+        }
+
+        .language-option-mini.active .flag-mini {
+          filter: brightness(1.2);
+        }
+
+        .flag-mini {
+          font-size: 20px;
+          line-height: 1;
+          display: block;
         }
 
         .greeting {
