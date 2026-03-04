@@ -10,7 +10,8 @@ const LanguageSelector = () => {
   const languages = {
     it: { flag: '🇮🇹', name: 'Italiano' },
     en: { flag: '🇺🇸', name: 'English' },
-    pt: { flag: '🇧🇷', name: 'Português' }
+    pt: { flag: '🇧🇷', name: 'Português' },
+    de: { flag: '🇩🇪', name: 'Deutsch' }
   };
 
   useEffect(() => {
