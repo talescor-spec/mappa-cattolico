@@ -1,4 +1,4 @@
-// src/contexts/LanguageContext.jsx - VERSÃO LIMPA E TESTADA
+// src/contexts/LanguageContext.jsx - COM ALEMÃO 🇩🇪
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const LanguageContext = createContext();
@@ -16,7 +16,8 @@ const formatDate = (language) => {
   const locales = {
     it: 'it-IT',
     en: 'en-US',
-    pt: 'pt-BR'
+    pt: 'pt-BR',
+    de: 'de-DE'
   };
   
   return date.toLocaleDateString(locales[language], options);
@@ -414,6 +415,137 @@ export const translations = {
     friday: "Sexta-feira",
     saturday: "Sábado",
     sunday: "Domingo"
+  },
+  
+  de: {
+    // Header
+    appTitle: "Katholische Karte",
+    appSubtitle: "Dein täglicher Glaubensbegleiter",
+    greeting: "Hallo",
+    peaceBless: "Der Friede Jesu und die Liebe Mariens ✨",
+    defaultName: "Freund",
+    
+    // Name Edit
+    editName: "Name bearbeiten",
+    enterYourName: "Gib deinen Namen ein",
+    save: "Speichern",
+    cancel: "Abbrechen",
+    
+    // Navigation
+    home: "Startseite",
+    rosary: "Rosenkranz",
+    gospel: "Evangelium",
+    prayers: "Gebete",
+    novenas: "Novenen",
+    
+    // Buttons
+    reading: "Lesung",
+    next: "Weiter",
+    previous: "Zurück",
+    
+    // Rosary
+    rosaryTitle: "Heiliger Rosenkranz",
+    rosarySubtitle: "Bete mit den Geheimnissen des Tages",
+    mysteriesJoyful: "Freudenreiche Geheimnisse",
+    mysteriesLuminous: "Lichtreiche Geheimnisse",
+    mysteriesSorrowful: "Schmerzhafte Geheimnisse",
+    mysteriesGlorious: "Glorreiche Geheimnisse",
+    selectMystery: "Wähle die Geheimnisse zum Meditieren",
+    mystery: "Geheimnis",
+    completed: "Abgeschlossen",
+    prayAgain: "Erneut beten",
+    rosaryCompleted: "Rosenkranz vollständig!",
+    
+    // Mysteries
+    joyful1: "Die Verkündigung des Herrn",
+    joyful2: "Die Heimsuchung Mariens",
+    joyful3: "Die Geburt Jesu Christi",
+    joyful4: "Die Darstellung im Tempel",
+    joyful5: "Die Auffindung im Tempel",
+    
+    luminous1: "Die Taufe Jesu im Jordan",
+    luminous2: "Die Hochzeit zu Kana",
+    luminous3: "Die Verkündigung des Reiches Gottes",
+    luminous4: "Die Verklärung Jesu",
+    luminous5: "Die Einsetzung der Eucharistie",
+    
+    sorrowful1: "Das Gebet Jesu am Ölberg",
+    sorrowful2: "Die Geißelung Jesu",
+    sorrowful3: "Die Dornenkrönung",
+    sorrowful4: "Die Kreuztragung Jesu",
+    sorrowful5: "Die Kreuzigung und der Tod Jesu",
+    
+    glorious1: "Die Auferstehung Jesu",
+    glorious2: "Die Himmelfahrt Jesu",
+    glorious3: "Die Herabkunft des Heiligen Geistes",
+    glorious4: "Die Aufnahme Mariens in den Himmel",
+    glorious5: "Die Krönung Mariens",
+    
+    // Prayers
+    ourFather: "Vaterunser",
+    hailMary: "Ave Maria",
+    gloryBe: "Ehre sei dem Vater",
+    hailHolyQueen: "Salve Regina",
+    
+    ourFatherText: "Vater unser im Himmel, geheiligt werde dein Name. Dein Reich komme. Dein Wille geschehe, wie im Himmel so auf Erden. Unser tägliches Brot gib uns heute. Und vergib uns unsere Schuld, wie auch wir vergeben unsern Schuldigern. Und führe uns nicht in Versuchung, sondern erlöse uns von dem Bösen. Amen.",
+    
+    hailMaryText: "Gegrüßet seist du, Maria, voll der Gnade, der Herr ist mit dir. Du bist gebenedeit unter den Frauen, und gebenedeit ist die Frucht deines Leibes, Jesus. Heilige Maria, Mutter Gottes, bitte für uns Sünder, jetzt und in der Stunde unseres Todes. Amen.",
+    
+    gloryBeText: "Ehre sei dem Vater und dem Sohn und dem Heiligen Geist. Wie im Anfang, so auch jetzt und allezeit und in Ewigkeit. Amen.",
+    
+    hailHolyQueenText: "Sei gegrüßt, o Königin, Mutter der Barmherzigkeit, unser Leben, unsre Wonne und unsre Hoffnung, sei gegrüßt! Zu dir rufen wir verbannte Kinder Evas; zu dir seufzen wir trauernd und weinend in diesem Tal der Tränen. Wohlan denn, unsre Fürsprecherin, wende deine barmherzigen Augen uns zu, und nach diesem Elend zeige uns Jesus, die gebenedeite Frucht deines Leibes. O gütige, o milde, o süße Jungfrau Maria.",
+    
+    // Gospel
+    gospelTitle: "Evangelium des Tages",
+    todayGospel: "Heute",
+    reflection: "Betrachtung",
+    gospelReference: "Lukas 20,27-40",
+    gospelTitleSample: "Die Auferstehung der Toten",
+    gospelTextSample: "Zu jener Zeit kamen einige Sadduzäer zu Jesus, die behaupten, es gebe keine Auferstehung. Sie fragten ihn: Meister, Mose hat uns vorgeschrieben: Wenn ein Mann, der einen Bruder hat, stirbt und eine Frau hinterlässt, ohne Kinder zu haben, dann soll sein Bruder die Frau nehmen und seinem Bruder Nachkommen verschaffen.\n\nNun lebten einmal sieben Brüder. Der erste nahm sich eine Frau, starb aber kinderlos. Da nahm sie der zweite, danach der dritte und ebenso die anderen bis zum siebten; sie alle hinterließen keine Kinder, als sie starben. Schließlich starb auch die Frau.\n\nWessen Frau wird sie nun bei der Auferstehung sein? Alle sieben haben sie doch zur Frau gehabt.\n\nDa sagte Jesus zu ihnen: Die Kinder dieser Welt heiraten und lassen sich heiraten. Die aber, die gewürdigt werden, an jener Welt und an der Auferstehung von den Toten teilzuhaben, heiraten nicht, noch lassen sie sich heiraten. Denn sie können auch nicht mehr sterben, weil sie den Engeln gleich und als Kinder der Auferstehung zu Kindern Gottes geworden sind.",
+    gospelReflectionSample: "Jesus lehrt uns über das ewige Leben und die Auferstehung. Das Leben nach dem Tod ist keine Fortsetzung dieses irdischen Lebens, sondern eine neue Wirklichkeit, in der wir wie Engel sein werden, Kinder Gottes in ewiger Herrlichkeit.",
+    
+    // Prayers Page
+    prayersTitle: "Traditionelle Gebete",
+    prayersSubtitle: "Katholische Gebete",
+    
+    // Novenas
+    novenasTitle: "Novenen",
+    novenasSubtitle: "9 Tage des Gebets",
+    day: "Tag",
+    dayOf: "von",
+    startNovena: "Novene beginnen",
+    continueNovena: "Novene fortsetzen",
+    novenaCompleted: "Novene abgeschlossen!",
+    markComplete: "Als abgeschlossen markieren",
+    
+    novena1Name: "Novene zu Unserer Lieben Frau von Fatima",
+    novena1Purpose: "Um Gnaden und Schutz von der Gottesmutter zu erbitten",
+    novena1Prayer: "O unbefleckte Jungfrau Maria, Mutter Gottes und unsere Mutter, Königin des Himmels und der Erde, Zuflucht der Sünder, wir weihen uns Dir ganz. Wir gehören Dir mit Leib und Seele und wünschen, immer mehr Dein zu sein. Bewahre in uns eine lebendige Erinnerung an Deine Barmherzigkeit, damit wir Dir und Gott für alle Wohltaten danken können, die Du uns schenkst. Nimm an, o gütige Mutter, unsere demütige Bitte und erwirke uns die Gnaden, die wir brauchen. Vor allem hilf uns, als Deine wahren Kinder zu leben, damit wir nach diesem Leben Dich ewig im Paradies preisen können. Amen.",
+    
+    novena2Name: "Novene zum Heiligen Geist",
+    novena2Purpose: "Um die Gaben des Heiligen Geistes zu empfangen",
+    novena2Prayer: "Komm, Heiliger Geist! Komm, Heiliger Geist, erfülle die Herzen Deiner Gläubigen und entzünde in ihnen das Feuer Deiner Liebe. Sende aus Deinen Geist, und alles wird neu geschaffen, und Du wirst das Angesicht der Erde erneuern. O Gott, der Du die Herzen der Gläubigen durch die Erleuchtung des Heiligen Geistes gelehrt hast, gib, dass wir in demselben Geist das Rechte erkennen und uns immer seines Trostes erfreuen. Durch Christus, unseren Herrn. Amen.",
+    
+    novena3Name: "Novene zum heiligen Josef",
+    novena3Purpose: "Um Schutz und Hilfe in unseren Nöten zu erbitten",
+    novena3Prayer: "O ruhmreicher heiliger Josef, Bräutigam der Jungfrau Maria und Pflegevater Jesu Christi, lege Fürsprache für uns ein bei Gott. Du, der Du liebevoll die Heilige Familie beschützt hast, beschütze auch uns vor den Versuchungen des Bösen. Hilf uns in unserer täglichen Arbeit und in unseren Nöten. Mögen wir wie Du stets in der Gegenwart Gottes leben und treu seinen Willen erfüllen. Erwirke uns die Gnaden, die wir benötigen, besonders die eines guten Todes. Amen.",
+    
+    novena4Name: "Novene zum Heiligsten Herzen Jesu",
+    novena4Purpose: "Um uns dem Herzen Jesu zu weihen",
+    novena4Prayer: "O Heiligstes Herz Jesu, unerschöpfliche Quelle der Liebe und Barmherzigkeit, ich weihe mich Dir ganz. Nimm Besitz von meinem Herzen und verwandle es nach Deinem. Gib, dass ich liebe, was Du liebst, und meide, was Du verabscheust. Schenke mir die Gnade, immer mit Dir vereint zu leben, die Prüfungen des Lebens geduldig zu ertragen und Dich in allen meinen Handlungen zu verherrlichen. Heiligstes Herz Jesu, ich vertraue auf Dich! Amen.",
+    
+    novena5Name: "Novene zur heiligen Rita von Cascia",
+    novena5Purpose: "Für unmögliche und schwierige Fälle",
+    novena5Prayer: "O ruhmreiche heilige Rita, du, die vor Gott die Fürsprecherin der verzweifelten Fälle bist, blicke auf meine Not und komm mir zu Hilfe. Lege Fürsprache für mich beim Herrn ein, damit das, was den Menschen unmöglich erscheint, durch deine Fürsprache möglich wird. O Heilige der unmöglichen Fälle, bitte für mich! Erwirke mir die Gnade, die ich so dringend benötige [mache deine Bitte]. Ich verspreche, deine Verehrung zu verbreiten und öffentlich für die empfangenen Gnaden zu danken. Amen.",
+    
+    // Days
+    monday: "Montag",
+    tuesday: "Dienstag",
+    wednesday: "Mittwoch",
+    thursday: "Donnerstag",
+    friday: "Freitag",
+    saturday: "Samstag",
+    sunday: "Sonntag"
   }
 };
 
