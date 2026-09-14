@@ -1,134 +1,48 @@
-# 📿 Mappa del Cattolico - App Católico
+# Fideora
 
-Aplicativo web para acompanhamento espiritual católico com Rosário interativo, Evangelho do dia, orações e novenas.
+Fideora é um aplicativo católico multilíngue para acompanhar a fé no dia a dia. A base atual reúne Evangelho/reflexão, Rosário, orações, novenas, perfil e progresso, com uma identidade visual premium e uma única marca internacional.
 
-## ✨ Funcionalidades
+## Idiomas
 
-- **Rosário Diário Interativo**: 4 tipos de mistérios (Gozosos, Luminosos, Dolorosos, Gloriosos) com progresso salvo
-- **Evangelho do Dia**: Leituras bíblicas diárias com reflexões
-- **Orações Tradicionais**: Ave Maria, Pai Nosso, Glória ao Pai, Salve Rainha
-- **Novenas**: Coleção de novenas católicas
-- **Interface Elegante**: Design inspirado em textos litúrgicos com paleta dourada
+- Italiano
+- Français
+- Español
+- Português (Brasil)
+- English
+- Deutsch
 
-## 🚀 Deploy no Vercel (Recomendado)
+## Stack
 
-### Opção 1: Deploy Direto pelo Site (Mais Fácil)
+- React 18 + Vite 8
+- Capacitor 8 para iOS
+- Supabase Auth + PostgreSQL/RLS para conta e progresso sincronizado
+- RevenueCat Capacitor para StoreKit/assinaturas
+- Vercel para preview/web
 
-1. **Acesse**: [vercel.com](https://vercel.com)
-2. **Crie conta**: Use Google, GitHub ou email
-3. **Clique em**: "Add New" → "Project"
-4. **Importe do GitHub**:
-   - Se já tem no GitHub: selecione o repositório
-   - Se não tem: siga a "Opção 2" abaixo
+## Conta e sincronização
 
-### Opção 2: Upload Manual do Projeto
+A Fideora usa o `auth.users.id` do Supabase como identidade canônica. Esse mesmo UUID é usado como RevenueCat `appUserID`, evitando criar identidades de assinatura diferentes por reinstalação/dispositivo.
 
-1. **Acesse**: [vercel.com](https://vercel.com) e faça login
-2. **Instale o Vercel CLI** no seu computador:
-   ```bash
-   npm install -g vercel
-   ```
+O perfil possui login por link seguro de e-mail, sincronização de nome/idioma/Rosário/novenas, logout e início de exclusão de conta dentro do app. As tabelas `fideora_profiles` e `fideora_progress` têm RLS own-row e privilégios mínimos para o role autenticado.
 
-3. **No terminal, navegue até a pasta do projeto**:
-   ```bash
-   cd caminho/para/mappa-cattolico-deploy
-   ```
+## Segurança e App Store
 
-4. **Execute o deploy**:
-   ```bash
-   vercel
-   ```
+Consulte:
 
-5. **Siga as instruções**:
-   - Login na sua conta Vercel (vai abrir o navegador)
-   - Confirme as configurações (aperte Enter em tudo)
-   - Aguarde o deploy finalizar
+- `SECURITY.md`
+- `docs/APP_STORE_REVIEW_GATE.md`
+- `.github/skills/apple-appstore-reviewer/SKILL.md`
+- `docs/APPLE_INTEGRATION.md`
 
-6. **Pronto!** Você receberá uma URL tipo: `https://seu-projeto.vercel.app`
-
-### Opção 3: Conectar com GitHub (Recomendado para atualizações automáticas)
-
-1. **Crie um repositório no GitHub**:
-   - Acesse [github.com](https://github.com) e crie um novo repositório
-   - Faça upload dos arquivos do projeto
-
-2. **No Vercel**:
-   - Clique em "Add New" → "Project"
-   - Selecione "Import Git Repository"
-   - Escolha seu repositório
-   - Clique em "Deploy"
-
-3. **Atualizações Automáticas**:
-   - Qualquer alteração que você fizer no GitHub será automaticamente deployada!
-
-## 💻 Desenvolvimento Local
-
-Se quiser testar localmente antes de fazer o deploy:
+Execute antes de mudanças de release:
 
 ```bash
-# Instalar dependências
-npm install
-
-# Iniciar servidor de desenvolvimento
-npm run dev
-
-# O app estará disponível em: http://localhost:5173
+npm ci
+npm audit --omit=dev --audit-level=moderate
+npm run appstore:preflight
+npm run build
 ```
 
-## 📦 Estrutura do Projeto
+## iOS
 
-```
-mappa-cattolico/
-├── src/
-│   ├── App.jsx          # Componente principal do aplicativo
-│   └── main.jsx         # Entry point do React
-├── index.html           # HTML principal
-├── package.json         # Dependências do projeto
-├── vite.config.js       # Configuração do Vite
-└── README.md           # Este arquivo
-```
-
-## 🔧 Tecnologias Utilizadas
-
-- **React 18**: Framework JavaScript
-- **Vite**: Build tool rápido
-- **Lucide React**: Ícones
-- **LocalStorage**: Salvamento de progresso do rosário
-
-## 🌐 Compartilhando com Alunos
-
-Após o deploy no Vercel, você receberá uma URL permanente como:
-```
-https://mappa-cattolico.vercel.app
-```
-
-Compartilhe esta URL com seus alunos! O app funcionará em qualquer navegador (celular, tablet, desktop).
-
-## 📱 Recursos
-
-- ✅ Responsivo (funciona em qualquer dispositivo)
-- ✅ PWA Ready (pode ser instalado como app)
-- ✅ Offline First (progresso salvo localmente)
-- ✅ Sem necessidade de login
-- ✅ Gratuito e sem anúncios
-
-## 🆘 Problemas Comuns
-
-**"Command not found: npm"**
-- Instale o Node.js: [nodejs.org](https://nodejs.org)
-
-**Deploy falhou no Vercel**
-- Verifique se todos os arquivos estão na pasta correta
-- Tente fazer deploy novamente
-
-**App não carrega**
-- Limpe o cache do navegador (Ctrl+Shift+Delete)
-- Tente em modo anônimo/privado
-
-## 📞 Suporte
-
-Para dúvidas ou sugestões, entre em contato ou abra uma issue no GitHub.
-
----
-
-**Desenvolvido com ❤️ para a comunidade católica**
+O Bundle ID `com.fideora.app` ainda é provisório. Antes do TestFlight precisamos confirmar o identificador definitivo, gerar/auditar o target iOS, configurar callbacks do Supabase Auth, revisar armazenamento seguro da sessão, criar o produto/subscription group no App Store Connect e conectar a oferta ao RevenueCat.
