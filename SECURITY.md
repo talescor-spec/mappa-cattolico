@@ -2,22 +2,36 @@
 
 ## Current architecture
 
-Fideora is currently a React/Vite client deployed on Vercel and prepared for iOS through Capacitor. RevenueCat is installed as the future StoreKit/subscription layer, but no real payment credential is committed and purchase initialization is not wired to app startup yet.
+Fideora is a React/Vite client deployed on Vercel and prepared for iOS through Capacitor. Supabase Auth + RLS now provide the canonical user identity and cloud progress layer. RevenueCat is installed as the StoreKit/subscription layer; the authenticated Supabase `user.id` is the target RevenueCat `appUserID`. No private Apple, RevenueCat or Supabase server credential belongs in the client.
 
 ## Non-negotiable rules
 
 1. **Never commit secrets.** `.env` and local environment files are ignored by Git.
 2. **Treat every `VITE_*` variable as public.** Vite bundles these values into client code.
-3. **Never expose server secrets in the client.** This includes Supabase service-role keys, Apple private keys, App Store Connect private keys and RevenueCat secret API keys.
-4. **Use server-side verification for privileged actions.** Subscription lifecycle webhooks and admin operations must be verified by a trusted backend/serverless function.
-5. **Supabase must use Row Level Security.** Client access must use the anon/publishable key only; user-owned rows must be protected by RLS policies based on the authenticated user id.
-6. **StoreKit/RevenueCat entitlements are authoritative for premium access.** Never trust a client-side boolean such as `isPremium` as the source of truth.
-7. **One user = one entitlement identity.** RevenueCat/App Store transaction identity must be mapped idempotently to a single Fideora user to prevent duplicate subscription state.
-8. **Do not store auth/session secrets in application LocalStorage.** Current LocalStorage is limited to non-sensitive UI preferences/progress and is validated before use.
+3. **Never expose server secrets in the client.** This includes Supabase service-role/secret keys, Apple private keys, App Store Connect private keys and RevenueCat secret API keys.
+4. **Use trusted server/database boundaries for privileged actions.** Subscription lifecycle webhooks and admin operations must be verified by trusted backend infrastructure.
+5. **Supabase user data uses Row Level Security.** The client uses a publishable key; Fideora user-owned rows are restricted by `auth.uid()` policies.
+6. **Least privilege at the SQL grant layer.** `authenticated` receives only SELECT/INSERT/UPDATE on Fideora profile/progress tables; `anon` receives no table access.
+7. **StoreKit/RevenueCat entitlements are authoritative for premium access.** Never trust a client-side boolean such as `isPremium` as the source of truth.
+8. **One user = one entitlement identity.** Supabase `auth.users.id` maps to RevenueCat `appUserID` so reinstall/device changes do not create a second application identity.
+9. **No custom auth tokens in app LocalStorage.** The web preview currently uses the Supabase SDK's standard persisted browser session. Before the native iOS TestFlight release candidate, session/token persistence must be reviewed and moved to an appropriate native secure-storage/Keychain strategy if the Capacitor runtime would otherwise persist credentials in ordinary web storage.
+
+## Account deletion
+
+Fideora exposes an in-app deletion flow. The database RPC `fideora_delete_own_account()`:
+
+- accepts no user-id parameter;
+- requires an authenticated JWT;
+- derives the target exclusively from `auth.uid()`;
+- deletes that one `auth.users` row;
+- relies on `ON DELETE CASCADE` for Fideora profile/progress data;
+- is executable by `authenticated` only, not `anon`/`public`.
+
+The project had already reached its Supabase Edge Function plan limit, so the self-only database RPC is used instead of adding a new administrative Edge Function. The client signs out and clears local personal data after deletion. The UI explicitly warns that deleting the Fideora account does not automatically cancel an active Apple subscription.
 
 ## Browser hardening
 
-The Vercel deployment defines a Content Security Policy and defensive response headers in `vercel.json`. Any new external origin (Supabase, analytics, CDN, auth, etc.) must be explicitly reviewed before it is added to CSP.
+The Vercel deployment defines a Content Security Policy and defensive response headers in `vercel.json`. The Fideora Supabase HTTPS/WSS project origin is explicitly allow-listed in `connect-src`; new external origins must be reviewed before being added.
 
 ## Dependency security
 
@@ -29,14 +43,26 @@ The Vercel deployment defines a Content Security Policy and defensive response h
 
 At the time the Capacitor scaffold was introduced, npm reported moderate advisories through the development-only Capacitor CLI chain (`@capacitor/cli -> xcode -> uuid`). They are not included in the production/runtime dependency audit and no high/critical advisory is accepted by CI. This toolchain issue remains monitored rather than forcing an unreviewed CLI downgrade.
 
-## Before enabling authentication
+## Authentication status
 
-- configure Supabase Auth
-- enable RLS on every user-facing table before inserting production data
-- restrict CORS/origins where applicable
-- define account deletion/export flows
-- add rate limiting to any custom public API or edge function
-- review logging to avoid PII or tokens
+Implemented:
+
+- Supabase email magic-link scaffold
+- `fideora_profiles` and `fideora_progress`
+- own-row RLS policies
+- minimal SQL grants
+- local-to-cloud progress migration/merge
+- language/profile sync
+- in-app sign out and account deletion
+- stable Supabase UUID -> RevenueCat identity mapping
+
+Still required before production/native authentication is considered complete:
+
+- configure approved Supabase Auth redirect URLs for the final web/native callback path
+- test magic-link round trip on the final domain and physical iPhone
+- review native secure session storage
+- test cross-device merge, logout/login and deleted-account behavior
+- create reviewer/demo access before App Review
 
 ## Before enabling App Store subscriptions
 
@@ -47,7 +73,7 @@ At the time the Capacitor scaffold was introduced, npm reported moderate advisor
 - validate RevenueCat webhooks/signatures server-side
 - make webhook processing idempotent
 - store original transaction identifiers with uniqueness constraints
-- implement Restore Purchases
+- keep Restore Purchases available
 - test sandbox renewals, cancellations, billing issues, refunds and revocations
 
 ## Incident rule
