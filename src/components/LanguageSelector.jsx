@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { languages, useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function LanguageSelector({ compact = false }) {
   const { language, changeLanguage } = useLanguage();
+  const { user, updateProfile } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -13,6 +15,12 @@ export default function LanguageSelector({ compact = false }) {
     document.addEventListener('pointerdown', onPointerDown);
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, []);
+
+  const selectLanguage = (code) => {
+    changeLanguage(code);
+    setOpen(false);
+    if (user) updateProfile({ locale: code }).catch(() => {});
+  };
 
   return (
     <div className={`language-selector ${compact ? 'compact' : ''}`} ref={ref}>
@@ -31,7 +39,7 @@ export default function LanguageSelector({ compact = false }) {
             <button
               key={code}
               className={code === language ? 'active' : ''}
-              onClick={() => { changeLanguage(code); setOpen(false); }}
+              onClick={() => selectLanguage(code)}
               role="menuitem"
             >
               <span>{item.flag}</span>
