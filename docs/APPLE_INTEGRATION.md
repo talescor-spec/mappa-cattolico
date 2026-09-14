@@ -8,26 +8,56 @@ This document describes the implementation path for turning the existing React/V
 
 - React + Vite client
 - Capacitor wrapper for iOS
+- Supabase Auth as the canonical Fideora user identity
+- `fideora_profiles` + `fideora_progress` protected by own-row RLS
 - RevenueCat Capacitor SDK scaffolded for StoreKit subscription access
+- authenticated Supabase UUID mapped to RevenueCat `appUserID`
 - entitlement target: `premium`
+- in-app account deletion scaffold implemented
 - Bundle ID currently provisional: `com.fideora.app`
 - no live Apple/RevenueCat private credentials are committed to the repository
 
 ## Target architecture
 
-`front-end buyer -> Fideora install -> account/auth -> RevenueCat appUserID -> StoreKit subscription -> premium entitlement -> Supabase/Funnel Metrics events`
+`front-end buyer -> Fideora install -> Supabase account -> stable user.id -> RevenueCat appUserID -> StoreKit subscription -> premium entitlement -> Supabase/Funnel Metrics events`
 
-Identity must be stable and idempotent. Once Supabase Auth exists, use the authenticated Fideora user ID as the RevenueCat `appUserID`. Do not create a new anonymous subscription identity on every reinstall or funnel entry.
+The authenticated Supabase UUID is the application identity. It must be reused after reinstall/device changes rather than creating a fresh subscription identity for each funnel entry.
 
 ## Security rules
 
 - `VITE_*` values are public client configuration only.
-- Never ship App Store Connect private keys, Apple private keys, RevenueCat secret API keys or Supabase service-role keys in the client.
+- Never ship App Store Connect private keys, Apple private keys, RevenueCat secret API keys or Supabase service-role/secret keys in the client.
+- Fideora user data is protected with RLS and minimum table grants.
 - Premium authority comes from StoreKit/RevenueCat entitlement state, not a local `isPremium` flag.
 - Webhooks and privileged subscription/admin operations belong on trusted backend/serverless infrastructure.
 - Webhook/event ingestion must be idempotent and preserve original transaction identity.
+- Native session persistence must receive a secure-storage/Keychain review before TestFlight.
 
-## Phase 1 — native project
+## Phase 1 — authentication/backend — implemented, E2E validation pending
+
+Implemented:
+
+- Supabase email magic-link client flow;
+- profile + progress cloud tables;
+- RLS own-row SELECT/INSERT/UPDATE policies;
+- `anon` denied Fideora table access;
+- local-to-cloud Rosary/novena merge;
+- profile/language synchronization;
+- authenticated UUID -> RevenueCat identity binding;
+- sign out with local personal-data cleanup;
+- in-app account deletion entry point;
+- deletion warning that an Apple subscription is managed separately by Apple.
+
+Account deletion uses `public.fideora_delete_own_account()` because the connected Supabase project has reached its current Edge Function quota. The RPC takes no user ID, can be executed only by `authenticated`, derives the target from `auth.uid()`, and relies on `ON DELETE CASCADE` for Fideora profile/progress data.
+
+Still required for this phase:
+
+1. configure final Supabase Auth Site URL / allowed redirect URLs;
+2. test magic-link round trip on the final web callback and physical iPhone;
+3. review native session storage / Keychain strategy;
+4. test cross-device merge and account deletion end-to-end.
+
+## Phase 2 — native project
 
 1. Confirm the final Bundle ID.
 2. Install dependencies with `npm ci`.
@@ -37,18 +67,8 @@ Identity must be stable and idempotent. Once Supabase Auth exists, use the authe
 6. Open Xcode with `npm run ios:open`.
 7. Select the Apple Developer team/signing identity.
 8. Enable In-App Purchase for the app target.
-9. Run `npm run appstore:preflight` and perform the first native App Store reviewer audit before remediation.
-
-## Phase 2 — authentication/backend
-
-Before enabling live subscriptions:
-
-- implement Supabase Auth;
-- enable RLS on every user-owned table;
-- sync Rosary/novena/profile progress through authenticated ownership;
-- implement in-app account deletion;
-- explain active Apple subscription behavior during deletion;
-- use the authenticated Fideora user ID as RevenueCat `appUserID`.
+9. Audit `Info.plist`, entitlements, privacy manifests and auth/session storage.
+10. Run `npm run appstore:preflight` and perform the first native App Store reviewer audit before remediation.
 
 ## Phase 3 — App Store Connect
 
@@ -93,6 +113,10 @@ Build and test:
 
 Test at minimum:
 
+- new account + magic-link callback;
+- local progress -> cloud migration;
+- same Fideora account on another device;
+- RevenueCat `appUserID` matches Supabase UUID;
 - fresh eligible trial;
 - ineligible returning user;
 - trial -> paid conversion;
@@ -101,8 +125,9 @@ Test at minimum:
 - billing issue/recovery;
 - refund/revocation;
 - reinstall + restore;
-- same Fideora account on another device;
 - duplicate purchase attempt;
+- account deletion;
+- deletion while an Apple subscription remains active;
 - offline/network failures;
 - all six supported languages.
 
