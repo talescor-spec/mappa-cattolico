@@ -2,6 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Book, Calendar, Check, ChevronRight, Edit2, Heart, Home, User, X } from 'lucide-react';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
+import {
+  clampInt,
+  normalizeNovenaProgress,
+  normalizeRosaryProgress,
+  safeGet,
+  safeGetJSON,
+  safeSet,
+  safeSetJSON,
+  sanitizeDisplayName,
+} from './utils/storage';
 import './styles.css';
 
 const ROSARY_STEPS = 53;
@@ -19,21 +29,31 @@ function getGreetingKey() {
 
 function useVisitStreak() {
   const [streak, setStreak] = useState(1);
+
   useEffect(() => {
     const today = new Date();
     const todayKey = today.toISOString().slice(0, 10);
-    const previousKey = localStorage.getItem('fideoraLastVisit');
-    let value = Number(localStorage.getItem('fideoraStreak') || 0);
-    if (!previousKey) value = 1;
-    else if (previousKey !== todayKey) {
-      const previous = new Date(`${previousKey}T12:00:00`);
-      const diff = Math.round((new Date(`${todayKey}T12:00:00`) - previous) / 86400000);
-      value = diff === 1 ? value + 1 : 1;
+    const previousKey = safeGet('fideoraLastVisit', '');
+    let value = clampInt(safeGet('fideoraStreak', '0'), 0, 36500, 0);
+
+    if (!previousKey) {
+      value = 1;
+    } else if (previousKey !== todayKey) {
+      const previous = /^\d{4}-\d{2}-\d{2}$/.test(previousKey)
+        ? new Date(`${previousKey}T12:00:00`)
+        : null;
+      const current = new Date(`${todayKey}T12:00:00`);
+      const diff = previous && !Number.isNaN(previous.getTime())
+        ? Math.round((current - previous) / 86400000)
+        : null;
+      value = diff === 1 ? Math.min(value + 1, 36500) : 1;
     }
-    localStorage.setItem('fideoraLastVisit', todayKey);
-    localStorage.setItem('fideoraStreak', String(value));
+
+    safeSet('fideoraLastVisit', todayKey);
+    safeSet('fideoraStreak', value);
     setStreak(value || 1);
   }, []);
+
   return streak;
 }
 
@@ -41,11 +61,15 @@ function FideoraApp() {
   const { t, getFormattedDate } = useLanguage();
   const [page, setPage] = useState('today');
   const [detail, setDetail] = useState(null);
-  const [name, setName] = useState(() => localStorage.getItem('fideoraUserName') || '');
+  const [name, setName] = useState(() => sanitizeDisplayName(safeGet('fideoraUserName', '')));
   const [editName, setEditName] = useState(false);
   const [draftName, setDraftName] = useState('');
-  const [rosaryProgress, setRosaryProgress] = useState(() => JSON.parse(localStorage.getItem('rosaryProgress') || '{}'));
-  const [novenaProgress, setNovenaProgress] = useState(() => JSON.parse(localStorage.getItem('novenaProgress') || '{}'));
+  const [rosaryProgress, setRosaryProgress] = useState(() =>
+    normalizeRosaryProgress(safeGetJSON('rosaryProgress', {}))
+  );
+  const [novenaProgress, setNovenaProgress] = useState(() =>
+    normalizeNovenaProgress(safeGetJSON('novenaProgress', {}))
+  );
   const streak = useVisitStreak();
 
   const todayKey = new Date().toDateString();
@@ -75,24 +99,35 @@ function FideoraApp() {
   const closeDetail = () => setDetail(null);
 
   const setRosaryStep = (mysteryId, step) => {
+    const validMystery = mysteries.some((m) => m.id === mysteryId);
+    if (!validMystery) return;
+
     const next = {
       ...rosaryProgress,
-      [todayKey]: { ...(rosaryProgress[todayKey] || {}), [mysteryId]: step },
+      [todayKey]: {
+        ...(rosaryProgress[todayKey] || {}),
+        [mysteryId]: clampInt(step, 0, ROSARY_STEPS, 0),
+      },
     };
-    setRosaryProgress(next);
-    localStorage.setItem('rosaryProgress', JSON.stringify(next));
+    const normalized = normalizeRosaryProgress(next);
+    setRosaryProgress(normalized);
+    safeSetJSON('rosaryProgress', normalized);
   };
 
   const setNovenaDay = (novenaId, day) => {
-    const next = { ...novenaProgress, [novenaId]: day };
+    if (!novenas.some((novena) => novena.id === novenaId)) return;
+    const next = normalizeNovenaProgress({
+      ...novenaProgress,
+      [novenaId]: clampInt(day, 0, 9, 0),
+    });
     setNovenaProgress(next);
-    localStorage.setItem('novenaProgress', JSON.stringify(next));
+    safeSetJSON('novenaProgress', next);
   };
 
   const saveName = () => {
-    const next = draftName.trim();
+    const next = sanitizeDisplayName(draftName);
     setName(next);
-    localStorage.setItem('fideoraUserName', next);
+    safeSet('fideoraUserName', next);
     setEditName(false);
   };
 
@@ -109,8 +144,8 @@ function FideoraApp() {
             onStep={setRosaryStep}
           />
         )}
-        {detail.type === 'prayer' && <PrayerDetail prayer={detail.item} />}
-        {detail.type === 'novena' && (
+        {detail.type === 'prayer' && detail.item && <PrayerDetail prayer={detail.item} />}
+        {detail.type === 'novena' && detail.item && (
           <NovenaDetail
             t={t}
             novena={detail.item}
@@ -144,17 +179,31 @@ function FideoraApp() {
           t={t}
           displayName={displayName}
           streak={streak}
-          onEdit={() => { setDraftName(name); setEditName(true); }}
+          onEdit={() => {
+            setDraftName(name);
+            setEditName(true);
+          }}
         />
       )}
       {editName && (
         <div className="sheet-backdrop" onMouseDown={() => setEditName(false)}>
-          <div className="sheet" onMouseDown={(e) => e.stopPropagation()}>
-            <button className="sheet-close" onClick={() => setEditName(false)}><X size={18} /></button>
+          <div className="sheet" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
+            <button className="sheet-close" onClick={() => setEditName(false)} aria-label={t('cancel')}><X size={18} /></button>
             <p className="eyebrow">FIDEORA</p>
             <h2>{t('editName')}</h2>
-            <label>{t('yourName')}</label>
-            <input value={draftName} onChange={(e) => setDraftName(e.target.value)} autoFocus />
+            <label htmlFor="fideora-name">{t('yourName')}</label>
+            <input
+              id="fideora-name"
+              value={draftName}
+              maxLength={60}
+              autoComplete="name"
+              onChange={(e) => setDraftName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveName();
+                if (e.key === 'Escape') setEditName(false);
+              }}
+              autoFocus
+            />
             <div className="sheet-actions">
               <button className="button secondary" onClick={() => setEditName(false)}>{t('cancel')}</button>
               <button className="button primary" onClick={saveName}>{t('save')}</button>
@@ -175,6 +224,7 @@ function AppShell({ children, page, setPage, hideNav = false }) {
     ['paths', Calendar, t('navPaths')],
     ['profile', User, t('navProfile')],
   ];
+
   return (
     <div className="app-frame">
       <div className="app-shell">
@@ -184,9 +234,9 @@ function AppShell({ children, page, setPage, hideNav = false }) {
         </header>
         <main>{children}</main>
         {!hideNav && (
-          <nav className="bottom-nav">
+          <nav className="bottom-nav" aria-label="Primary">
             {tabs.map(([id, Icon, label]) => (
-              <button key={id} className={page === id ? 'active' : ''} onClick={() => setPage(id)}>
+              <button key={id} className={page === id ? 'active' : ''} onClick={() => setPage(id)} aria-current={page === id ? 'page' : undefined}>
                 <Icon size={20} strokeWidth={1.8} />
                 <span>{label}</span>
               </button>
@@ -265,7 +315,7 @@ function PathsPage({ t, novenas, progress, onNovena }) {
       <PageIntro eyebrow="FIDEORA" title={t('pathsTitle')} subtitle={t('pathsSubtitle')} />
       <div className="novena-grid">
         {novenas.map((n, index) => {
-          const day = progress[n.id] || 0;
+          const day = clampInt(progress[n.id], 0, 9, 0);
           return (
             <button key={n.id} className="novena-card" onClick={() => onNovena(n)}>
               <div className="novena-top"><span>0{index + 1}</span><small>{day}/9</small></div>
@@ -286,7 +336,7 @@ function ProfilePage({ t, displayName, streak, onEdit }) {
       <section className="profile-card">
         <div className="profile-avatar"><FideoraMark /></div>
         <div><h2>{displayName}</h2><p>{t('tagline')}</p></div>
-        <button onClick={onEdit}><Edit2 size={17} /></button>
+        <button onClick={onEdit} aria-label={t('editName')}><Edit2 size={17} /></button>
       </section>
       <div className="stats-grid">
         <div><b>{streak}</b><span>{t('streak')}</span></div>
@@ -302,7 +352,7 @@ function ProfilePage({ t, displayName, streak, onEdit }) {
 
 function DetailHeader({ onBack }) {
   const { t } = useLanguage();
-  return <div className="detail-header"><button onClick={onBack}>←</button><span>{t('back')}</span></div>;
+  return <div className="detail-header"><button onClick={onBack} aria-label={t('back')}>←</button><span>{t('back')}</span></div>;
 }
 
 function GospelDetail({ t, date }) {
@@ -319,9 +369,10 @@ function GospelDetail({ t, date }) {
 
 function RosaryDetail({ t, mysteries, progress, onStep }) {
   const [selected, setSelected] = useState(mysteries[0].id);
-  const item = mysteries.find((m) => m.id === selected);
-  const step = progress[selected] || 0;
+  const item = mysteries.find((m) => m.id === selected) || mysteries[0];
+  const step = clampInt(progress[selected], 0, ROSARY_STEPS, 0);
   const pct = Math.min(100, (step / ROSARY_STEPS) * 100);
+
   return (
     <div className="page">
       <PageIntro eyebrow={t('rosary')} title={item.title} subtitle={item.days} />
@@ -340,15 +391,17 @@ function PrayerDetail({ prayer }) {
 }
 
 function NovenaDetail({ t, novena, day, onDay }) {
-  const currentDay = day >= 9 ? 9 : Math.max(1, day + 1);
+  const safeDay = clampInt(day, 0, 9, 0);
+  const currentDay = safeDay >= 9 ? 9 : Math.max(1, safeDay + 1);
+
   return (
     <div className="page">
       <PageIntro eyebrow={t('novenas')} title={novena.title} subtitle={novena.purpose} />
       <section className="novena-detail-card">
         <div className="day-medallion"><span>{t('day')}</span><b>{currentDay}</b><small>{t('of')} 9</small></div>
         <p className="prayer-text compact">{t('novenaPrayer')}</p>
-        <div className="day-dots">{Array.from({ length: 9 }).map((_, i) => <span key={i} className={i < day ? 'done' : i === day && day < 9 ? 'current' : ''}>{i < day ? <Check size={12}/> : i + 1}</span>)}</div>
-        <button className="button primary wide" onClick={() => onDay(day >= 9 ? 0 : day + 1)}>{day >= 9 ? t('reset') : t('markDay')}</button>
+        <div className="day-dots">{Array.from({ length: 9 }).map((_, i) => <span key={i} className={i < safeDay ? 'done' : i === safeDay && safeDay < 9 ? 'current' : ''}>{i < safeDay ? <Check size={12}/> : i + 1}</span>)}</div>
+        <button className="button primary wide" onClick={() => onDay(safeDay >= 9 ? 0 : safeDay + 1)}>{safeDay >= 9 ? t('reset') : t('markDay')}</button>
       </section>
     </div>
   );
@@ -357,7 +410,11 @@ function NovenaDetail({ t, novena, day, onDay }) {
 function PageIntro({ eyebrow, title, subtitle }) {
   return <section className="page-intro"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{subtitle}</p></section>;
 }
-function SectionHeader({ title }) { return <div className="section-header"><h2>{title}</h2></div>; }
+
+function SectionHeader({ title }) {
+  return <div className="section-header"><h2>{title}</h2></div>;
+}
+
 function ActionRow({ icon, title, subtitle, onClick }) {
   return <button className="action-row" onClick={onClick}><span className="action-icon">{icon}</span><span className="action-copy"><b>{title}</b><small>{subtitle}</small></span><ChevronRight size={18} /></button>;
 }
