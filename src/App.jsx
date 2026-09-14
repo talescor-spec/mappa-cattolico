@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Book, Calendar, Check, ChevronRight, Edit2, Heart, Home, User, X } from 'lucide-react';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
+import AccountPanel from './components/AccountPanel';
 import {
   clampInt,
   normalizeNovenaProgress,
@@ -346,6 +347,7 @@ function ProfilePage({ t, displayName, streak, onEdit }) {
         <div><span>{t('language')}</span><LanguageSelector /></div>
         <div><span>{t('version')}</span></div>
       </section>
+      <AccountPanel />
     </div>
   );
 }
