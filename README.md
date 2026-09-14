@@ -1,134 +1,67 @@
-# 📿 Mappa del Cattolico - App Católico
+# Fideora
 
-Aplicativo web para acompanhamento espiritual católico com Rosário interativo, Evangelho do dia, orações e novenas.
+Fideora é a evolução internacional do antigo **Mappa del Cattolico**: um aplicativo de fé católica com experiência premium e uma única marca para diferentes idiomas.
 
-## ✨ Funcionalidades
+## Experiência atual
 
-- **Rosário Diário Interativo**: 4 tipos de mistérios (Gozosos, Luminosos, Dolorosos, Gloriosos) com progresso salvo
-- **Evangelho do Dia**: Leituras bíblicas diárias com reflexões
-- **Orações Tradicionais**: Ave Maria, Pai Nosso, Glória ao Pai, Salve Rainha
-- **Novenas**: Coleção de novenas católicas
-- **Interface Elegante**: Design inspirado em textos litúrgicos com paleta dourada
+- Home diária com leitura/reflexão e atalhos de oração
+- Santo Rosário com progresso salvo
+- Orações tradicionais
+- Novenas com acompanhamento de 9 dias
+- Perfil, nome do usuário e sequência de uso
+- Interface responsiva preparada para safe areas de iPhone/PWA
+- Marca única **Fideora** em todos os idiomas
 
-## 🚀 Deploy no Vercel (Recomendado)
+## Idiomas
 
-### Opção 1: Deploy Direto pelo Site (Mais Fácil)
+- Italiano
+- Francês
+- Espanhol
+- Inglês
+- Alemão
 
-1. **Acesse**: [vercel.com](https://vercel.com)
-2. **Crie conta**: Use Google, GitHub ou email
-3. **Clique em**: "Add New" → "Project"
-4. **Importe do GitHub**:
-   - Se já tem no GitHub: selecione o repositório
-   - Se não tem: siga a "Opção 2" abaixo
+A interface e o conteúdo essencial são localizados, enquanto o nome **Fideora** permanece igual em todos os mercados.
 
-### Opção 2: Upload Manual do Projeto
+## Direção visual
 
-1. **Acesse**: [vercel.com](https://vercel.com) e faça login
-2. **Instale o Vercel CLI** no seu computador:
-   ```bash
-   npm install -g vercel
-   ```
+O redesign usa uma linguagem mais editorial e premium:
 
-3. **No terminal, navegue até a pasta do projeto**:
-   ```bash
-   cd caminho/para/mappa-cattolico-deploy
-   ```
+- base ivory/branca
+- verde profundo como cor institucional
+- dourado discreto como acento
+- tipografia editorial com Playfair Display + DM Sans
+- cards mais limpos e menos sombras
+- navegação inferior com cinco áreas: Oggi/Today, Bibbia/Bible, Prega/Pray, Percorsi/Paths e Profilo/Profile
 
-4. **Execute o deploy**:
-   ```bash
-   vercel
-   ```
+## Stack
 
-5. **Siga as instruções**:
-   - Login na sua conta Vercel (vai abrir o navegador)
-   - Confirme as configurações (aperte Enter em tudo)
-   - Aguarde o deploy finalizar
+- React 18
+- Vite 5
+- Lucide React
+- LocalStorage para progresso e preferências nesta etapa
+- Vercel para deploy
 
-6. **Pronto!** Você receberá uma URL tipo: `https://seu-projeto.vercel.app`
+## Próximas camadas previstas
 
-### Opção 3: Conectar com GitHub (Recomendado para atualizações automáticas)
+1. Autenticação e sincronização de progresso com Supabase
+2. StoreKit/RevenueCat para trial e assinatura no iOS
+3. Eventos de funil para Funnel Metrics
+4. Fonte dinâmica para liturgia/evangelho diário
+5. Empacotamento e publicação na App Store
 
-1. **Crie um repositório no GitHub**:
-   - Acesse [github.com](https://github.com) e crie um novo repositório
-   - Faça upload dos arquivos do projeto
-
-2. **No Vercel**:
-   - Clique em "Add New" → "Project"
-   - Selecione "Import Git Repository"
-   - Escolha seu repositório
-   - Clique em "Deploy"
-
-3. **Atualizações Automáticas**:
-   - Qualquer alteração que você fizer no GitHub será automaticamente deployada!
-
-## 💻 Desenvolvimento Local
-
-Se quiser testar localmente antes de fazer o deploy:
+## Desenvolvimento
 
 ```bash
-# Instalar dependências
 npm install
-
-# Iniciar servidor de desenvolvimento
 npm run dev
-
-# O app estará disponível em: http://localhost:5173
 ```
 
-## 📦 Estrutura do Projeto
+Build de produção:
 
+```bash
+npm run build
 ```
-mappa-cattolico/
-├── src/
-│   ├── App.jsx          # Componente principal do aplicativo
-│   └── main.jsx         # Entry point do React
-├── index.html           # HTML principal
-├── package.json         # Dependências do projeto
-├── vite.config.js       # Configuração do Vite
-└── README.md           # Este arquivo
-```
-
-## 🔧 Tecnologias Utilizadas
-
-- **React 18**: Framework JavaScript
-- **Vite**: Build tool rápido
-- **Lucide React**: Ícones
-- **LocalStorage**: Salvamento de progresso do rosário
-
-## 🌐 Compartilhando com Alunos
-
-Após o deploy no Vercel, você receberá uma URL permanente como:
-```
-https://mappa-cattolico.vercel.app
-```
-
-Compartilhe esta URL com seus alunos! O app funcionará em qualquer navegador (celular, tablet, desktop).
-
-## 📱 Recursos
-
-- ✅ Responsivo (funciona em qualquer dispositivo)
-- ✅ PWA Ready (pode ser instalado como app)
-- ✅ Offline First (progresso salvo localmente)
-- ✅ Sem necessidade de login
-- ✅ Gratuito e sem anúncios
-
-## 🆘 Problemas Comuns
-
-**"Command not found: npm"**
-- Instale o Node.js: [nodejs.org](https://nodejs.org)
-
-**Deploy falhou no Vercel**
-- Verifique se todos os arquivos estão na pasta correta
-- Tente fazer deploy novamente
-
-**App não carrega**
-- Limpe o cache do navegador (Ctrl+Shift+Delete)
-- Tente em modo anônimo/privado
-
-## 📞 Suporte
-
-Para dúvidas ou sugestões, entre em contato ou abra uma issue no GitHub.
 
 ---
 
-**Desenvolvido com ❤️ para a comunidade católica**
+**Fideora — Your faith, every day.**
