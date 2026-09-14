@@ -16,17 +16,23 @@ export default function LanguageSelector({ compact = false }) {
 
   return (
     <div className={`language-selector ${compact ? 'compact' : ''}`} ref={ref}>
-      <button className="language-trigger" onClick={() => setOpen((v) => !v)} aria-label="Language">
+      <button
+        className="language-trigger"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Selecionar idioma / Select language"
+        aria-expanded={open}
+      >
         <span>{languages[language].flag}</span>
         {!compact && <span className="language-trigger-label">{languages[language].label}</span>}
       </button>
       {open && (
-        <div className="language-menu">
+        <div className="language-menu" role="menu">
           {Object.entries(languages).map(([code, item]) => (
             <button
               key={code}
               className={code === language ? 'active' : ''}
               onClick={() => { changeLanguage(code); setOpen(false); }}
+              role="menuitem"
             >
               <span>{item.flag}</span>
               <span>{item.label}</span>
