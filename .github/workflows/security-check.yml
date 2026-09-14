@@ -30,5 +30,8 @@ jobs:
       - name: Audit all high/critical vulnerabilities
         run: npm audit --audit-level=high
 
+      - name: App Store preflight
+        run: npm run appstore:preflight
+
       - name: Build
         run: npm run build
