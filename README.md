@@ -17,6 +17,7 @@ Fideora é a evolução internacional do antigo **Mappa del Cattolico**: um apli
 - Italiano
 - Francês
 - Espanhol
+- Português (Brasil)
 - Inglês
 - Alemão
 
@@ -31,7 +32,7 @@ O redesign usa uma linguagem mais editorial e premium:
 - dourado discreto como acento
 - tipografia editorial com Playfair Display + DM Sans
 - cards mais limpos e menos sombras
-- navegação inferior com cinco áreas: Oggi/Today, Bibbia/Bible, Prega/Pray, Percorsi/Paths e Profilo/Profile
+- navegação inferior com cinco áreas: Oggi/Today/Hoje, Bibbia/Bible/Bíblia, Prega/Pray/Rezar, Percorsi/Paths/Caminhos e Profilo/Profile/Perfil
 
 ## Stack
 
@@ -43,11 +44,12 @@ O redesign usa uma linguagem mais editorial e premium:
 
 ## Próximas camadas previstas
 
-1. Autenticação e sincronização de progresso com Supabase
-2. StoreKit/RevenueCat para trial e assinatura no iOS
-3. Eventos de funil para Funnel Metrics
-4. Fonte dinâmica para liturgia/evangelho diário
-5. Empacotamento e publicação na App Store
+1. Revisão de segurança e hardening antes de integrar pagamentos
+2. Autenticação e sincronização de progresso com Supabase
+3. StoreKit/RevenueCat para trial e assinatura no iOS
+4. Eventos de funil para Funnel Metrics
+5. Fonte dinâmica para liturgia/evangelho diário
+6. Empacotamento e publicação na App Store
 
 ## Desenvolvimento
 
@@ -64,4 +66,4 @@ npm run build
 
 ---
 
-**Fideora — Your faith, every day.**
+**Fideora — Sua fé, todos os dias.**
