@@ -1,6 +1,14 @@
 const ROSARY_IDS = new Set(['joyful', 'luminous', 'sorrowful', 'glorious']);
 const NOVENA_IDS = new Set(['novena1', 'novena2', 'novena3', 'novena4', 'novena5']);
 
+function notifyLocalChange(key) {
+  try {
+    window.dispatchEvent(new CustomEvent('fideora:local-change', { detail: { key } }));
+  } catch {
+    // Custom events are best-effort; local persistence must still succeed without them.
+  }
+}
+
 export function safeGet(key, fallback = '') {
   try {
     const value = window.localStorage.getItem(key);
@@ -13,6 +21,7 @@ export function safeGet(key, fallback = '') {
 export function safeSet(key, value) {
   try {
     window.localStorage.setItem(key, String(value));
+    notifyLocalChange(key);
     return true;
   } catch {
     return false;
