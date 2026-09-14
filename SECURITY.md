@@ -2,22 +2,32 @@
 
 ## Current architecture
 
-Fideora is currently a static React/Vite client deployed on Vercel. At this stage there is no authenticated backend, no payment processing in the web client, and no private credential should exist in the repository.
+Fideora is currently a React/Vite client deployed on Vercel and prepared for iOS through Capacitor. RevenueCat is installed as the future StoreKit/subscription layer, but no real payment credential is committed and purchase initialization is not wired to app startup yet.
 
 ## Non-negotiable rules
 
 1. **Never commit secrets.** `.env` and local environment files are ignored by Git.
 2. **Treat every `VITE_*` variable as public.** Vite bundles these values into client code.
 3. **Never expose server secrets in the client.** This includes Supabase service-role keys, Apple private keys, App Store Connect private keys and RevenueCat secret API keys.
-4. **Use server-side verification for privileged actions.** Subscription status, webhook signatures and admin operations must be verified by a trusted backend/serverless function.
+4. **Use server-side verification for privileged actions.** Subscription lifecycle webhooks and admin operations must be verified by a trusted backend/serverless function.
 5. **Supabase must use Row Level Security.** Client access must use the anon/publishable key only; user-owned rows must be protected by RLS policies based on the authenticated user id.
 6. **StoreKit/RevenueCat entitlements are authoritative for premium access.** Never trust a client-side boolean such as `isPremium` as the source of truth.
 7. **One user = one entitlement identity.** RevenueCat/App Store transaction identity must be mapped idempotently to a single Fideora user to prevent duplicate subscription state.
-8. **Do not store auth/session secrets in application LocalStorage.** The current LocalStorage data is limited to non-sensitive UI preferences/progress and must be migrated carefully when authentication is introduced.
+8. **Do not store auth/session secrets in application LocalStorage.** Current LocalStorage is limited to non-sensitive UI preferences/progress and is validated before use.
 
 ## Browser hardening
 
 The Vercel deployment defines a Content Security Policy and defensive response headers in `vercel.json`. Any new external origin (Supabase, analytics, CDN, auth, etc.) must be explicitly reviewed before it is added to CSP.
+
+## Dependency security
+
+- builds use a committed `package-lock.json`
+- CI uses `npm ci`
+- CI fails on **moderate-or-higher production/runtime advisories**
+- CI fails on **high-or-critical advisories across the complete dependency tree**
+- Dependabot checks npm dependencies weekly
+
+At the time the Capacitor scaffold was introduced, npm reported moderate advisories through the development-only Capacitor CLI chain (`@capacitor/cli -> xcode -> uuid`). They are not included in the production/runtime dependency audit and no high/critical advisory is accepted by CI. This toolchain issue remains monitored rather than forcing an unreviewed CLI downgrade.
 
 ## Before enabling authentication
 
@@ -30,6 +40,7 @@ The Vercel deployment defines a Content Security Policy and defensive response h
 
 ## Before enabling App Store subscriptions
 
+- confirm the final Bundle ID before creating the App Store record
 - create products/subscription group in App Store Connect
 - use StoreKit/RevenueCat SDK keys only on the client
 - keep App Store Connect private keys and RevenueCat secret API keys server-side
