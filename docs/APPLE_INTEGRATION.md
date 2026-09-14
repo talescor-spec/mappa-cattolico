@@ -1,114 +1,131 @@
-# Fideora — Apple / RevenueCat integration
+# Fideora — Apple / iOS Integration Plan
 
-## Current state
+This document describes the implementation path for turning the existing React/Vite Fideora app into the iOS product distributed through the App Store.
 
-The React/Vite application is prepared for iOS through Capacitor and already includes an isolated RevenueCat purchase service. No real Apple or RevenueCat credential is committed to the repository.
+> App Store approval is governed by the permanent review gate in `docs/APP_STORE_REVIEW_GATE.md` and the repository skill at `.github/skills/apple-appstore-reviewer/SKILL.md`. Any change touching iOS, auth, payments, privacy, permissions, analytics, account lifecycle or review metadata must pass that process.
 
-## Identity and bundle
+## Current architecture
 
-- App name: `Fideora`
-- Provisional Capacitor app id / iOS Bundle ID: `com.fideora.app`
-- RevenueCat entitlement default: `premium`
+- React + Vite client
+- Capacitor wrapper for iOS
+- RevenueCat Capacitor SDK scaffolded for StoreKit subscription access
+- entitlement target: `premium`
+- Bundle ID currently provisional: `com.fideora.app`
+- no live Apple/RevenueCat private credentials are committed to the repository
 
-**Important:** the Bundle ID is provisional. Confirm the final identifier before creating the App Store Connect record because the Xcode bundle identifier must match the App Store Connect app record.
+## Target architecture
 
-## Intended purchase architecture
+`front-end buyer -> Fideora install -> account/auth -> RevenueCat appUserID -> StoreKit subscription -> premium entitlement -> Supabase/Funnel Metrics events`
 
-1. Customer buys a front-end book/infoproduct outside the iOS app.
-2. Customer installs Fideora and creates/signs into a Fideora account.
-3. The authenticated Fideora user id becomes the RevenueCat `appUserID`.
-4. The app loads the current RevenueCat Offering.
-5. The user starts the Apple introductory offer / free trial through StoreKit.
-6. Apple handles billing and renewal.
-7. RevenueCat exposes the active `premium` entitlement to the app.
-8. Server-side webhooks later synchronize subscription lifecycle events with Supabase/Funnel Metrics.
+Identity must be stable and idempotent. Once Supabase Auth exists, use the authenticated Fideora user ID as the RevenueCat `appUserID`. Do not create a new anonymous subscription identity on every reinstall or funnel entry.
 
-The app must never unlock premium content from a local boolean alone. The active StoreKit/RevenueCat entitlement is authoritative.
+## Security rules
 
-## App Store Connect setup
+- `VITE_*` values are public client configuration only.
+- Never ship App Store Connect private keys, Apple private keys, RevenueCat secret API keys or Supabase service-role keys in the client.
+- Premium authority comes from StoreKit/RevenueCat entitlement state, not a local `isPremium` flag.
+- Webhooks and privileged subscription/admin operations belong on trusted backend/serverless infrastructure.
+- Webhook/event ingestion must be idempotent and preserve original transaction identity.
 
-Manual account-side steps:
+## Phase 1 — native project
 
-1. Confirm Apple Developer Program / App Store Connect access.
-2. Confirm the final Bundle ID and create the matching app record.
-3. Accept the current Paid Apps Agreement and complete tax/banking requirements.
-4. Create one auto-renewable subscription group for Fideora.
-5. Create the monthly subscription product.
-6. Configure countries/regions and Apple price points.
-7. Configure the introductory offer (for example a free trial) in App Store Connect.
-8. Localize the subscription display name/description for IT, FR, ES, PT-BR, EN and DE.
+1. Confirm the final Bundle ID.
+2. Install dependencies with `npm ci`.
+3. Build web assets with `npm run build`.
+4. Generate the native project locally on macOS with `npx cap add ios` if it does not already exist.
+5. Run `npm run cap:ios` after web changes.
+6. Open Xcode with `npm run ios:open`.
+7. Select the Apple Developer team/signing identity.
+8. Enable In-App Purchase for the app target.
+9. Run `npm run appstore:preflight` and perform the first native App Store reviewer audit before remediation.
 
-Customers are eligible for one introductory offer per subscription group, so all plans that should share trial eligibility should be designed deliberately inside that group.
+## Phase 2 — authentication/backend
 
-## RevenueCat setup
+Before enabling live subscriptions:
 
-1. Create/open the Fideora RevenueCat project.
-2. Add the iOS app using the final Bundle ID.
-3. Connect the App Store credentials requested by RevenueCat.
-4. Import the App Store subscription product.
-5. Create/confirm entitlement id `premium`.
-6. Create an Offering (recommended id: `default`) containing the monthly package.
-7. Put only the **public iOS SDK key** in `VITE_REVENUECAT_PUBLIC_SDK_KEY`.
-8. Never expose the RevenueCat secret API key in the client.
+- implement Supabase Auth;
+- enable RLS on every user-owned table;
+- sync Rosary/novena/profile progress through authenticated ownership;
+- implement in-app account deletion;
+- explain active Apple subscription behavior during deletion;
+- use the authenticated Fideora user ID as RevenueCat `appUserID`.
 
-## Xcode / Capacitor setup
+## Phase 3 — App Store Connect
 
-After dependencies are installed:
+Create/confirm:
 
-```bash
-npm install
-npm run build
-npx cap add ios
-npm run cap:ios
-npm run ios:open
-```
+- Fideora app record;
+- final Bundle ID;
+- subscription group;
+- monthly auto-renewable subscription;
+- introductory free trial;
+- localized subscription display names/descriptions;
+- pricing/storefront availability;
+- App Privacy answers;
+- support URL and privacy policy URL.
 
-In Xcode:
+## Phase 4 — RevenueCat
 
-1. Select the Fideora target.
-2. Choose the correct Apple Developer team.
-3. Confirm the final Bundle Identifier.
-4. Enable automatic signing unless there is a specific reason not to.
-5. Add the **In-App Purchase** capability.
-6. Confirm Swift language version is compatible with the RevenueCat Capacitor plugin (Swift 5+).
-7. Run first on Simulator/device before TestFlight.
+Configure:
 
-## RevenueCat client service
+- iOS app with the same Bundle ID;
+- App Store connection;
+- Apple subscription product import;
+- entitlement `premium`;
+- current offering/package;
+- public iOS SDK key only in client configuration;
+- server-side webhook destination later for Funnel Metrics/Supabase.
 
-`src/services/purchases.js` currently provides:
+## Phase 5 — paywall and subscription UX
 
-- native iOS detection
-- safe SDK initialization
-- current Offering lookup
-- entitlement check
-- package purchase
-- Restore Purchases
+Build and test:
 
-Initialization is intentionally not wired to app startup yet. It should happen only after authentication is implemented so RevenueCat can use the stable Fideora user id and avoid unnecessary anonymous identities.
+- clear recurring price and billing period;
+- clear free-trial wording and what happens after trial;
+- premium value proposition;
+- purchase success/error/cancellation states;
+- Restore Purchases;
+- subscription-management path;
+- no duplicate subscription variants for the same access;
+- entitlement refresh after purchase/restore/account sign-in.
 
-## Security rules for subscriptions
+## Phase 6 — sandbox/TestFlight
 
-- `VITE_REVENUECAT_PUBLIC_SDK_KEY` is public by design; RevenueCat secret keys are not.
-- App Store Connect private keys never belong in the Vite client.
-- Future RevenueCat webhook processing must be server-side and idempotent.
-- Persist Apple original transaction identity with uniqueness constraints in the backend.
-- One Fideora account should map predictably to one RevenueCat app user identity.
-- Restore Purchases must be available as an explicit user action.
-- Test trial conversion, renewal, billing issue, recovery, cancellation, refund and revocation before production release.
+Test at minimum:
 
-## Funnel Metrics events planned
+- fresh eligible trial;
+- ineligible returning user;
+- trial -> paid conversion;
+- renewal;
+- user cancellation;
+- billing issue/recovery;
+- refund/revocation;
+- reinstall + restore;
+- same Fideora account on another device;
+- duplicate purchase attempt;
+- offline/network failures;
+- all six supported languages.
 
-`app_install`
-`signup`
-`paywall_view`
-`trial_started`
-`trial_converted`
-`renewal`
-`billing_issue`
-`billing_recovered`
-`voluntary_churn`
-`involuntary_churn`
-`refund`
-`revocation`
+## Phase 7 — Funnel Metrics
 
-These should be emitted from trusted subscription lifecycle data whenever possible, not inferred only from UI clicks.
+Planned normalized events:
+
+- `app_install`
+- `account_created`
+- `paywall_view`
+- `trial_started`
+- `trial_cancelled`
+- `trial_converted`
+- `renewal`
+- `billing_issue`
+- `billing_recovered`
+- `voluntary_churn`
+- `involuntary_churn`
+- `refund`
+- `revocation`
+
+Each event should be idempotent and tied to stable user/subscription identifiers without leaking Apple/RevenueCat secrets to the client.
+
+## Submission gate
+
+Before TestFlight RC and again before App Review submission, run the audit defined in `docs/APP_STORE_REVIEW_GATE.md`. The last pass must verify current official Apple guidance, not rely on a frozen checklist.
