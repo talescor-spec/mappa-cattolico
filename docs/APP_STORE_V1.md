@@ -12,9 +12,9 @@ Updated 21 October 2026. Italian and Portuguese version descriptions, keywords, 
 - Version: 1.0.0; initial build number 1
 - Minimum native target: iOS 15
 - V1 contains no active in-app purchase offer or paywall. Do not describe a trial, subscription or recurring price without a separate configured and tested release.
-- Privacy URL: https://mappa-cattolico.vercel.app/privacy.html
-- Support URL: https://mappa-cattolico.vercel.app/support.html
-- Terms URL: https://mappa-cattolico.vercel.app/terms.html
+- Privacy URL: https://fideora.app/privacy.html
+- Support URL: https://fideora.app/support.html
+- Terms URL: https://fideora.app/terms.html
 - Canonical production is deployed with V1. Apple record: https://appstoreconnect.apple.com/apps/6825337165/distribution. The account banner requires the Account Holder to accept the updated Paid Applications Schedule in Business; no agreement was accepted by the agent.
 
 ## Italian listing
