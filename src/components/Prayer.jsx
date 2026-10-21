@@ -27,8 +27,11 @@ import {
   normalizeNovenaProgress,
 } from "../utils/storage";
 import { Header, Modal, Empty, Row } from "./UI";
+import { usePremium } from "../contexts/PremiumContext";
+import { PremiumCard } from "./Premium";
 export default function Prayer() {
   const { t, l, language } = useLanguage();
+  const { isPremium, can, request } = usePremium();
   const { entries, write, remove, ready } = useStudy();
   const index = language === "it" ? 0 : 1;
   const [view, setView] = useState("all"),
@@ -87,7 +90,7 @@ export default function Prayer() {
           : step === 66
             ? { title: t("hailQueen"), text: t("hailQueenText") }
             : { title: t("hailMary"), text: t("hailMaryText") };
-  if (view === "rosary")
+  if (view === "rosary" && isPremium)
     return (
       <>
         <button className="text-button back" onClick={() => setView("all")}>
@@ -199,7 +202,10 @@ export default function Prayer() {
           "A oração começa onde você está.",
         )}
       />
-      <button className="rosary-banner" onClick={() => setView("rosary")}>
+      <button
+        className="rosary-banner"
+        onClick={() => (can("rosary") ? setView("rosary") : request("rosary"))}
+      >
         <span>
           <p className="eyebrow">
             {l("I MISTERI DI OGGI", "OS MISTÉRIOS DE HOJE")}
@@ -213,6 +219,7 @@ export default function Prayer() {
           ✧
         </span>
       </button>
+      {!isPremium && <PremiumCard feature="rosary" compact />}
       <div className="prayer-columns">
         <section>
           <div className="section-line">
@@ -249,7 +256,9 @@ export default function Prayer() {
                 icon={Calendar}
                 title={n.title}
                 subtitle={`${novenaProgress[n.id] || 0} / 9 ${l("giorni", "dias")}`}
-                onClick={() => setNovena(n)}
+                onClick={() =>
+                  can("devotions") ? setNovena(n) : request("devotions")
+                }
               />
             ))}
           </div>
@@ -261,7 +270,9 @@ export default function Prayer() {
               className="icon-button"
               disabled={!ready}
               aria-label={l("Nuova intenzione", "Nova intenção")}
-              onClick={() => setNewIntention(true)}
+              onClick={() =>
+                can("devotions") ? setNewIntention(true) : request("devotions")
+              }
             >
               <Plus size={20} />
             </button>
@@ -319,7 +330,11 @@ export default function Prayer() {
                 <button
                   className="button secondary"
                   disabled={!ready}
-                  onClick={() => setNewIntention(true)}
+                  onClick={() =>
+                    can("devotions")
+                      ? setNewIntention(true)
+                      : request("devotions")
+                  }
                 >
                   <Plus size={16} />
                   {l("Aggiungi intenzione", "Adicionar intenção")}
@@ -334,7 +349,7 @@ export default function Prayer() {
           <p className="prayer-text">{prayer.text}</p>
         </Modal>
       )}
-      {novena && (
+      {novena && isPremium && (
         <Modal title={novena.title} onClose={() => setNovena(null)}>
           <p className="eyebrow">
             {l(
@@ -423,7 +438,7 @@ export default function Prayer() {
           )}
         </Modal>
       )}
-      {newIntention && (
+      {newIntention && isPremium && (
         <Modal
           title={l("Una nuova intenzione", "Uma nova intenção")}
           onClose={() => setNewIntention(false)}

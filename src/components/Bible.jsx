@@ -15,10 +15,13 @@ import {
 } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useStudy } from "../contexts/StudyContext";
-import { bookNames, lexicon } from "../data/content";
+import { bookNames, lexicon, dailyReading } from "../data/content";
 import { searchBible } from "../utils/study";
 import { safeGetJSON, safeSetJSON } from "../utils/storage";
 import { Header, Modal } from "./UI";
+import { usePremium } from "../contexts/PremiumContext";
+import { PremiumCard } from "./Premium";
+import { dailyVerses } from "../utils/access";
 export default function Bible({
   bible,
   error,
@@ -28,6 +31,7 @@ export default function Bible({
   onSources,
 }) {
   const { language, l } = useLanguage();
+  const { isPremium, can, request } = usePremium();
   const { entries, write, ready } = useStudy();
   const [query, setQuery] = useState(""),
     [search, setSearch] = useState(""),
@@ -61,6 +65,10 @@ export default function Bible({
     `verse:${language}:${book.book}:${chapter.chapter}:${v.number}`;
   const select = (verse) => {
     const entry = highlights[verseId(verse)];
+    if (!can("annotations", { existing: !!entry })) {
+      request("annotations");
+      return;
+    }
     setSelected(verse);
     setNote(entry?.payload.note || "");
     setColor(entry?.payload.color || "");
@@ -125,6 +133,66 @@ export default function Bible({
         {l("Preparazione della Bibbia…", "Preparando a Bíblia…")}
       </p>
     );
+  if (!isPremium) {
+    const daily = dailyReading();
+    const freeBook = bible.books.find((b) => b.book === daily.book);
+    const freeChapter = freeBook?.chapters.find(
+      (c) => c.chapter === daily.chapter,
+    );
+    const verses = dailyVerses(
+      daily.book,
+      daily.chapter,
+      freeChapter?.verses || [],
+      daily,
+    );
+    return (
+      <>
+        <Header
+          eyebrow={l("LA TUA LETTURA GRATUITA", "SUA LEITURA GRATUITA")}
+          title={l("Un momento con la Parola.", "Um momento com a Palavra.")}
+          action={
+            <button className="text-button" onClick={onSources}>
+              {l("Edizioni e fonti", "Edições e fontes")}
+            </button>
+          }
+        />
+        <section className="reader card">
+          <p className="eyebrow">
+            {bookNames[language][freeBook.bookId - 1]} {daily.chapter},
+            {daily.start}–{daily.end}
+          </p>
+          <h2>{daily.title[language === "it" ? 0 : 1]}</h2>
+          <div className="font-controls">
+            <button
+              className="icon-button"
+              aria-label={l("Riduci testo", "Diminuir texto")}
+              disabled={font <= 17}
+              onClick={() => setSize(font - 2)}
+            >
+              <Minus size={16} />
+            </button>
+            <span>Aa</span>
+            <button
+              className="icon-button"
+              aria-label={l("Ingrandisci testo", "Aumentar texto")}
+              disabled={font >= 31}
+              onClick={() => setSize(font + 2)}
+            >
+              <Plus size={16} />
+            </button>
+          </div>
+          <div className="scripture" style={{ fontSize: `${font}px` }}>
+            {verses.map((v) => (
+              <p key={v.number}>
+                <sup>{v.number}</sup> {v.text}
+              </p>
+            ))}
+          </div>
+        </section>
+        <PremiumCard feature="bible" />
+      </>
+    );
+  }
   return (
     <>
       <Header

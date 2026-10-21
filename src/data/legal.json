@@ -21,7 +21,7 @@
         ],
         [
           "Acquisti e tracciamento",
-          "Questa V1 non presenta offerte di acquisto né richiede un pagamento per gli strumenti inclusi. Non sono integrati pubblicità, pixel di marketing o tracciamento tra app. Fideora non raccoglie dati di carte di pagamento."
+          "Gli acquisti Premium nell’app iOS sono gestiti da Apple e RevenueCat. RevenueCat tratta un identificativo anonimo dell’installazione o, dopo l’accesso, l’UUID dell’account, dati di acquisto e abbonamento, prezzo/valuta, stato e scadenza e interazioni tecniche con il paywall per fornire il servizio, ripristinare gli acquisti e misurare l’offerta. Non inviamo a RevenueCat il testo di note o intenzioni, il nome o l’email. Le risposte iniziali su obiettivo e tempo restano sul dispositivo. Non sono integrati pubblicità, pixel di marketing o tracciamento tra app. Non raccogliamo dati di carte di pagamento. Apple e RevenueCat possono conservare i dati delle transazioni secondo obblighi contabili e le rispettive politiche anche dopo l’eliminazione dell’account Fideora."
         ],
         [
           "Contatti e diritti",
@@ -34,7 +34,11 @@
       "sections": [
         [
           "Il servizio",
-          "Fideora è uno strumento indipendente di lettura biblica, studio personale e preghiera cattolica. Non è un servizio ufficiale della Chiesa e non sostituisce l’accompagnamento pastorale. Le funzionalità incluse in questa V1 sono accessibili senza acquisto; l’account è facoltativo."
+          "Fideora è uno strumento indipendente di lettura biblica, studio personale e preghiera cattolica. Non è un servizio ufficiale della Chiesa e non sostituisce l’accompagnamento pastorale. La lettura devozionale quotidiana e le preghiere di base sono gratuite; gli strumenti completi richiedono Premium. L’account è facoltativo. I contenuti personali già creati restano accessibili ed esportabili anche senza un abbonamento attivo."
+        ],
+        [
+          "Abbonamenti Premium",
+          "I piani mensile e annuale danno lo stesso livello di accesso. Prezzo totale, valuta, durata ed eventuale offerta sono mostrati da Apple prima dell’acquisto. L’abbonamento si rinnova automaticamente salvo annullamento nelle impostazioni Apple almeno 24 ore prima della scadenza. Puoi gestirlo o annullarlo dal Profilo e ripristinare un acquisto con lo stesso account Apple. Eliminare l’account Fideora non annulla l’abbonamento Apple. Si applica la licenza standard Apple: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/."
         ],
         [
           "Testi e fonti",
@@ -60,6 +64,10 @@
         [
           "Primi passi",
           "Oggi propone una lettura e una riflessione. In Bibbia puoi scegliere libro e capitolo, cercare una parola e toccare un versetto per annotare, evidenziare o salvare. Quaderno raccoglie studi, versetti e guide. Prega include Rosario, preghiere, novene e intenzioni."
+        ],
+        [
+          "Premium",
+          "Se hai già acquistato Premium, usa Profilo → Ripristina acquisti con lo stesso account Apple. Puoi gestire o annullare la sottoscrizione con il collegamento Apple nel Profilo. Nessun acquisto viene completato chiudendo il paywall. Per problemi di fatturazione o rimborsi, consulta anche Apple."
         ],
         [
           "Account e dati",
@@ -102,7 +110,7 @@
         ],
         [
           "Compras e rastreamento",
-          "Esta V1 não apresenta ofertas de compra nem exige pagamento pelos recursos incluídos. Não inclui publicidade, pixels de marketing nem rastreamento entre apps. Fideora não coleta dados de cartões de pagamento."
+          "As compras Premium no app iOS são gerenciadas pela Apple e RevenueCat. O RevenueCat trata um identificador anônimo da instalação ou, após login, o UUID da conta, dados de compra e assinatura, preço/moeda, status e vencimento e interações técnicas com o paywall para fornecer o serviço, restaurar compras e medir a oferta. Não enviamos ao RevenueCat o texto das notas ou intenções, nome ou email. As respostas iniciais sobre objetivo e tempo ficam no dispositivo. Não há anúncios, pixels de marketing ou rastreamento entre apps. Não coletamos dados de cartões. Apple e RevenueCat podem reter dados de transações por obrigações contábeis e suas políticas mesmo após a exclusão da conta Fideora."
         ],
         [
           "Contato e direitos",
@@ -115,7 +123,11 @@
       "sections": [
         [
           "O serviço",
-          "Fideora é uma ferramenta independente de leitura bíblica, estudo pessoal e oração católica. Não é um serviço oficial da Igreja nem substitui acompanhamento pastoral. Os recursos desta V1 são acessíveis sem compra; a conta é opcional."
+          "Fideora é uma ferramenta independente de leitura bíblica, estudo pessoal e oração católica. Não é um serviço oficial da Igreja nem substitui acompanhamento pastoral. A leitura devocional diária e as orações básicas são gratuitas; as ferramentas completas exigem Premium. A conta é opcional. Conteúdos pessoais já criados continuam acessíveis e exportáveis mesmo sem assinatura ativa."
+        ],
+        [
+          "Assinaturas Premium",
+          "Os planos mensal e anual dão o mesmo nível de acesso. Preço total, moeda, duração e eventual oferta são mostrados pela Apple antes da compra. A assinatura renova automaticamente, salvo cancelamento nos Ajustes Apple pelo menos 24 horas antes do vencimento. Você pode gerenciar ou cancelar pelo Perfil e restaurar uma compra com a mesma conta Apple. Excluir a conta Fideora não cancela a assinatura Apple. Aplica-se a licença padrão Apple: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/."
         ],
         [
           "Textos e fontes",
@@ -141,6 +153,10 @@
         [
           "Primeiros passos",
           "Hoje sugere uma leitura e uma reflexão. Na Bíblia escolha livro e capítulo, busque uma palavra e toque em um versículo para anotar, destacar ou salvar. O Caderno reúne estudos, versículos e guias. Rezar inclui Rosário, orações, novenas e intenções."
+        ],
+        [
+          "Premium",
+          "Se já comprou Premium, use Perfil → Restaurar compras com a mesma conta Apple. Gerencie ou cancele pelo link da Apple no Perfil. Fechar o paywall não conclui uma compra. Para problemas de cobrança ou reembolso, consulte também a Apple."
         ],
         [
           "Conta e dados",
