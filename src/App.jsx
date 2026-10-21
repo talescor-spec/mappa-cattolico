@@ -1,1565 +1,534 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Book, Heart, Home, Menu, ChevronRight, Check, Edit2, X } from 'lucide-react';
-import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
-import LanguageSelector from './components/LanguageSelector';
-
-function MappaCattolicoContent() {
-  const { t, getFormattedDate } = useLanguage();
-  const [currentPage, setCurrentPage] = useState('home');
-  const [selectedMystery, setSelectedMystery] = useState(null);
-  const [selectedNovena, setSelectedNovena] = useState(null);
-  const [rosaryProgress, setRosaryProgress] = useState({});
-  const [novenaProgress, setNovenaProgress] = useState({});
-  const [userName, setUserName] = useState('');
-  const [showNameModal, setShowNameModal] = useState(false);
-  const [tempName, setTempName] = useState('');
-
-  useEffect(() => {
-    const savedProgress = JSON.parse(localStorage.getItem('rosaryProgress') || '{}');
-    const savedNovenaProgress = JSON.parse(localStorage.getItem('novenaProgress') || '{}');
-    const savedName = localStorage.getItem('userName') || '';
-    setRosaryProgress(savedProgress);
-    setNovenaProgress(savedNovenaProgress);
-    setUserName(savedName || t('defaultName'));
-  }, [t]);
-
-  const updateProgress = (mysteryType, beadIndex) => {
-    const today = new Date().toDateString();
-    const newProgress = {
-      ...rosaryProgress,
-      [today]: {
-        ...rosaryProgress[today],
-        [mysteryType]: beadIndex
-      }
-    };
-    setRosaryProgress(newProgress);
-    localStorage.setItem('rosaryProgress', JSON.stringify(newProgress));
-  };
-
-  const getTodayProgress = (mysteryType) => {
-    const today = new Date().toDateString();
-    return rosaryProgress[today]?.[mysteryType] || 0;
-  };
-
-  const updateNovenaProgress = (novenaId, day) => {
-    const newProgress = {
-      ...novenaProgress,
-      [novenaId]: day
-    };
-    setNovenaProgress(newProgress);
-    localStorage.setItem('novenaProgress', JSON.stringify(newProgress));
-  };
-
-  const getNovenaProgress = (novenaId) => {
-    return novenaProgress[novenaId] || 0;
-  };
-
-  const handleEditName = () => {
-    setTempName(userName === t('defaultName') ? '' : userName);
-    setShowNameModal(true);
-  };
-
-  const handleSaveName = () => {
-    const newName = tempName.trim() || t('defaultName');
-    setUserName(newName);
-    localStorage.setItem('userName', newName);
-    setShowNameModal(false);
-  };
-
-  const handleCancelEdit = () => {
-    setShowNameModal(false);
-    setTempName('');
-  };
-
-  const mysteries = {
-    gozosos: {
-      name: t('mysteriesJoyful'),
-      day: `${t('monday')} e ${t('saturday')}`,
-      color: '#D4AF37',
-      mysteries: [
-        t('joyful1'),
-        t('joyful2'),
-        t('joyful3'),
-        t('joyful4'),
-        t('joyful5')
-      ]
-    },
-    luminosos: {
-      name: t('mysteriesLuminous'),
-      day: t('thursday'),
-      color: '#FFD700',
-      mysteries: [
-        t('luminous1'),
-        t('luminous2'),
-        t('luminous3'),
-        t('luminous4'),
-        t('luminous5')
-      ]
-    },
-    dolorosos: {
-      name: t('mysteriesSorrowful'),
-      day: `${t('tuesday')} e ${t('friday')}`,
-      color: '#8B4513',
-      mysteries: [
-        t('sorrowful1'),
-        t('sorrowful2'),
-        t('sorrowful3'),
-        t('sorrowful4'),
-        t('sorrowful5')
-      ]
-    },
-    gloriosos: {
-      name: t('mysteriesGlorious'),
-      day: `${t('wednesday')} e ${t('sunday')}`,
-      color: '#DAA520',
-      mysteries: [
-        t('glorious1'),
-        t('glorious2'),
-        t('glorious3'),
-        t('glorious4'),
-        t('glorious5')
-      ]
-    }
-  };
-
-  const prayers = [
-    {
-      title: t('hailMary'),
-      text: t('hailMaryText')
-    },
-    {
-      title: t('ourFather'),
-      text: t('ourFatherText')
-    },
-    {
-      title: t('gloryBe'),
-      text: t('gloryBeText')
-    },
-    {
-      title: t('hailHolyQueen'),
-      text: t('hailHolyQueenText')
-    }
-  ];
-
-  const novenas = [
-    {
-      id: 'novena1',
-      name: t('novena1Name'),
-      purpose: t('novena1Purpose'),
-      prayer: t('novena1Prayer'),
-      color: '#8B6F47'
-    },
-    {
-      id: 'novena2',
-      name: t('novena2Name'),
-      purpose: t('novena2Purpose'),
-      prayer: t('novena2Prayer'),
-      color: '#D4AF37'
-    },
-    {
-      id: 'novena3',
-      name: t('novena3Name'),
-      purpose: t('novena3Purpose'),
-      prayer: t('novena3Prayer'),
-      color: '#A0826D'
-    },
-    {
-      id: 'novena4',
-      name: t('novena4Name'),
-      purpose: t('novena4Purpose'),
-      prayer: t('novena4Prayer'),
-      color: '#C41E3A'
-    },
-    {
-      id: 'novena5',
-      name: t('novena5Name'),
-      purpose: t('novena5Purpose'),
-      prayer: t('novena5Prayer'),
-      color: '#722F37'
-    }
-  ];
-
-  // Home Page
-  const HomePage = () => (
-    <div className="page-content">
-      <div className="greeting-card">
-        <LanguageSelector />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-          <h1 className="greeting">{t('greeting')}, {userName}.</h1>
-          <button onClick={handleEditName} className="edit-name-button">
-            <Edit2 size={18} />
-          </button>
-        </div>
-        <p className="subtitle">{t('appSubtitle')}</p>
-        <p className="verse">{t('peaceBless')}</p>
-      </div>
-
-      <div className="feature-card gospel-card" onClick={() => setCurrentPage('gospel')}>
-        <div className="card-header">
-          <Book size={24} />
-          <span className="card-badge">{t('todayGospel')}</span>
-        </div>
-        <div className="gospel-preview">
-          <div className="gospel-image"></div>
-          <div className="gospel-info">
-            <p className="gospel-date">{getFormattedDate()}</p>
-            <h3 className="gospel-title">{t('gospelReference')}</h3>
-            <p className="gospel-excerpt">{t('gospelTitleSample')}</p>
-            <button className="read-more">{t('reading')}</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="feature-card rosary-card" onClick={() => setCurrentPage('rosary')}>
-        <div className="card-header">
-          <div className="rosary-icon">✿</div>
-          <h3>{t('rosaryTitle')}</h3>
-        </div>
-        <p className="card-description">{t('rosarySubtitle')}</p>
-      </div>
-
-      <div className="quick-links">
-        <div className="quick-link" onClick={() => setCurrentPage('prayers')}>
-          <Heart size={20} />
-          <span>{t('prayers')}</span>
-        </div>
-        <div className="quick-link" onClick={() => setCurrentPage('novena')}>
-          <Calendar size={20} />
-          <span>{t('novenas')}</span>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Rosary Page
-  const RosaryPage = () => (
-    <div className="page-content rosary-page">
-      <div className="page-header">
-        <h1>{t('rosaryTitle')}</h1>
-        <p className="page-subtitle">{t('selectMystery')}</p>
-      </div>
-
-      {selectedMystery ? (
-        <RosaryPrayer mystery={selectedMystery} />
-      ) : (
-        <div className="mysteries-grid">
-          {Object.entries(mysteries).map(([key, mystery]) => {
-            const progress = getTodayProgress(key);
-            const completed = progress >= 53;
-            return (
-              <div
-                key={key}
-                className="mystery-card"
-                style={{ borderColor: mystery.color }}
-                onClick={() => setSelectedMystery({ key, ...mystery })}
-              >
-                <div className="mystery-header">
-                  <h3>{mystery.name}</h3>
-                  <div className="mystery-day">{mystery.day}</div>
-                </div>
-                <div className="mystery-progress">
-                  <div className="progress-beads">
-                    {[...Array(10)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`bead ${i < Math.floor(progress / 5.3) ? 'completed' : ''}`}
-                        style={{ backgroundColor: i < Math.floor(progress / 5.3) ? mystery.color : 'transparent' }}
-                      />
-                    ))}
-                  </div>
-                  {completed && <div className="completed-badge">✓ {t('completed')}</div>}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-
-  // Rosary Prayer Component
-  const RosaryPrayer = ({ mystery }) => {
-    const [currentBead, setCurrentBead] = useState(getTodayProgress(mystery.key));
-    const [currentMysteryIndex, setCurrentMysteryIndex] = useState(Math.floor(currentBead / 11));
-
-    const advanceBead = () => {
-      const newBead = currentBead + 1;
-      setCurrentBead(newBead);
-      updateProgress(mystery.key, newBead);
-      setCurrentMysteryIndex(Math.floor(newBead / 11));
-    };
-
-    const beadType = currentBead % 11 === 0 ? t('ourFather') : t('hailMary');
-    const beadText = currentBead % 11 === 0 ? t('ourFatherText') : t('hailMaryText');
-    const currentMystery = mystery.mysteries[currentMysteryIndex];
-
-    return (
-      <div className="rosary-prayer">
-        <button className="back-button" onClick={() => setSelectedMystery(null)}>
-          ← {t('previous')}
-        </button>
-        
-        <div className="prayer-card">
-          <h2 style={{ color: mystery.color }}>{mystery.name}</h2>
-          
-          {currentBead < 53 ? (
-            <>
-              <div className="current-mystery">
-                <span className="mystery-number">{currentMysteryIndex + 1}º {t('mystery')}</span>
-                <h3>{currentMystery}</h3>
-              </div>
-
-              <div className="prayer-display">
-                <div className="prayer-icon" style={{ backgroundColor: mystery.color }}>
-                  {beadType === t('ourFather') ? '✕' : '✿'}
-                </div>
-                <h4>{beadType}</h4>
-                <p className="prayer-text">{beadText}</p>
-              </div>
-
-              <div className="rosary-counter">
-                <span>{currentBead + 1} / 53</span>
-              </div>
-
-              <button className="pray-button" onClick={advanceBead} style={{ backgroundColor: mystery.color }}>
-                <Check size={20} />
-                {t('next')}
-              </button>
-            </>
-          ) : (
-            <div className="completion-message">
-              <div className="completion-icon">✓</div>
-              <h3>{t('rosaryCompleted')}</h3>
-              <p>{mystery.name}</p>
-              <button 
-                className="pray-button" 
-                onClick={() => {
-                  setCurrentBead(0);
-                  updateProgress(mystery.key, 0);
-                  setCurrentMysteryIndex(0);
-                }}
-                style={{ backgroundColor: mystery.color }}
-              >
-                {t('prayAgain')}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  // Gospel Page
-  const GospelPage = () => (
-    <div className="page-content gospel-page">
-      <div className="page-header">
-        <h1>{t('gospelTitle')}</h1>
-        <p className="page-subtitle">{getFormattedDate()}</p>
-      </div>
-
-      <div className="gospel-card-full">
-        <div className="gospel-book-icon"></div>
-        <h2>{t('gospelReference')}</h2>
-        <h3>{t('gospelTitleSample')}</h3>
-        <div className="gospel-text">
-          {t('gospelTextSample').split('\n\n').map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
-        </div>
-      </div>
-
-      <div className="reflection-section">
-        <h3>{t('reflection')}</h3>
-        <p>{t('gospelReflectionSample')}</p>
-      </div>
-    </div>
-  );
-
-  // Prayers Page
-  const PrayersPage = () => (
-    <div className="page-content prayers-page">
-      <div className="page-header">
-        <h1>{t('prayersTitle')}</h1>
-        <p className="page-subtitle">{t('prayersSubtitle')}</p>
-      </div>
-
-      {prayers.map((prayer, index) => (
-        <div key={index} className="prayer-card-full">
-          <h3>{prayer.title}</h3>
-          <p>{prayer.text}</p>
-        </div>
-      ))}
-    </div>
-  );
-
-  // Novena List Page
-  const NovenaPage = () => (
-    <div className="page-content novena-page">
-      <div className="page-header">
-        <h1>{t('novenasTitle')}</h1>
-        <p className="page-subtitle">{t('novenasSubtitle')}</p>
-      </div>
-
-      <div className="novena-list">
-        {novenas.map((novena) => {
-          const progress = getNovenaProgress(novena.id);
-          const completed = progress >= 9;
-          
-          return (
-            <div
-              key={novena.id}
-              className="novena-item"
-              onClick={() => setSelectedNovena(novena)}
-            >
-              <div style={{ flex: 1 }}>
-                <span className="novena-name">{novena.name}</span>
-                {progress > 0 && (
-                  <div className="novena-progress-indicator">
-                    {completed ? (
-                      <span className="novena-completed">✓ {t('completed')}</span>
-                    ) : (
-                      <span className="novena-in-progress">{t('day')} {progress} {t('dayOf')} 9</span>
-                    )}
-                  </div>
-                )}
-              </div>
-              <ChevronRight size={20} />
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-
-  // Novena Detail Page
-  const NovenaDetailPage = ({ novena }) => {
-    const currentDay = getNovenaProgress(novena.id);
-    const [showPrayer, setShowPrayer] = useState(false);
-
-    const handleDayComplete = () => {
-      if (currentDay < 9) {
-        updateNovenaProgress(novena.id, currentDay + 1);
-      }
-      setShowPrayer(false);
-    };
-
-    const handleReset = () => {
-      updateNovenaProgress(novena.id, 0);
-      setShowPrayer(false);
-    };
-
-    return (
-      <div className="page-content novena-detail-page">
-        <button className="back-button" onClick={() => setSelectedNovena(null)}>
-          ← {t('previous')}
-        </button>
-
-        <div className="novena-detail-card">
-          <h2 style={{ color: novena.color }}>{novena.name}</h2>
-          <p className="novena-purpose">{novena.purpose}</p>
-
-          {/* Progress Indicators */}
-          <div className="novena-days-grid">
-            {[...Array(9)].map((_, i) => {
-              const day = i + 1;
-              const isCompleted = day <= currentDay;
-              const isCurrent = day === currentDay + 1;
-
-              return (
-                <div
-                  key={i}
-                  className={`novena-day-badge ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}
-                  style={{
-                    borderColor: isCompleted ? novena.color : '#E5DCC8',
-                    backgroundColor: isCompleted ? novena.color : 'transparent',
-                    color: isCompleted ? '#FFF' : '#8B6F47'
-                  }}
-                >
-                  {isCompleted ? '✓' : day}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Status */}
-          {currentDay < 9 ? (
-            <>
-              <div className="novena-current-day">
-                <h3>{t('day')} {currentDay + 1} {t('dayOf')} 9</h3>
-              </div>
-
-              {!showPrayer ? (
-                <button
-                  className="pray-button"
-                  onClick={() => setShowPrayer(true)}
-                  style={{ backgroundColor: novena.color }}
-                >
-                  {currentDay === 0 ? t('startNovena') : t('continueNovena')}
-                </button>
-              ) : (
-                <div className="novena-prayer-display">
-                  <div className="prayer-scroll">
-                    <p>{novena.prayer}</p>
-                  </div>
-                  <button
-                    className="pray-button"
-                    onClick={handleDayComplete}
-                    style={{ backgroundColor: novena.color }}
-                  >
-                    <Check size={20} />
-                    {t('markComplete')}
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="completion-message">
-              <div className="completion-icon" style={{ backgroundColor: novena.color }}>✓</div>
-              <h3>{t('novenaCompleted')}</h3>
-              <p>{novena.name}</p>
-              <button
-                className="pray-button"
-                onClick={handleReset}
-                style={{ backgroundColor: novena.color }}
-              >
-                {t('prayAgain')}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const pages = {
-    home: <HomePage />,
-    rosary: <RosaryPage />,
-    gospel: <GospelPage />,
-    prayers: <PrayersPage />,
-    novena: selectedNovena ? <NovenaDetailPage novena={selectedNovena} /> : <NovenaPage />
-  };
-
+import React, { useEffect, useState } from "react";
+import {
+  Home,
+  BookOpen,
+  Heart,
+  User,
+  ArrowUpRight,
+  ChevronRight,
+  Check,
+  Sun,
+  CloudOff,
+  Leaf,
+  PenLine,
+  Library,
+  WifiOff,
+} from "lucide-react";
+import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
+import { StudyProvider, useStudy } from "./contexts/StudyContext";
+import { useAuth } from "./contexts/AuthContext";
+import {
+  dailyReading,
+  bookNames,
+  localDateKey,
+  mysteryToday,
+} from "./data/content";
+import { safeGet, safeSet, safeGetJSON, safeSetJSON } from "./utils/storage";
+import useBible from "./hooks/useBible";
+import Bible from "./components/Bible";
+import Notebook from "./components/Notebook";
+import Prayer from "./components/Prayer";
+import Profile from "./components/Profile";
+import { Header, Mark, Modal, Row } from "./components/UI";
+import "./styles.css";
+function HomePage({ bible, onRead, onPray, onStudy }) {
+  const { l, language, t, getFormattedDate } = useLanguage();
+  const { entries, write, ready } = useStudy();
+  const index = language === "it" ? 0 : 1;
+  const daily = dailyReading();
+  const b = bible?.books.find((b) => b.book === daily.book);
+  const first = b?.chapters
+    .find((c) => c.chapter === daily.chapter)
+    ?.verses.find((v) => v.number === daily.start);
+  const name = safeGet("fideoraUserName");
+  const today = localDateKey();
+  const done = entries.some((e) => e.id === `reading:${today}`);
   return (
-    <div className="app-container">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Inter', sans-serif;
-          -webkit-font-smoothing: antialiased;
-        }
-
-        .app-container {
-          max-width: 428px;
-          margin: 0 auto;
-          min-height: 100vh;
-          background: linear-gradient(180deg, #F5F0E8 0%, #E8DCC8 100%);
-          position: relative;
-          padding-bottom: 80px;
-        }
-
-        .page-content {
-          padding: 24px 20px;
-          animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        /* Edit Name Button */
-        .edit-name-button {
-          background: rgba(255, 255, 255, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 8px;
-          padding: 8px;
-          color: white;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-        }
-
-        .edit-name-button:hover {
-          background: rgba(255, 255, 255, 0.3);
-          transform: scale(1.05);
-        }
-
-        /* Name Edit Modal */
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          animation: fadeIn 0.2s ease-out;
-        }
-
-        .modal-content {
-          background: white;
-          border-radius: 20px;
-          padding: 32px 24px;
-          max-width: 360px;
-          width: 90%;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-          animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .modal-header {
-          font-family: 'Crimson Text', serif;
-          font-size: 24px;
-          font-weight: 700;
-          color: #8B6F47;
-          margin-bottom: 24px;
-          text-align: center;
-        }
-
-        .modal-input {
-          width: 100%;
-          padding: 16px;
-          border: 2px solid #E5DCC8;
-          border-radius: 12px;
-          font-size: 16px;
-          font-family: 'Inter', sans-serif;
-          margin-bottom: 24px;
-          transition: border-color 0.2s;
-        }
-
-        .modal-input:focus {
-          outline: none;
-          border-color: #8B6F47;
-        }
-
-        .modal-buttons {
-          display: flex;
-          gap: 12px;
-        }
-
-        .modal-button {
-          flex: 1;
-          padding: 14px;
-          border: none;
-          border-radius: 12px;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .modal-button-cancel {
-          background: #F5F0E8;
-          color: #666;
-        }
-
-        .modal-button-cancel:hover {
-          background: #E8DCC8;
-        }
-
-        .modal-button-save {
-          background: #8B6F47;
-          color: white;
-        }
-
-        .modal-button-save:hover {
-          background: #6F5838;
-        }
-
-        .greeting-card {
-          background: linear-gradient(135deg, #8B6F47 0%, #A0826D 100%);
-          padding: 32px 24px;
-          border-radius: 20px;
-          color: #FFF;
-          margin-bottom: 24px;
-          box-shadow: 0 8px 24px rgba(139, 111, 71, 0.2);
-          position: relative;
-        }
-
-        /* Language Selector Mini */
-        .language-selector-mini {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          z-index: 10;
-        }
-
-        .language-button-mini {
-          background: rgba(255, 255, 255, 0.15);
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          border-radius: 12px;
-          padding: 8px 10px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-          backdrop-filter: blur(10px);
-        }
-
-        .language-button-mini:hover {
-          background: rgba(255, 255, 255, 0.25);
-          transform: scale(1.05);
-        }
-
-        .flag-large {
-          font-size: 24px;
-          line-height: 1;
-          display: block;
-        }
-
-        .language-dropdown-mini {
-          position: absolute;
-          top: calc(100% + 8px);
-          right: 0;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-          padding: 8px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          min-width: 56px;
-          animation: slideDown 0.2s ease-out;
-        }
-
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .language-option-mini {
-          background: transparent;
-          border: none;
-          padding: 8px 10px;
-          cursor: pointer;
-          border-radius: 8px;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .language-option-mini:hover {
-          background: #F5F0E8;
-        }
-
-        .language-option-mini.active {
-          background: #8B6F47;
-        }
-
-        .language-option-mini.active .flag-mini {
-          filter: brightness(1.2);
-        }
-
-        .flag-mini {
-          font-size: 20px;
-          line-height: 1;
-          display: block;
-        }
-
-        .greeting {
-          font-family: 'Crimson Text', serif;
-          font-size: 32px;
-          font-weight: 700;
-          margin: 0;
-        }
-
-        .subtitle {
-          font-size: 16px;
-          opacity: 0.9;
-          margin-bottom: 4px;
-        }
-
-        .verse {
-          font-size: 14px;
-          opacity: 0.85;
-          font-style: italic;
-        }
-
-        .feature-card {
-          background: #FFF;
-          border-radius: 16px;
-          padding: 20px;
-          margin-bottom: 16px;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-          cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .feature-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 16px;
-        }
-
-        .card-badge {
-          background: #D4AF37;
-          color: #FFF;
-          padding: 4px 12px;
-          border-radius: 12px;
-          font-size: 12px;
-          font-weight: 600;
-        }
-
-        .gospel-card {
-          background: linear-gradient(135deg, #FFF8E7 0%, #FFF 100%);
-        }
-
-        .gospel-preview {
-          display: flex;
-          gap: 16px;
-        }
-
-        .gospel-image {
-          width: 100px;
-          height: 100px;
-          background: linear-gradient(135deg, #E8D7B8 0%, #D4C5A9 100%);
-          border-radius: 12px;
-          flex-shrink: 0;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .gospel-image::before {
-          content: '📖';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 40px;
-        }
-
-        .gospel-info {
-          flex: 1;
-        }
-
-        .gospel-date {
-          font-size: 12px;
-          color: #8B6F47;
-          margin-bottom: 4px;
-        }
-
-        .gospel-title {
-          font-family: 'Crimson Text', serif;
-          font-size: 18px;
-          font-weight: 700;
-          color: #2C2416;
-          margin-bottom: 8px;
-        }
-
-        .gospel-excerpt {
-          font-size: 13px;
-          color: #666;
-          margin-bottom: 12px;
-        }
-
-        .read-more {
-          background: #8B6F47;
-          color: #FFF;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 8px;
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.2s;
-        }
-
-        .read-more:hover {
-          background: #6F5838;
-        }
-
-        .rosary-card {
-          background: linear-gradient(135deg, #F0E6D2 0%, #E8DCC8 100%);
-        }
-
-        .rosary-icon {
-          font-size: 28px;
-          margin-right: 12px;
-        }
-
-        .card-header h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          font-weight: 700;
-          color: #2C2416;
-        }
-
-        .card-description {
-          font-size: 14px;
-          color: #666;
-        }
-
-        .quick-links {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-          margin-top: 16px;
-        }
-
-        .quick-link {
-          background: #FFF;
-          border-radius: 12px;
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-          cursor: pointer;
-          transition: all 0.2s;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .quick-link:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .quick-link svg {
-          color: #8B6F47;
-        }
-
-        .quick-link span {
-          font-size: 13px;
-          font-weight: 600;
-          color: #2C2416;
-        }
-
-        .page-header {
-          margin-bottom: 24px;
-        }
-
-        .page-header h1 {
-          font-family: 'Crimson Text', serif;
-          font-size: 32px;
-          font-weight: 700;
-          color: #2C2416;
-          margin-bottom: 4px;
-        }
-
-        .page-subtitle {
-          font-size: 14px;
-          color: #8B6F47;
-        }
-
-        .mysteries-grid {
-          display: grid;
-          gap: 16px;
-        }
-
-        .mystery-card {
-          background: #FFF;
-          border-radius: 16px;
-          padding: 20px;
-          border-left: 4px solid;
-          cursor: pointer;
-          transition: all 0.2s;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .mystery-card:hover {
-          transform: translateX(4px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .mystery-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: start;
-          margin-bottom: 16px;
-        }
-
-        .mystery-header h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          font-weight: 700;
-          color: #2C2416;
-          flex: 1;
-        }
-
-        .mystery-day {
-          background: #F5F0E8;
-          color: #8B6F47;
-          padding: 4px 10px;
-          border-radius: 8px;
-          font-size: 11px;
-          font-weight: 600;
-        }
-
-        .mystery-progress {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .progress-beads {
-          display: flex;
-          gap: 6px;
-        }
-
-        .bead {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          border: 2px solid #D4C5A9;
-          transition: all 0.3s;
-        }
-
-        .bead.completed {
-          border-color: transparent;
-          transform: scale(1.1);
-        }
-
-        .completed-badge {
-          background: #4CAF50;
-          color: #FFF;
-          padding: 4px 10px;
-          border-radius: 8px;
-          font-size: 11px;
-          font-weight: 600;
-        }
-
-        .rosary-prayer {
-          max-width: 100%;
-        }
-
-        .back-button {
-          background: none;
-          border: none;
-          color: #8B6F47;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          margin-bottom: 20px;
-          padding: 8px 0;
-        }
-
-        .prayer-card {
-          background: #FFF;
-          border-radius: 20px;
-          padding: 32px 24px;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .prayer-card h2 {
-          font-family: 'Crimson Text', serif;
-          font-size: 24px;
-          font-weight: 700;
-          text-align: center;
-          margin-bottom: 24px;
-        }
-
-        .current-mystery {
-          text-align: center;
-          margin-bottom: 32px;
-          padding: 20px;
-          background: #F9F6F0;
-          border-radius: 12px;
-        }
-
-        .mystery-number {
-          display: block;
-          font-size: 12px;
-          color: #8B6F47;
-          font-weight: 600;
-          margin-bottom: 8px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
-
-        .current-mystery h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          color: #2C2416;
-        }
-
-        .prayer-display {
-          text-align: center;
-          margin-bottom: 32px;
-        }
-
-        .prayer-icon {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 36px;
-          color: #FFF;
-          margin: 0 auto 20px;
-        }
-
-        .prayer-display h4 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          color: #2C2416;
-          margin-bottom: 16px;
-        }
-
-        .prayer-text {
-          font-size: 15px;
-          line-height: 1.7;
-          color: #444;
-          max-width: 90%;
-          margin: 0 auto;
-        }
-
-        .rosary-counter {
-          text-align: center;
-          font-size: 14px;
-          color: #8B6F47;
-          font-weight: 600;
-          margin-bottom: 24px;
-        }
-
-        .pray-button {
-          width: 100%;
-          padding: 16px;
-          border: none;
-          border-radius: 12px;
-          color: #FFF;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: opacity 0.2s;
-        }
-
-        .pray-button:hover {
-          opacity: 0.9;
-        }
-
-        .completion-message {
-          text-align: center;
-          padding: 40px 20px;
-        }
-
-        .completion-icon {
-          width: 100px;
-          height: 100px;
-          background: #4CAF50;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 48px;
-          color: #FFF;
-          margin: 0 auto 24px;
-        }
-
-        .completion-message h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 28px;
-          color: #2C2416;
-          margin-bottom: 12px;
-        }
-
-        .completion-message p {
-          font-size: 16px;
-          color: #666;
-          margin-bottom: 32px;
-        }
-
-        .gospel-card-full {
-          background: #FFF;
-          border-radius: 20px;
-          padding: 32px 24px;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-          margin-bottom: 24px;
-        }
-
-        .gospel-book-icon {
-          width: 60px;
-          height: 60px;
-          background: linear-gradient(135deg, #D4AF37 0%, #B8960F 100%);
-          border-radius: 12px;
-          margin: 0 auto 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .gospel-book-icon::before {
-          content: '📖';
-          font-size: 28px;
-        }
-
-        .gospel-card-full h2 {
-          font-family: 'Crimson Text', serif;
-          font-size: 24px;
-          font-weight: 700;
-          color: #8B6F47;
-          text-align: center;
-          margin-bottom: 8px;
-        }
-
-        .gospel-card-full h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          font-weight: 600;
-          color: #2C2416;
-          text-align: center;
-          margin-bottom: 24px;
-        }
-
-        .gospel-text p {
-          font-size: 15px;
-          line-height: 1.8;
-          color: #333;
-          margin-bottom: 16px;
-          text-align: justify;
-        }
-
-        .reflection-section {
-          background: #F9F6F0;
-          border-radius: 16px;
-          padding: 24px;
-        }
-
-        .reflection-section h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          font-weight: 700;
-          color: #8B6F47;
-          margin-bottom: 12px;
-        }
-
-        .reflection-section p {
-          font-size: 15px;
-          line-height: 1.7;
-          color: #444;
-        }
-
-        .prayer-card-full {
-          background: #FFF;
-          border-radius: 16px;
-          padding: 24px;
-          margin-bottom: 16px;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .prayer-card-full h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 20px;
-          font-weight: 700;
-          color: #8B6F47;
-          margin-bottom: 12px;
-        }
-
-        .prayer-card-full p {
-          font-size: 15px;
-          line-height: 1.7;
-          color: #444;
-        }
-
-        /* Novena Styles */
-        .novena-list {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .novena-item {
-          background: #FFF;
-          border-radius: 12px;
-          padding: 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          cursor: pointer;
-          transition: all 0.2s;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .novena-item:hover {
-          transform: translateX(4px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .novena-name {
-          font-size: 15px;
-          font-weight: 500;
-          color: #2C2416;
-          display: block;
-          margin-bottom: 4px;
-        }
-
-        .novena-progress-indicator {
-          font-size: 12px;
-          margin-top: 4px;
-        }
-
-        .novena-completed {
-          color: #4CAF50;
-          font-weight: 600;
-        }
-
-        .novena-in-progress {
-          color: #8B6F47;
-          font-weight: 600;
-        }
-
-        .novena-item svg {
-          color: #8B6F47;
-          flex-shrink: 0;
-        }
-
-        .novena-detail-card {
-          background: #FFF;
-          border-radius: 20px;
-          padding: 32px 24px;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .novena-detail-card h2 {
-          font-family: 'Crimson Text', serif;
-          font-size: 28px;
-          font-weight: 700;
-          text-align: center;
-          margin-bottom: 16px;
-        }
-
-        .novena-purpose {
-          text-align: center;
-          font-size: 14px;
-          color: #666;
-          margin-bottom: 32px;
-          font-style: italic;
-        }
-
-        .novena-days-grid {
-          display: grid;
-          grid-template-columns: repeat(9, 1fr);
-          gap: 8px;
-          margin-bottom: 32px;
-        }
-
-        .novena-day-badge {
-          aspect-ratio: 1;
-          border-radius: 50%;
-          border: 2px solid;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-          font-weight: 600;
-          transition: all 0.3s;
-        }
-
-        .novena-day-badge.current {
-          transform: scale(1.2);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .novena-current-day {
-          text-align: center;
-          margin-bottom: 24px;
-        }
-
-        .novena-current-day h3 {
-          font-family: 'Crimson Text', serif;
-          font-size: 24px;
-          color: #8B6F47;
-        }
-
-        .novena-prayer-display {
-          margin-top: 24px;
-        }
-
-        .prayer-scroll {
-          background: #F9F6F0;
-          border-radius: 12px;
-          padding: 24px;
-          margin-bottom: 24px;
-          max-height: 400px;
-          overflow-y: auto;
-        }
-
-        .prayer-scroll p {
-          font-size: 15px;
-          line-height: 1.8;
-          color: #444;
-          text-align: justify;
-        }
-
-        .bottom-nav {
-          position: fixed;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          max-width: 428px;
-          width: 100%;
-          background: #FFF;
-          border-top: 1px solid #E5DCC8;
-          display: flex;
-          justify-content: space-around;
-          padding: 12px 0;
-          box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .nav-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-          cursor: pointer;
-          padding: 8px 16px;
-          border-radius: 12px;
-          transition: background 0.2s;
-        }
-
-        .nav-item:hover {
-          background: #F5F0E8;
-        }
-
-        .nav-item.active {
-          color: #8B6F47;
-        }
-
-        .nav-item svg {
-          color: #666;
-        }
-
-        .nav-item.active svg {
-          color: #8B6F47;
-        }
-
-        .nav-item span {
-          font-size: 11px;
-          font-weight: 600;
-          color: #666;
-        }
-
-        .nav-item.active span {
-          color: #8B6F47;
-        }
-      `}</style>
-
-      <div className="app-content">
-        {pages[currentPage]}
+    <>
+      <Header
+        eyebrow={getFormattedDate()}
+        title={
+          name
+            ? l(`Un momento per te, ${name}.`, `Um momento para você, ${name}.`)
+            : l("Fai spazio alla tua fede.", "Abra espaço para sua fé.")
+        }
+        subtitle={l(
+          "Un incontro con la Parola. Un piccolo passo, ogni giorno.",
+          "Um encontro com a Palavra. Um pequeno passo, todos os dias.",
+        )}
+      />
+      <div className="home-grid">
+        <section className="daily-card">
+          <div className="section-line">
+            <span className="eyebrow">
+              {l("LA LETTURA DI OGGI", "A LEITURA DE HOJE")}
+            </span>
+            <BookOpen size={22} />
+          </div>
+          <p className="daily-reference">
+            {b ? bookNames[language][b.bookId - 1] : ""} {daily.chapter},
+            {daily.start}–{daily.end}
+          </p>
+          <h2>{daily.title[index]}</h2>
+          {first && <blockquote>{first.text}</blockquote>}
+          <div className="daily-bottom">
+            <button
+              className="button light"
+              onClick={() => onRead({ ...daily, verse: daily.start })}
+            >
+              {l("Apri la lettura", "Abrir a leitura")}
+              <ArrowUpRight size={16} />
+            </button>
+            <span>5 {l("minuti per te", "minutos para você")}</span>
+          </div>
+          <div className="daily-art" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </section>
+        <section className="card reflection-card">
+          <span className="mini-icon">
+            <Leaf size={20} />
+          </span>
+          <p className="eyebrow">
+            {l("DA PORTARE CON TE", "PARA LEVAR COM VOCÊ")}
+          </p>
+          <h2>{l("Dalla Parola alla vita.", "Da Palavra à vida.")}</h2>
+          <p>{daily.reflection[index]}</p>
+          <button
+            className={`button ${done ? "secondary" : "primary"}`}
+            disabled={!ready || done}
+            onClick={() =>
+              write(`reading:${today}`, "reading", {
+                date: today,
+                book: daily.book,
+                chapter: daily.chapter,
+              })
+            }
+          >
+            {done ? <Check size={16} /> : <Sun size={16} />}
+            {done
+              ? l("Un passo compiuto", "Um passo concluído")
+              : l("Ho meditato oggi", "Meditei hoje")}
+          </button>
+        </section>
       </div>
-
-      {/* Name Edit Modal */}
-      {showNameModal && (
-        <div className="modal-overlay" onClick={handleCancelEdit}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-header">{t('editName')}</h2>
-            <input
-              type="text"
-              className="modal-input"
-              placeholder={t('enterYourName')}
-              value={tempName}
-              onChange={(e) => setTempName(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSaveName()}
-              autoFocus
+      <p className="daily-disclaimer">
+        {l(
+          "Selezione devozionale Fideora · ciclo di 14 letture. Non corrisponde al lezionario della Messa.",
+          "Seleção devocional Fideora · ciclo de 14 leituras. Não corresponde ao lecionário da Missa.",
+        )}
+      </p>
+      <div className="section-line section-gap">
+        <h2>
+          {l("Scegli il tuo prossimo passo.", "Escolha seu próximo passo.")}
+        </h2>
+        <span className="caption">
+          {l("Senza fretta. Con presenza.", "Sem pressa. Com presença.")}
+        </span>
+      </div>
+      <div className="feature-grid">
+        <button
+          className="card feature-card"
+          onClick={() => onRead({ book: "Gen", chapter: 1 })}
+        >
+          <span className="mini-icon">
+            <BookOpen size={22} />
+          </span>
+          <h3>{l("Leggi e comprendi", "Leia e compreenda")}</h3>
+          <p>
+            {l(
+              "La Bibbia, le tue note, le parole delle origini.",
+              "A Bíblia, suas notas, as palavras das origens.",
+            )}
+          </p>
+          <span className="text-button">
+            {l("Esplora la Bibbia", "Explorar a Bíblia")}
+            <ArrowUpRight size={16} />
+          </span>
+        </button>
+        <button className="card feature-card" onClick={onPray}>
+          <span className="mini-icon amber">
+            <Heart size={22} />
+          </span>
+          <h3>{l("Fermati e prega", "Pare e reze")}</h3>
+          <p>
+            {t(mysteryToday())}.{" "}
+            {l("Un’intenzione da affidare.", "Uma intenção para entregar.")}
+          </p>
+          <span className="text-button">
+            {l("Trova il tuo silenzio", "Encontre seu silêncio")}
+            <ArrowUpRight size={16} />
+          </span>
+        </button>
+        <button className="card feature-card" onClick={onStudy}>
+          <span className="mini-icon lavender">
+            <PenLine size={22} />
+          </span>
+          <h3>{l("Custodisci un pensiero", "Guarde um pensamento")}</h3>
+          <p>
+            {l(
+              "Un quaderno per ciò che la Parola risveglia.",
+              "Um caderno para o que a Palavra desperta.",
+            )}
+          </p>
+          <span className="text-button">
+            {l("Apri il quaderno", "Abrir o caderno")}
+            <ArrowUpRight size={16} />
+          </span>
+        </button>
+      </div>
+      <footer className="home-footer">
+        <Mark />
+        <p>{l("La tua fede, ogni giorno.", "Sua fé, todos os dias.")}</p>
+        <span>FIDEORA</span>
+      </footer>
+    </>
+  );
+}
+function Fideora() {
+  const { language, changeLanguage, l } = useLanguage();
+  const { user } = useAuth();
+  const { storageError } = useStudy();
+  const [page, setPage] = useState("today"),
+    [location, setLocation] = useState(() =>
+      safeGetJSON("fideoraLastReading", { book: "John", chapter: 1 }),
+    ),
+    [sources, setSources] = useState(false),
+    [legal, setLegal] = useState(null),
+    [online, setOnline] = useState(navigator.onLine),
+    [onboard, setOnboard] = useState(() => safeGet("fideoraOnboarded") !== "1");
+  const { bible, error, retry } = useBible(language);
+  useEffect(() => {
+    const up = () => setOnline(true),
+      down = () => setOnline(false);
+    window.addEventListener("online", up);
+    window.addEventListener("offline", down);
+    return () => {
+      window.removeEventListener("online", up);
+      window.removeEventListener("offline", down);
+    };
+  }, []);
+  const navigate = (target) => {
+    setPage(target);
+    window.scrollTo(0, 0);
+  };
+  const read = (p) => {
+    if (p.language) changeLanguage(p.language);
+    const value = { book: p.book, chapter: p.chapter, verse: p.verse };
+    setLocation(value);
+    safeSetJSON("fideoraLastReading", value);
+    navigate("bible");
+  };
+  const tabs = [
+    ["today", Home, l("Oggi", "Hoje")],
+    ["bible", BookOpen, l("Bibbia", "Bíblia")],
+    ["notebook", PenLine, l("Quaderno", "Caderno")],
+    ["pray", Heart, l("Prega", "Rezar")],
+    ["profile", User, l("Profilo", "Perfil")],
+  ];
+  return (
+    <div className="app">
+      <aside className="sidebar">
+        <a
+          href="#"
+          className="brand"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("today");
+          }}
+        >
+          <Mark />
+          <span>
+            Fideora
+            <small>
+              {l("LA TUA FEDE, OGNI GIORNO", "SUA FÉ, TODOS OS DIAS")}
+            </small>
+          </span>
+        </a>
+        <nav aria-label={l("Navigazione principale", "Navegação principal")}>
+          {tabs.map(([id, Icon, label]) => (
+            <button
+              key={id}
+              className={page === id ? "active" : ""}
+              aria-current={page === id ? "page" : undefined}
+              onClick={() => navigate(id)}
+            >
+              <Icon size={20} />
+              <span>{label}</span>
+              {page === id && <span className="nav-dot" />}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <span className="sidebar-leaf">
+            <Leaf size={24} />
+          </span>
+          <p>{l("Coltiva ciò che conta.", "Cultive o que importa.")}</p>
+          <button className="text-button" onClick={() => setLegal("support")}>
+            {l("Siamo qui per te", "Estamos aqui para você")}
+            <ArrowUpRight size={14} />
+          </button>
+          <span className="sidebar-version">FIDEORA · 1.0</span>
+        </div>
+      </aside>
+      <div className="workspace">
+        <header className="topbar">
+          <div className="mobile-brand">
+            <Mark />
+            <strong>Fideora</strong>
+          </div>
+          <span className="desktop-label">
+            {tabs.find((t) => t[0] === page)[2]}
+          </span>
+          <div className="topbar-actions">
+            <label className="sr-only" htmlFor="header-language">
+              {l("Lingua", "Idioma")}
+            </label>
+            <select
+              id="header-language"
+              value={language}
+              onChange={(e) => changeLanguage(e.target.value)}
+            >
+              <option value="it">Italiano</option>
+              <option value="pt">Português</option>
+            </select>
+            <button
+              className="avatar-button"
+              aria-label={l("Apri profilo", "Abrir perfil")}
+              onClick={() => navigate("profile")}
+            >
+              <User size={18} />
+            </button>
+          </div>
+        </header>
+        {!online && (
+          <div className="offline-banner" role="status">
+            <WifiOff size={15} />
+            {l(
+              "Sei offline. Le letture scaricate e i tuoi appunti restano disponibili.",
+              "Você está offline. As leituras baixadas e suas anotações continuam disponíveis.",
+            )}
+          </div>
+        )}
+        {storageError && (
+          <div className="offline-banner" role="alert">
+            {l(
+              "Memoria del dispositivo piena o non disponibile. Esporta i dati prima di chiudere.",
+              "Memória do dispositivo cheia ou indisponível. Exporte seus dados antes de fechar.",
+            )}
+          </div>
+        )}
+        <main id="main-content" key={`${user?.id || "guest"}:${page}`}>
+          {page === "today" && (
+            <HomePage
+              bible={bible}
+              onRead={read}
+              onPray={() => navigate("pray")}
+              onStudy={() => navigate("notebook")}
             />
-            <div className="modal-buttons">
-              <button className="modal-button modal-button-cancel" onClick={handleCancelEdit}>
-                {t('cancel')}
+          )}
+          {page === "bible" && (
+            <Bible
+              bible={bible}
+              error={error}
+              retry={retry}
+              location={location}
+              onLocation={(value) => {
+                setLocation(value);
+                safeSetJSON("fideoraLastReading", value);
+              }}
+              onSources={() => setSources(true)}
+            />
+          )}
+          {page === "notebook" && <Notebook bible={bible} onRead={read} />}
+          {page === "pray" && <Prayer />}
+          {page === "profile" && (
+            <Profile onSources={() => setSources(true)} onLegal={setLegal} />
+          )}
+        </main>
+        <nav
+          className="bottom-nav"
+          aria-label={l("Navigazione mobile", "Navegação móvel")}
+        >
+          {tabs.map(([id, Icon, label]) => (
+            <button
+              key={id}
+              aria-current={page === id ? "page" : undefined}
+              className={page === id ? "active" : ""}
+              onClick={() => navigate(id)}
+            >
+              <Icon size={21} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+      {onboard && (
+        <Modal
+          title={l("Benvenuto in Fideora.", "Bem-vindo ao Fideora.")}
+          onClose={() => {
+            safeSet("fideoraOnboarded", "1");
+            setOnboard(false);
+          }}
+        >
+          <div className="onboarding">
+            <Mark />
+            <h3>{l("La tua fede, ogni giorno.", "Sua fé, todos os dias.")}</h3>
+            <p>
+              {l(
+                "Leggi la Parola, trova un momento di preghiera e custodisci ciò che ti accompagna. Puoi iniziare senza un account.",
+                "Leia a Palavra, encontre um momento de oração e guarde o que acompanha você. Você pode começar sem uma conta.",
+              )}
+            </p>
+            <div className="onboard-language">
+              <button
+                className={`button ${language === "it" ? "primary" : "secondary"}`}
+                onClick={() => changeLanguage("it")}
+              >
+                Italiano
               </button>
-              <button className="modal-button modal-button-save" onClick={handleSaveName}>
-                {t('save')}
+              <button
+                className={`button ${language === "pt" ? "primary" : "secondary"}`}
+                onClick={() => changeLanguage("pt")}
+              >
+                Português
               </button>
             </div>
+            <button
+              className="button primary wide"
+              onClick={() => {
+                safeSet("fideoraOnboarded", "1");
+                setOnboard(false);
+              }}
+            >
+              {l("Inizia il tuo cammino", "Começar minha caminhada")}
+              <ChevronRight size={16} />
+            </button>
           </div>
-        </div>
+        </Modal>
       )}
-
-      <div className="bottom-nav">
-        <div 
-          className={`nav-item ${currentPage === 'home' ? 'active' : ''}`}
-          onClick={() => {
-            setCurrentPage('home');
-            setSelectedNovena(null);
-          }}
+      {sources && (
+        <Modal
+          title={l("Edizioni e fonti", "Edições e fontes")}
+          wide
+          onClose={() => setSources(false)}
         >
-          <Home size={24} />
-          <span>{t('home')}</span>
-        </div>
-        <div 
-          className={`nav-item ${currentPage === 'rosary' ? 'active' : ''}`}
-          onClick={() => {
-            setCurrentPage('rosary');
-            setSelectedNovena(null);
-          }}
+          <div className="prose">
+            <h3>{l("Testi biblici", "Textos bíblicos")}</h3>
+            <p>
+              {l(
+                "Italiano: Bibbia Diodati (1649). Português: Almeida (edizione 1819). Entrambe sono edizioni storiche in pubblico dominio, con 66 libri ciascuna.",
+                "Italiano: Bíblia Diodati (1649). Português: Almeida (edição de 1819). Ambas são edições históricas em domínio público, com 66 livros cada.",
+              )}
+            </p>
+            <p>
+              {l(
+                "Queste edizioni non includono i sette libri deuterocanonici del canone cattolico e non sono il testo ufficiale della liturgia. La numerazione dei Salmi segue l’edizione del lettore.",
+                "Estas edições não incluem os sete livros deuterocanônicos do cânon católico e não são o texto oficial da liturgia. A numeração dos Salmos segue a edição do leitor.",
+              )}
+            </p>
+            <a
+              href="https://github.com/midvash/bible-data"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {l(
+                "Consulta il corpus e le licenze",
+                "Consultar o corpus e as licenças",
+              )}{" "}
+              ↗
+            </a>
+            <h3>{l("Studio e preghiera", "Estudo e oração")}</h3>
+            <p>
+              {l(
+                "Le riflessioni, le quattro guide e le tracce delle novene sono contenuti editoriali originali Fideora. Il glossario essenziale contiene otto schede introduttive con identificatori Strong (1890), non un interlineare completo. Le citazioni vanno lette nel loro contesto.",
+                "As reflexões, os quatro guias e os roteiros das novenas são conteúdo editorial original Fideora. O glossário essencial contém oito verbetes introdutórios com identificadores Strong (1890), não um interlinear completo. As citações devem ser lidas em contexto.",
+              )}
+            </p>
+            <p>
+              {l(
+                "La lettura proposta ogni giorno segue un ciclo devozionale di 14 brani. Non è il Vangelo del giorno del calendario liturgico. Fideora è un progetto indipendente, non un servizio ufficiale della Chiesa.",
+                "A leitura sugerida a cada dia segue um ciclo devocional de 14 passagens. Não é o Evangelho do dia do calendário litúrgico. Fideora é um projeto independente, não um serviço oficial da Igreja.",
+              )}
+            </p>
+          </div>
+        </Modal>
+      )}
+      {legal && (
+        <Modal
+          title={l(
+            legal === "privacy"
+              ? "Privacy"
+              : legal === "terms"
+                ? "Termini di utilizzo"
+                : "Aiuto e supporto",
+            legal === "privacy"
+              ? "Privacidade"
+              : legal === "terms"
+                ? "Termos de uso"
+                : "Ajuda e suporte",
+          )}
+          wide
+          onClose={() => setLegal(null)}
         >
-          <span style={{ fontSize: '24px' }}>✿</span>
-          <span>{t('rosary')}</span>
-        </div>
-        <div 
-          className={`nav-item ${currentPage === 'gospel' ? 'active' : ''}`}
-          onClick={() => {
-            setCurrentPage('gospel');
-            setSelectedNovena(null);
-          }}
-        >
-          <Book size={24} />
-          <span>{t('gospel')}</span>
-        </div>
-        <div 
-          className={`nav-item ${currentPage === 'prayers' ? 'active' : ''}`}
-          onClick={() => {
-            setCurrentPage('prayers');
-            setSelectedNovena(null);
-          }}
-        >
-          <Heart size={24} />
-          <span>{t('prayers')}</span>
-        </div>
-      </div>
+          <iframe
+            title={legal}
+            src={`/${legal}.html?lang=${language}`}
+            className="legal-frame"
+          />
+          <a
+            href={`/${legal}.html?lang=${language}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-button"
+          >
+            {l("Apri pagina completa", "Abrir página completa")}
+            <ArrowUpRight size={14} />
+          </a>
+        </Modal>
+      )}
     </div>
   );
 }
-
-export default function MappaCattolico() {
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: false };
+  }
+  static getDerivedStateFromError() {
+    return { error: true };
+  }
+  render() {
+    if (this.state.error)
+      return (
+        <div className="fatal">
+          <h1>Fideora</h1>
+          <p>
+            Non è stato possibile aprire questa schermata.
+            <br />
+            Não foi possível abrir esta tela.
+          </p>
+          <button
+            className="button primary"
+            onClick={() => window.location.reload()}
+          >
+            Riprova / Tentar novamente
+          </button>
+        </div>
+      );
+    return this.props.children;
+  }
+}
+export default function App() {
   return (
-    <LanguageProvider>
-      <MappaCattolicoContent />
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <StudyProvider>
+          <Fideora />
+        </StudyProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }

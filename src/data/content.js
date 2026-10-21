@@ -1,0 +1,526 @@
+// Original Fideora editorial material. Scripture text is loaded from the credited editions.
+export const bookNames = {
+  it: "Genesi|Esodo|Levitico|Numeri|Deuteronomio|Giosuè|Giudici|Rut|1 Samuele|2 Samuele|1 Re|2 Re|1 Cronache|2 Cronache|Esdra|Neemia|Ester|Giobbe|Salmi|Proverbi|Ecclesiaste|Cantico dei Cantici|Isaia|Geremia|Lamentazioni|Ezechiele|Daniele|Osea|Gioele|Amos|Abdia|Giona|Michea|Naum|Abacuc|Sofonia|Aggeo|Zaccaria|Malachia|Matteo|Marco|Luca|Giovanni|Atti|Romani|1 Corinzi|2 Corinzi|Galati|Efesini|Filippesi|Colossesi|1 Tessalonicesi|2 Tessalonicesi|1 Timoteo|2 Timoteo|Tito|Filemone|Ebrei|Giacomo|1 Pietro|2 Pietro|1 Giovanni|2 Giovanni|3 Giovanni|Giuda|Apocalisse".split(
+    "|",
+  ),
+  pt: "Gênesis|Êxodo|Levítico|Números|Deuteronômio|Josué|Juízes|Rute|1 Samuel|2 Samuel|1 Reis|2 Reis|1 Crônicas|2 Crônicas|Esdras|Neemias|Ester|Jó|Salmos|Provérbios|Eclesiastes|Cântico dos Cânticos|Isaías|Jeremias|Lamentações|Ezequiel|Daniel|Oseias|Joel|Amós|Obadias|Jonas|Miqueias|Naum|Habacuque|Sofonias|Ageu|Zacarias|Malaquias|Mateus|Marcos|Lucas|João|Atos|Romanos|1 Coríntios|2 Coríntios|Gálatas|Efésios|Filipenses|Colossenses|1 Tessalonicenses|2 Tessalonicenses|1 Timóteo|2 Timóteo|Tito|Filemom|Hebreus|Tiago|1 Pedro|2 Pedro|1 João|2 João|3 João|Judas|Apocalipse".split(
+    "|",
+  ),
+};
+export const readings = [
+  {
+    book: "John",
+    chapter: 15,
+    start: 1,
+    end: 12,
+    title: ["Rimanete nel mio amore", "Permaneçam no meu amor"],
+    reflection: [
+      "La fede prende vita nella relazione. Come un tralcio unito alla vite, non devi portare frutto da solo. Oggi dedica cinque minuti al silenzio e poi scegli un gesto concreto di cura per qualcuno.",
+      "A fé ganha vida na relação. Como um ramo unido à videira, você não precisa dar frutos sozinho. Reserve cinco minutos para o silêncio e escolha um gesto concreto de cuidado com alguém.",
+    ],
+  },
+  {
+    book: "Matt",
+    chapter: 6,
+    start: 25,
+    end: 34,
+    title: ["Un giorno alla volta", "Um dia de cada vez"],
+    reflection: [
+      "Affidarsi non significa ignorare le responsabilità, ma attraversarle senza lasciare che la paura occupi tutto. Scegli un compito possibile per oggi e affida il resto nella preghiera.",
+      "Confiar não é ignorar responsabilidades, mas enfrentá-las sem deixar que o medo ocupe tudo. Escolha uma tarefa possível para hoje e entregue o restante na oração.",
+    ],
+  },
+  {
+    book: "Luke",
+    chapter: 15,
+    start: 11,
+    end: 24,
+    title: ["La strada verso casa", "O caminho de volta para casa"],
+    reflection: [
+      "Il padre vede il figlio quando è ancora lontano. Il ritorno comincia con un passo sincero, non con una vita già perfetta. Quale riconciliazione puoi iniziare oggi?",
+      "O pai vê o filho quando ele ainda está longe. O retorno começa com um passo sincero, não com uma vida já perfeita. Que reconciliação você pode iniciar hoje?",
+    ],
+  },
+  {
+    book: "John",
+    chapter: 1,
+    start: 1,
+    end: 14,
+    title: ["Una luce nelle tenebre", "Uma luz nas trevas"],
+    reflection: [
+      "Il Vangelo presenta Gesù come la Parola che entra nella nostra storia. Cerca oggi un luogo concreto dove la tua presenza possa portare luce: ascoltare è già un inizio.",
+      "O Evangelho apresenta Jesus como a Palavra que entra na nossa história. Procure um lugar concreto onde sua presença possa levar luz: escutar já é um começo.",
+    ],
+  },
+  {
+    book: "Matt",
+    chapter: 5,
+    start: 1,
+    end: 12,
+    title: ["La via delle beatitudini", "O caminho das bem-aventuranças"],
+    reflection: [
+      "Le beatitudini cambiano il nostro modo di misurare una vita riuscita. Scegline una e trasformala in una domanda per la tua giornata, senza fretta di rispondere.",
+      "As bem-aventuranças mudam nossa maneira de medir uma vida realizada. Escolha uma e transforme-a em uma pergunta para o seu dia, sem pressa de responder.",
+    ],
+  },
+  {
+    book: "Luke",
+    chapter: 10,
+    start: 25,
+    end: 37,
+    title: ["Farsi prossimo", "Fazer-se próximo"],
+    reflection: [
+      "Il samaritano interrompe il viaggio per prendersi cura di una ferita. La carità ha un volto e un tempo concreto. Chi sta aspettando il tuo ascolto o il tuo aiuto?",
+      "O samaritano interrompe a viagem para cuidar de uma ferida. A caridade tem rosto e tempo concretos. Quem está esperando sua escuta ou sua ajuda?",
+    ],
+  },
+  {
+    book: "Ps",
+    chapter: 23,
+    start: 1,
+    end: 6,
+    title: ["Il Signore mi accompagna", "O Senhor me acompanha"],
+    reflection: [
+      "Questo salmo non promette un cammino senza valli oscure: annuncia una presenza che le attraversa con noi. Dai un nome alla tua paura e portala nella preghiera.",
+      "Este salmo não promete um caminho sem vales escuros: anuncia uma presença que os atravessa conosco. Dê um nome ao seu medo e leve-o à oração.",
+    ],
+  },
+  {
+    book: "Mark",
+    chapter: 4,
+    start: 35,
+    end: 41,
+    title: ["Nella tempesta", "Na tempestade"],
+    reflection: [
+      "Anche i discepoli conoscono la paura. La preghiera può cominciare da una domanda onesta, senza parole perfette. Racconta al Signore ciò che oggi ti agita.",
+      "Os discípulos também conhecem o medo. A oração pode começar com uma pergunta honesta, sem palavras perfeitas. Conte ao Senhor o que hoje inquieta você.",
+    ],
+  },
+  {
+    book: "Luke",
+    chapter: 1,
+    start: 26,
+    end: 38,
+    title: ["Un sì nella fiducia", "Um sim na confiança"],
+    reflection: [
+      "Maria domanda e poi si affida. La disponibilità non esclude le domande: le porta dentro una relazione di fiducia. Quale piccolo sì puoi offrire oggi?",
+      "Maria pergunta e depois confia. A disponibilidade não exclui as perguntas: leva-as para uma relação de confiança. Que pequeno sim você pode oferecer hoje?",
+    ],
+  },
+  {
+    book: "John",
+    chapter: 20,
+    start: 19,
+    end: 29,
+    title: ["La pace sia con voi", "A paz esteja com vocês"],
+    reflection: [
+      "Il Risorto raggiunge i discepoli dietro le porte chiuse. La pace non cancella le ferite, ma apre un futuro. Prega per una persona con cui fai fatica a parlare.",
+      "O Ressuscitado encontra os discípulos atrás de portas fechadas. A paz não apaga as feridas, mas abre um futuro. Reze por uma pessoa com quem você tem dificuldade de conversar.",
+    ],
+  },
+  {
+    book: "1Cor",
+    chapter: 13,
+    start: 1,
+    end: 13,
+    title: ["La forma dell’amore", "A forma do amor"],
+    reflection: [
+      "Paolo descrive l’amore con azioni quotidiane, non con dichiarazioni grandiose. Scegli oggi la pazienza in una situazione concreta e nota che cosa cambia.",
+      "Paulo descreve o amor com ações cotidianas, não com grandes declarações. Escolha hoje a paciência em uma situação concreta e observe o que muda.",
+    ],
+  },
+  {
+    book: "Gen",
+    chapter: 1,
+    start: 1,
+    end: 5,
+    title: ["All’inizio, un dono", "No princípio, um dom"],
+    reflection: [
+      "Il racconto della creazione invita a riconoscere il mondo come dono. Fermati davanti a qualcosa di semplice e ringrazia, prima di chiedere altro.",
+      "O relato da criação convida a reconhecer o mundo como dom. Pare diante de algo simples e agradeça, antes de pedir outra coisa.",
+    ],
+  },
+  {
+    book: "Matt",
+    chapter: 11,
+    start: 28,
+    end: 30,
+    title: ["Un luogo di riposo", "Um lugar de descanso"],
+    reflection: [
+      "Gesù invita chi è stanco ad avvicinarsi. Oggi concediti una pausa senza trasformarla in un altro compito da svolgere bene. La preghiera può essere anche riposo.",
+      "Jesus convida quem está cansado a se aproximar. Permita-se uma pausa sem transformá-la em outra tarefa a cumprir bem. A oração também pode ser descanso.",
+    ],
+  },
+  {
+    book: "Luke",
+    chapter: 24,
+    start: 13,
+    end: 35,
+    title: ["In cammino insieme", "Caminhando juntos"],
+    reflection: [
+      "Sulla strada di Emmaus, Gesù ascolta prima di spiegare. Quando accompagni qualcuno, prova a fare spazio al suo racconto. Rileggi poi un passaggio che ha toccato la tua giornata.",
+      "Na estrada de Emaús, Jesus escuta antes de explicar. Ao acompanhar alguém, abra espaço para sua história. Releia depois uma passagem que tocou seu dia.",
+    ],
+  },
+];
+export const lexicon = [
+  {
+    id: "logos",
+    word: "λόγος",
+    translit: "lógos",
+    strong: "G3056",
+    lang: ["Greco", "Grego"],
+    meaning: [
+      "Parola, discorso, ragione. Nel prologo di Giovanni indica il Verbo: il contesto teologico va oltre la semplice definizione del dizionario.",
+      "Palavra, discurso, razão. No prólogo de João indica o Verbo: o contexto teológico vai além de uma simples definição de dicionário.",
+    ],
+    refs: [
+      ["John", 1, 1],
+      ["John", 1, 14],
+    ],
+  },
+  {
+    id: "agape",
+    word: "ἀγάπη",
+    translit: "agápē",
+    strong: "G26",
+    lang: ["Greco", "Grego"],
+    meaning: [
+      "Amore, carità. Paolo ne descrive le qualità in 1 Corinzi 13; il significato va letto nella frase e nel suo contesto, non come una formula universale.",
+      "Amor, caridade. Paulo descreve suas qualidades em 1 Coríntios 13; o significado deve ser lido na frase e em seu contexto, não como uma fórmula universal.",
+    ],
+    refs: [
+      ["1Cor", 13, 4],
+      ["1John", 4, 8],
+    ],
+  },
+  {
+    id: "pistis",
+    word: "πίστις",
+    translit: "pístis",
+    strong: "G4102",
+    lang: ["Greco", "Grego"],
+    meaning: [
+      "Fede, fiducia, fedeltà. Può indicare la fiducia personale o la fedeltà; il contesto aiuta a distinguere gli usi.",
+      "Fé, confiança, fidelidade. Pode indicar confiança pessoal ou fidelidade; o contexto ajuda a distinguir os usos.",
+    ],
+    refs: [
+      ["Heb", 11, 1],
+      ["Mark", 4, 40],
+    ],
+  },
+  {
+    id: "eirene",
+    word: "εἰρήνη",
+    translit: "eirḗnē",
+    strong: "G1515",
+    lang: ["Greco", "Grego"],
+    meaning: [
+      "Pace. Nei saluti del Risorto diventa un dono che apre alla riconciliazione e alla missione.",
+      "Paz. Nas saudações do Ressuscitado torna-se um dom que abre à reconciliação e à missão.",
+    ],
+    refs: [
+      ["John", 20, 19],
+      ["John", 14, 27],
+    ],
+  },
+  {
+    id: "bereshit",
+    word: "בְּרֵאשִׁית",
+    translit: "berēʾšît",
+    strong: "H7225",
+    lang: ["Ebraico", "Hebraico"],
+    meaning: [
+      "In principio. La preposizione be- si unisce a reshit, “inizio”. È l’apertura del racconto della creazione in Genesi.",
+      "No princípio. A preposição be- une-se a reshit, “início”. É a abertura do relato da criação em Gênesis.",
+    ],
+    refs: [["Gen", 1, 1]],
+  },
+  {
+    id: "ruach",
+    word: "רוּחַ",
+    translit: "rûaḥ",
+    strong: "H7307",
+    lang: ["Ebraico", "Hebraico"],
+    meaning: [
+      "Vento, soffio, spirito. In Genesi 1,2 il termine compare nell’espressione ruach Elohim; le traduzioni riflettono diverse scelte interpretative.",
+      "Vento, sopro, espírito. Em Gênesis 1,2 aparece na expressão ruach Elohim; as traduções refletem diferentes escolhas interpretativas.",
+    ],
+    refs: [
+      ["Gen", 1, 2],
+      ["Ezek", 37, 9],
+    ],
+  },
+  {
+    id: "shalom",
+    word: "שָׁלוֹם",
+    translit: "šālôm",
+    strong: "H7965",
+    lang: ["Ebraico", "Hebraico"],
+    meaning: [
+      "Pace, benessere, integrità. Il termine comprende più della sola assenza di conflitto e cambia sfumatura secondo il contesto.",
+      "Paz, bem-estar, integridade. O termo compreende mais que a ausência de conflito e muda de nuance conforme o contexto.",
+    ],
+    refs: [
+      ["Num", 6, 26],
+      ["Ps", 29, 11],
+    ],
+  },
+  {
+    id: "hesed",
+    word: "חֶסֶד",
+    translit: "ḥésed",
+    strong: "H2617",
+    lang: ["Ebraico", "Hebraico"],
+    meaning: [
+      "Bontà, misericordia, amore fedele. Spesso riguarda una relazione di lealtà; nessuna singola parola italiana ne esaurisce tutti gli usi.",
+      "Bondade, misericórdia, amor fiel. Frequentemente envolve uma relação de lealdade; nenhuma palavra portuguesa esgota todos os seus usos.",
+    ],
+    refs: [
+      ["Ps", 136, 1],
+      ["Exod", 34, 6],
+    ],
+  },
+];
+export const guides = [
+  {
+    title: ["Come leggere un brano", "Como ler uma passagem"],
+    ref: ["Luke", 24, 13],
+    body: [
+      [
+        "Leggi il testo una prima volta senza cercare subito una risposta. Nota chi parla, a chi si rivolge e che cosa accade.",
+        "Rileggi i versetti prima e dopo. Un versetto isolato può perdere il senso della scena. Confronta anche i passi paralleli.",
+        "Annota una domanda, una parola e un gesto possibile. Questa guida editoriale accompagna la lettura personale e non sostituisce l’insegnamento della Chiesa.",
+      ],
+      [
+        "Leia o texto uma primeira vez sem procurar uma resposta imediata. Observe quem fala, a quem se dirige e o que acontece.",
+        "Releia os versículos anteriores e posteriores. Um versículo isolado pode perder o sentido da cena. Compare também as passagens paralelas.",
+        "Anote uma pergunta, uma palavra e um gesto possível. Este guia editorial acompanha a leitura pessoal e não substitui o ensinamento da Igreja.",
+      ],
+    ],
+  },
+  {
+    title: [
+      "Lectio divina, in quattro passi",
+      "Lectio divina em quatro passos",
+    ],
+    ref: ["John", 15, 1],
+    body: [
+      [
+        "Lectio: ascolta il brano lentamente. Meditatio: lascia che una parola incontri la tua esperienza. Non cercare significati segreti dietro ogni dettaglio.",
+        "Oratio: rispondi a Dio con gratitudine, domande e intercessione. Contemplatio: resta qualche istante in silenzio, senza dover produrre qualcosa.",
+        "Concludi con un gesto di carità concreto. Puoi usare il quaderno per conservare le tue riflessioni e ritornarci nei giorni successivi.",
+      ],
+      [
+        "Lectio: escute a passagem devagar. Meditatio: deixe uma palavra encontrar sua experiência. Não procure sentidos secretos em cada detalhe.",
+        "Oratio: responda a Deus com gratidão, perguntas e intercessão. Contemplatio: permaneça um instante em silêncio, sem precisar produzir algo.",
+        "Conclua com um gesto concreto de caridade. Use o caderno para guardar suas reflexões e retomá-las nos dias seguintes.",
+      ],
+    ],
+  },
+  {
+    title: ["Pregare con i Salmi", "Rezar com os Salmos"],
+    ref: ["Ps", 23, 1],
+    body: [
+      [
+        "I Salmi danno voce alla lode, alla paura, alla protesta e alla fiducia. Puoi pregarli anche quando le loro parole sembrano lontane da ciò che provi.",
+        "Leggi un salmo intero. Cerca il movimento del testo: a chi si rivolge? Che cosa chiede? Che cosa ricorda dell’azione di Dio?",
+        "Nella tradizione cattolica la numerazione può differire tra il testo ebraico e la Vulgata. Qui il lettore segue la numerazione dell’edizione indicata.",
+      ],
+      [
+        "Os Salmos dão voz ao louvor, ao medo, ao protesto e à confiança. Você pode rezá-los mesmo quando suas palavras parecem distantes do que sente.",
+        "Leia um salmo inteiro. Observe o movimento do texto: a quem se dirige? O que pede? O que recorda da ação de Deus?",
+        "Na tradição católica a numeração pode diferir entre o texto hebraico e a Vulgata. Aqui o leitor segue a numeração da edição indicada.",
+      ],
+    ],
+  },
+  {
+    title: ["Discernere nella vita quotidiana", "Discernir na vida cotidiana"],
+    ref: ["Matt", 7, 16],
+    body: [
+      [
+        "Prima di una decisione, descrivi i fatti e distinguili dalle paure. La preghiera non sostituisce le informazioni né la responsabilità personale.",
+        "Domandati quali frutti produce ogni possibilità: cura delle persone, verità, giustizia, libertà interiore. Cerca il consiglio di una persona saggia.",
+        "Non tutto va deciso subito. Concludi affidando a Dio il passo che puoi compiere oggi e annota ciò che desideri rivedere.",
+      ],
+      [
+        "Antes de decidir, descreva os fatos e diferencie-os dos medos. A oração não substitui informações nem responsabilidade pessoal.",
+        "Pergunte quais frutos cada possibilidade produz: cuidado com as pessoas, verdade, justiça, liberdade interior. Busque o conselho de alguém sábio.",
+        "Nem tudo precisa ser decidido agora. Confie a Deus o passo possível hoje e anote o que deseja revisar.",
+      ],
+    ],
+  },
+];
+export const mysteryNames = {
+  joyful: [
+    [
+      "L’Annunciazione",
+      "La Visitazione",
+      "La nascita di Gesù",
+      "La presentazione al Tempio",
+      "Il ritrovamento di Gesù nel Tempio",
+    ],
+    [
+      "A Anunciação",
+      "A Visitação",
+      "O nascimento de Jesus",
+      "A apresentação no Templo",
+      "O encontro de Jesus no Templo",
+    ],
+  ],
+  luminous: [
+    [
+      "Il Battesimo di Gesù",
+      "Le nozze di Cana",
+      "L’annuncio del Regno",
+      "La Trasfigurazione",
+      "L’istituzione dell’Eucaristia",
+    ],
+    [
+      "O Batismo de Jesus",
+      "As bodas de Caná",
+      "O anúncio do Reino",
+      "A Transfiguração",
+      "A instituição da Eucaristia",
+    ],
+  ],
+  sorrowful: [
+    [
+      "L’agonia nel Getsemani",
+      "La flagellazione",
+      "La coronazione di spine",
+      "Gesù porta la croce",
+      "La crocifissione",
+    ],
+    [
+      "A agonia no Getsêmani",
+      "A flagelação",
+      "A coroação de espinhos",
+      "Jesus carrega a cruz",
+      "A crucificação",
+    ],
+  ],
+  glorious: [
+    [
+      "La Risurrezione",
+      "L’Ascensione",
+      "La Pentecoste",
+      "L’Assunzione di Maria",
+      "L’incoronazione di Maria",
+    ],
+    [
+      "A Ressurreição",
+      "A Ascensão",
+      "Pentecostes",
+      "A Assunção de Maria",
+      "A coroação de Maria",
+    ],
+  ],
+};
+export const novenaThemes = [
+  [
+    "Affidamento",
+    "Fiducia",
+    "Ascolto",
+    "Gratitudine",
+    "Perdono",
+    "Servizio",
+    "Pazienza",
+    "Speranza",
+    "Perseveranza",
+  ],
+  [
+    "Entrega",
+    "Confiança",
+    "Escuta",
+    "Gratidão",
+    "Perdão",
+    "Serviço",
+    "Paciência",
+    "Esperança",
+    "Perseverança",
+  ],
+];
+export function localDateKey(date = new Date()) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+export function dailyReading(date = new Date()) {
+  const day = Math.floor(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000,
+  );
+  return readings[
+    ((day % readings.length) + readings.length) % readings.length
+  ];
+}
+export function mysteryToday(date = new Date()) {
+  return [
+    "glorious",
+    "joyful",
+    "sorrowful",
+    "glorious",
+    "luminous",
+    "sorrowful",
+    "joyful",
+  ][date.getDay()];
+}
+
+export const novenaInvocations = {
+  novena1: [
+    "Maria, Madre di Gesù, accompagna questa intenzione e aiutami a rispondere al Vangelo con un cuore disponibile.",
+    "Maria, Mãe de Jesus, acompanhe esta intenção e ajude-me a responder ao Evangelho com um coração disponível.",
+  ],
+  novena2: [
+    "Spirito Santo, illumina la mia mente e rendi il mio cuore attento al bene che posso compiere oggi.",
+    "Espírito Santo, ilumine minha mente e torne meu coração atento ao bem que posso realizar hoje.",
+  ],
+  novena3: [
+    "San Giuseppe, custodisci il mio cammino nella famiglia e nel lavoro. Aiutami a servire con umiltà e responsabilità.",
+    "São José, guarde minha caminhada na família e no trabalho. Ajude-me a servir com humildade e responsabilidade.",
+  ],
+  novena4: [
+    "Gesù, mite e umile di cuore, insegnami un amore paziente e fedele, capace di accogliere e di ricominciare.",
+    "Jesus, manso e humilde de coração, ensine-me um amor paciente e fiel, capaz de acolher e recomeçar.",
+  ],
+  novena5: [
+    "Santa Rita, accompagna nella preghiera le mie difficoltà. Aiutami a cercare la pace e a perseverare anche quando non vedo una soluzione.",
+    "Santa Rita, acompanhe em oração minhas dificuldades. Ajude-me a buscar a paz e a perseverar mesmo quando não vejo uma solução.",
+  ],
+};
+export const novenaDayPrompts = [
+  [
+    "Dai un nome a ciò che porti nel cuore. Presentalo al Signore senza cercare parole perfette e lascia un momento di silenzio.",
+    "Dê um nome ao que traz no coração. Apresente ao Senhor sem procurar palavras perfeitas e deixe um momento de silêncio.",
+  ],
+  [
+    "Ricorda un momento in cui hai ricevuto aiuto. Ringrazia per quella presenza e chiedi la fiducia necessaria per il passo di oggi.",
+    "Recorde um momento em que recebeu ajuda. Agradeça por aquela presença e peça a confiança necessária para o passo de hoje.",
+  ],
+  [
+    "Ascolta prima di chiedere. Rileggi lentamente una frase del Vangelo e annota la domanda che risveglia in te.",
+    "Escute antes de pedir. Releia devagar uma frase do Evangelho e anote a pergunta que desperta em você.",
+  ],
+  [
+    "Nomina tre doni concreti di questa giornata, anche piccoli. La gratitudine non nega la fatica: allarga lo sguardo.",
+    "Nomeie três dons concretos deste dia, ainda que pequenos. A gratidão não nega a dificuldade: amplia o olhar.",
+  ],
+  [
+    "Affida una ferita e domanda un cuore libero dal rancore. Il perdono può richiedere tempo e non esclude confini giusti o la ricerca di aiuto.",
+    "Entregue uma ferida e peça um coração livre do rancor. O perdão pode exigir tempo e não exclui limites justos ou a busca de ajuda.",
+  ],
+  [
+    "Scegli un gesto di cura realizzabile oggi: una visita, un ascolto, un aiuto concreto. Unisci la tua intenzione al bene di qualcuno.",
+    "Escolha um gesto de cuidado possível hoje: uma visita, uma escuta, uma ajuda concreta. Una sua intenção ao bem de alguém.",
+  ],
+  [
+    "Osserva ciò che non puoi accelerare. Chiedi pazienza senza rinunciare a fare la tua parte con chiarezza e responsabilità.",
+    "Observe o que você não pode acelerar. Peça paciência sem renunciar a fazer sua parte com clareza e responsabilidade.",
+  ],
+  [
+    "Porta nella preghiera chi vive una situazione simile alla tua. Lascia che la speranza diventi anche solidarietà.",
+    "Leve à oração quem vive uma situação parecida com a sua. Deixe a esperança tornar-se também solidariedade.",
+  ],
+  [
+    "Rileggi il cammino di questi nove giorni. Ringrazia per ciò che hai compreso e scegli un piccolo impegno da continuare nella vita quotidiana.",
+    "Releia o caminho destes nove dias. Agradeça pelo que compreendeu e escolha um pequeno compromisso para continuar no cotidiano.",
+  ],
+];

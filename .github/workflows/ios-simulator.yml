@@ -1,0 +1,56 @@
+name: iOS Simulator
+on:
+  push:
+    branches: [fideora-v1-italiano]
+    paths:
+      [
+        "src/**",
+        "public/**",
+        "ios/**",
+        "package*.json",
+        "capacitor.config.json",
+        ".github/workflows/ios-simulator.yml",
+      ]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fideora-ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  simulator:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run appstore:preflight
+      - run: npm run cap:ios
+      - name: Build unsigned iOS simulator app
+        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/fideora-derived CODE_SIGNING_ALLOWED=NO build > /tmp/fideora-xcode.log 2>&1
+      - name: Launch on iPhone simulator
+        run: |
+          mkdir -p qa/artifacts
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys;d=json.load(sys.stdin);print(next(v["udid"] for items in d["devices"].values() for v in items if "iPhone" in v["name"]))')
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl install "$DEVICE_ID" /tmp/fideora-derived/Build/Products/Debug-iphonesimulator/App.app
+          xcrun simctl launch "$DEVICE_ID" com.fideora.app
+          sleep 8
+          xcrun simctl io "$DEVICE_ID" screenshot qa/artifacts/ios-launch.png
+      - name: Save native build evidence
+        if: always()
+        run: |
+          mkdir -p qa/artifacts
+          cp /tmp/fideora-xcode.log qa/artifacts/xcode.log || true
+          xcodebuild -version > qa/artifacts/xcode-version.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fideora-ios-simulator
+          path: qa/artifacts/
