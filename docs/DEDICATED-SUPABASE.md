@@ -77,3 +77,26 @@ Após conexão, configurar Site URL https://fideora.app e redirects exatos, vali
 4. Validar com o titular um recebimento e login reais e só então preparar e publicar o mesmo ajuste no main. Nenhum e-mail foi enviado pelo agente. Produção continua no projeto compartilhado até esse aceite; não afirmar migração concluída.
 
 O conector de banco não oferece edição de nome, Site URL, Redirect URLs ou SMTP. A conexão do navegador não respondeu às tentativas de acesso e de reconexão nesta etapa; nenhuma sessão alternativa foi usada. As três ações acima permanecem necessárias no painel.
+
+### Campos de SMTP para o painel
+
+Ativar Custom SMTP no projeto sysuottboucultzzaagv e preencher:
+
+| Campo | Valor |
+|---|---|
+| Sender email | support@fideora.app |
+| Sender name | Fideora |
+| Host | br878.hostgator.com.br |
+| Port | 587 (TLS/STARTTLS) |
+| Username | support@fideora.app |
+| Password | Senha da caixa de e-mail, inserida pelo titular diretamente no painel |
+
+O servidor br878 foi identificado no cPanel da hospedagem existente. A HostGator documenta o uso do servidor da hospedagem, usuário com endereço completo e porta 587 com TLS. Nenhuma senha foi lida ou salva no repositório. Referências: https://supabase.com/docs/guides/auth/auth-smtp e https://suporte.hostgator.com.br/hc/pt-br/articles/30812261267731-Como-configurar-o-recebimento-e-envio-de-e-mails-no-aplicativo-Gmail-Android-iOS.
+
+### Preview conferido
+
+- Commit do app: 54bc3091fd2546997008b7183211fb4d94b8632a.
+- Preview READY: https://mappa-cattolico-3225qzau9-thales-projects-54040b4e.vercel.app.
+- HTML e bundle JavaScript publicados retornaram HTTP 200 por acesso autenticado. O bundle contém o hostname novo e não contém o hostname antigo. A CSP entregue aponta HTTPS/WSS somente ao projeto dedicado.
+- GitHub Security & Build Check 39652197485 passou. O workflow iOS Simulator 39652187002 ainda estava em execução na última consulta; não é declarado aprovado.
+- Inspeção visual e login real permanecem pendentes devido à conexão indisponível do navegador e à configuração Auth/SMTP ainda necessária. A produção fideora.app não foi promovida para este preview.
