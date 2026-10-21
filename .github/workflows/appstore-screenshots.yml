@@ -68,19 +68,23 @@ jobs:
           lang='pt' if pt else 'it'
           steps=['appId: com.fideora.app','---','- launchApp','- assertVisible: '+json.dumps('Come possiamo chiamarti.*')]
           if pt: steps+=['- tapOn: '+json.dumps('Português')]
-          steps+=['- tapOn: '+json.dumps('Fechar' if pt else 'Chiudi'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-01-today'))]
+          steps+=['- tapOn: '+json.dumps('Fechar' if pt else 'Chiudi'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(lang+'-01-today')]
           for n, label in [('02-bible','Bíblia' if pt else 'Bibbia'),('03-prayer','Rezar' if pt else 'Prega'),('04-notebook','Caderno' if pt else 'Quaderno')]:
-              steps+=['- tapOn: '+json.dumps(label),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-'+n))]
-          steps+=['- tapOn: '+json.dumps('Conhecer Premium' if pt else 'Scopri Premium'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-05-premium'))]
-          steps+=['- tapOn: '+json.dumps('Ver planos' if pt else 'Vedi i piani'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-06-plans'))]
+              steps+=['- tapOn: '+json.dumps(label),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(lang+'-'+n)]
+          steps+=['- tapOn: '+json.dumps('Conhecer Premium' if pt else 'Scopri Premium'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(lang+'-05-premium')]
+          steps+=['- tapOn: '+json.dumps('Ver planos' if pt else 'Vedi i piani'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(lang+'-06-plans')]
           open('/tmp/fideora-store-flow.yaml','w').write('\n'.join(steps)+'\n')
           PY
-            maestro --device "$FIDEORA_SIMULATOR" test --debug-output qa/store/maestro-debug /tmp/fideora-store-flow.yaml
+            maestro --device "$FIDEORA_SIMULATOR" test --test-output-dir qa/store/maestro --debug-output qa/store/maestro /tmp/fideora-store-flow.yaml
           done
       - name: Validate actual screenshot dimensions
         run: |
           python3 - <<'PY'
-          import glob, struct
+          import glob, struct, shutil
+          from pathlib import Path
+          for source in Path('qa/store/maestro').rglob('*.png'):
+              if source.name.startswith(('it-','pt-')):
+                  shutil.copy2(source, Path('qa/store') / source.name)
           files=glob.glob('qa/store/*.png')
           assert len(files)==12, files
           for name in files:
@@ -95,3 +99,5 @@ jobs:
         with:
           name: fideora-appstore-${{ matrix.device }}
           path: qa/store/
+          include-hidden-files: true
+
