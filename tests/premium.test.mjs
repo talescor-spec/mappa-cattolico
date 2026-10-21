@@ -91,6 +91,10 @@ test("only a valid active entitlement grants access; expired/offline cache and m
   assert.equal(hasEntitlement(active), true);
   assert.equal(hasEntitlement(free), false);
   assert.equal(hasEntitlement({ premium: true }), false);
+  assert.equal(
+    hasEntitlement({ entitlements: { active: { premium: {} } } }),
+    false,
+  );
   for (const expirationDate of ["2020-01-01", "garbage"])
     assert.equal(
       hasEntitlement({

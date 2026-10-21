@@ -120,7 +120,7 @@ export default function Onboarding({ bible, onFinish }) {
             </blockquote>
             {passage && (
               <small>
-                Giovanni / João 1,1 ·{" "}
+                {l("Giovanni 1,1", "João 1,1")} ·{" "}
                 {language === "it" ? "Diodati 1649" : "Almeida 1819"}
               </small>
             )}

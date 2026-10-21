@@ -21,3 +21,6 @@ Italiano padrão → onboarding com objetivo/tempo → amostra diária grátis �
 
 ## Notas de review (rascunho)
 Fideora uses RevenueCat/StoreKit for an optional Premium subscription. Daily devotional reading remains free. Full Bible navigation/search, new annotations/studies, editorial guides/lexicon and guided prayer tracks require the premium entitlement. Existing personal content, export, deletion and support remain accessible after expiry. Restore and subscription management are available in Profile. Verify exact configured product IDs and sandbox acceptance in the final release report; this audit is not release approval.
+
+## Reavaliação após implementação
+Projeto/app RevenueCat criados com credenciais iOS válidas; entitlement premium e dois produtos reais vinculados à oferta default; paywall IT/PT publicado. Source gates, restore e customer center implementados; 20 testes e 24 preflight checks passaram, build iOS e abertura no simulador passaram. O risco de compra real continua aberto até aceite StoreKit em aparelho. Nenhuma evidência fictícia foi criada para ultrapassar o release gate.

@@ -19,7 +19,7 @@ export function hasEntitlement(
   now = Date.now(),
 ) {
   const active = info?.entitlements?.active?.[entitlement];
-  if (!active || active.isActive === false) return false;
+  if (!active || active.isActive !== true) return false;
   if (active.expirationDate != null) {
     const expiry = Date.parse(active.expirationDate);
     if (!Number.isFinite(expiry) || expiry <= now) return false;
