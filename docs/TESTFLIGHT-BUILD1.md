@@ -10,12 +10,12 @@ Verificado no App Store Connect em 21/10/2026, após envio pelo titular via Xcod
 - Assinatura de distribuição no metadata: application-identifier CZ7QKZBQC8.com.fideora.app; equipe CZ7QKZBQC8; get-task-allow false; beta-reports-active true.
 - App Uses Non-Exempt Encryption: No. Includes Symbols: Yes.
 - Destinos: iPhone e iPad; arm64; mínimo iOS 15.0. Localizations no metadata Apple: Italian. A seleção de português dentro do app deve ser conferida no aparelho.
-- Grupo interno Fideora QA Interno criado com distribuição automática desativada e build 1 associada. Status Ready to Test; zero testadores no momento desta verificação. Nenhum convite enviado.
+- Grupo interno Fideora QA Interno criado com distribuição automática desativada e build 1 associada. Status Ready to Test; um testador interno adicionado após autorização explícita do titular. A linha do testador confirmou Invited em 21/10/2026; recebimento, aceite e instalação ainda não foram confirmados.
 - Texto What to Test salvo em italiano, com cenários de idioma, uso gratuito, paywall, compras mensal/anual, elegibilidade do trial, restauração, expiração, conta, exclusão de conta QA, suporte e modo offline.
 - URL do grupo: https://appstoreconnect.apple.com/teams/1f404b10-6425-4a63-9483-a4bc8a3f49d7/apps/6825337165/testflight/groups/e73db516-080e-4121-89a7-88443574942f.
 - URL da build: https://appstoreconnect.apple.com/teams/1f404b10-6425-4a63-9483-a4bc8a3f49d7/apps/6825337165/testflight/ios/3f58fea2-0faf-42ea-a93e-8007b49b6310.
 
-![Grupo interno com build pronta para testar](assets/fideora-testflight-build1.png)
+![Grupo interno com um testador adicionado e build pronta para testar](assets/fideora-testflight-invited.png)
 
 ## Limites e próximo aceite
 
@@ -30,3 +30,4 @@ O Xcode havia salvo literalmente /Volumes/THALES%20HD%20500GB%20/Fideora-Build/D
 Os campos IDECustomDerivedDataLocation e IDECustomDistributionArchivesLocation foram atualizados para DerivedData e Archives dentro de Fideora-Build. O cache padrão acompanha DerivedData. O titular confirmou compilação e envio concluídos depois da correção. Isso não comprova que o checkout ou node_modules também foram movidos para fora do disco interno.
 
 Roteiro de aceite e assinatura: TESTFLIGHT-SETUP.md. O estado verificado neste documento substitui as pendências históricas de archive/upload nos relatórios anteriores. Os demais itens de review continuam sujeitos ao gate APP_STORE_REVIEW_GATE.md e ao teste físico.
+
