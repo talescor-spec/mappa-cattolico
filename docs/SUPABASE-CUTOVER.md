@@ -18,4 +18,12 @@ Data: 21/10/2026.
 
 ## Publicação
 
-Aguardando build e conferência da versão de produção. Registrar deployment, commit e resultado HTTP após conclusão.
+- Commit de código main: 1ecf163e8ace9231ee7584cf78277a1faa62f89d.
+- Deployment: dpl_2Z2LqNqeA6a3skGJVvMw1UbfZn12, target production, READY.
+- Aliases confirmados: fideora.app, www.fideora.app e mappa-cattolico.vercel.app.
+- https://fideora.app retornou HTTP 200. A CSP entregue permite HTTPS/WSS apenas ao projeto sysuottboucultzzaagv.
+- Bundle publicado observado no HTML: /assets/index-D9uS5fq-.js. Retornou HTTP 200, contém o hostname novo e não contém o hostname antigo. O hash difere do build local; a validação foi feita sobre o artefato efetivamente publicado.
+- privacy.html e support.html retornaram HTTP 200 e incluem support@fideora.app.
+- GitHub Security & Build Check 39655698628 concluiu com sucesso.
+- Recebimento de e-mail e login na versão preparada foram confirmados pelo titular antes da publicação; login posterior no domínio final e retorno automático no iPhone não foram executados pelo agente. Nenhuma submissão Apple foi feita.
+- Deployment anterior preservado para retorno: dpl_47NaPY8kmfc2nZYJfGMXBtAoZDjK.
