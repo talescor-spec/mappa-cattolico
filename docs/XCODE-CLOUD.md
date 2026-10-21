@@ -67,7 +67,7 @@ Para garantir que o Xcode analise a configuração atualizada, scripts/setup-xco
 
 Para o contador: Xcode Cloud → Settings → Build Number → Edit Next Build Number. Ajustar antes do primeiro envio para TestFlight. O número no projeto continua 1; no Cloud, a Apple atribui e incrementa o número da build. Não sobrescrever CFBundleVersion por script nem tentar deduzir a build a partir do SHA.
 
-Distribuição automática validada em 21/10/2026: workflow ativo, archive Cloud assinado, upload processado e 1.0.0 (4) disponível no grupo interno. O próximo teste é instalar a atualização no iPhone e avaliar os ajustes V2; isso permanece separado da validação da infraestrutura e de eventual submissão para App Review.
+Distribuição automática validada em 21/10/2026: workflow ativo, archive Cloud assinado, upload processado e 1.0.0 (5) disponível no grupo interno, iniciada por push no GitHub. O próximo teste é instalar a atualização no iPhone e avaliar os ajustes V2; isso permanece separado da validação da infraestrutura e de eventual submissão para App Review.
 
 ## Evidência de validação
 
@@ -82,11 +82,16 @@ Distribuição automática validada em 21/10/2026: workflow ativo, archive Cloud
 - Build Cloud 3, 0749b4f6-5437-4057-9ff6-d221577d7994, commit 29e6107f9df9fe6523e0ca09823d00f61519fd88: Succeeded. Post-clone passou na Apple, dependências resolvidas e compilação iOS aprovada. O esquema App ficou disponível para configuração do archive.
 - Workflow Fideora · TestFlight salvo e ativo às 18:44: início manual e push somente em fideora-premium-v1; PRs/tags desativados; commits somente em docs/ ignorados; cache permitido; Archive iOS/App com Distribution Preparation = App Store Connect; postação TestFlight Internal Testing para Fideora QA Interno (um membro existente). Sem novos convites e sem submissão pública.
 - Build 4, 1c44a9f0-32df-40a4-b58f-c506ca2b9fa7, commit 29e6107f9df9fe6523e0ca09823d00f61519fd88: Succeeded, incluindo Archive - iOS e TestFlight Internal Testing - iOS. Upload processado: versão 1.0.0 (4), build App Store Connect 60d6e627-5444-4ab3-91b6-9b8644e9603c, associada automaticamente ao grupo Fideora QA Interno. Não foi necessário archive nem upload pelo Mac.
-- Notas PT-BR importadas automaticamente. Italiano estava vazio porque it-IT não é locale válido para BetaBuildLocalization; preenchido no painel para a build 4 e corrigido o nome do arquivo fonte para WhatToTest.it.txt. A correção acionará a próxima build por push, validando também o gatilho automático.
+- Notas PT-BR importadas automaticamente. Italiano estava vazio porque it-IT não é locale válido para BetaBuildLocalization; preenchido no painel para a build 4 e corrigido o nome do arquivo fonte para WhatToTest.it.txt. Na build 5, a nota italiana foi importada automaticamente e verificada no painel (3.162 caracteres restantes).
+- Push 0378a73ea715ee96bdc2b5bdc1788a0152d3e05c criou automaticamente a build 5, d5d512c7-1e6d-4a19-b63f-a684b3131a13, com Start Condition = Code push. Sem iniciar manualmente e sem Mac. Resultado Succeeded no archive e na postação TestFlight Internal Testing; 1.0.0 (5) processada, associada automaticamente a Fideora QA Interno e com status Testing. Nota italiana importada automaticamente. Fluxo completo por push validado.
 - Quatro warnings não bloquearam o archive: dois do SDK RevenueCat UI, um do Filesystem e um arquivo antigo não referenciado no catálogo AppIcon. Nenhum erro de compilação ou de distribuição; warnings não são prova de aprovação futura do App Review.
 - Nenhuma chave privada foi extraída e nenhuma submissão para App Review foi realizada.
 
 ![Workflow ativo: branch premium, archive App e grupo interno](assets/fideora-xcode-cloud-workflow.jpg)
+
+![Build 5 iniciada por push, archive e distribuição com sucesso](assets/fideora-xcode-cloud-build5.jpg)
+
+![Versão 1.0.0 (5) disponível para teste no grupo interno](assets/fideora-testflight-cloud5.jpg)
 
 Comando de preparo inicial no Mac (script versionado na branch do projeto):
 
@@ -103,3 +108,4 @@ O script é uma conveniência para baixar um checkout atualizado e abrir o proje
 - https://developer.apple.com/documentation/xcode/making-dependencies-available-to-xcode-cloud
 - https://developer.apple.com/documentation/xcode/setting-the-next-build-number-for-xcode-cloud-builds
 - https://developer.apple.com/documentation/xcode/including-notes-for-testers-with-a-beta-release-of-your-app
+- https://developer.apple.com/documentation/appstoreconnectapi/betabuildlocalization/attributes-data.dictionary
