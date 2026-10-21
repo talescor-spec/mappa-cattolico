@@ -28,6 +28,8 @@ O leitor contém edições históricas de 66 livros por idioma, sem deuterocanô
 - Paywall publicado: `wfc1f6a56c9adc4b9a`, Fideora Premium V1 · IT / PT. Italiano padrão; português do Brasil adicional; inglês removido. Três benefícios, botão de fechar, restauração, termos, privacidade e renovação.
 - Pacotes reais: `$rc_monthly` → `com.fideora.premium.monthly`; `$rc_annual` → `com.fideora.premium.annual`. Ambos vinculados ao mesmo entitlement.
 - Apple: grupo `22500299`; mensal `6825362133`; anual `6825368737`.
+- Ambos os planos estão no nível 1 do mesmo grupo Apple. Duração mensal de um mês e anual de um ano; sem compromisso anual parcelado. Localizações dos produtos e do grupo salvas em italiano e português do Brasil.
+- URLs de notificações Apple → RevenueCat salvas para produção e sandbox. Ainda sem transações para comprovar entrega dessas notificações.
 - Preços base iniciais para Itália: €4,99/mês e €29,99/ano, com equivalências locais calculadas pela Apple. O SDK mostra o preço do storefront, sem valores fixos no código do paywall. Sem trial nesta primeira configuração; sem oferta vitalícia.
 - A prévia do editor RevenueCat pode usar preços fictícios do Test Store ($9,99/$79,99). Esses valores não são os preços base Apple configurados. O código de produção rejeita chaves Test Store.
 - Nenhuma cobrança, compra real ou submissão à Apple foi efetuada pelo agente.
@@ -56,11 +58,15 @@ Os posts foram lidos na sessão conectada do X, pois a busca pública não recup
 - 20 testes passaram; 24 verificações estruturais passaram; build web e sincronização iOS passaram; auditoria npm sem vulnerabilidades.
 - [Build e abertura iOS no simulador](https://github.com/talescor-spec/mappa-cattolico/actions/runs/39610924305): sucesso com os SDKs novos. Isso não comprova compra StoreKit nem execução em aparelho físico.
 - Prévia web: onboarding e objetivo/tempo, bloqueio de novas notas e Rosário, passagem diária limitada, troca IT/PT, fechar oferta e estado de plataforma sem compra. 390×844 e 320×568 sem overflow horizontal; console sem erros.
+- Prévia final disponível: https://mappa-cattolico-2wiek2tjr-thales-projects-54040b4e.vercel.app (commit `1bc1a95797ad3d1719e71b363c8c98c9a57b6148`). Produção permanece na V1 gratuita enquanto falta aceite StoreKit.
+- Rascunho App Privacy salvo com sete tipos de dados. Compras, User ID e Product Interaction: funcionamento e analytics, vinculados à identidade, sem tracking. A prévia não apresenta mais a classificação contraditória de identificadores/interações como dados desvinculados. Publicação final ainda pendente.
+- Descrições IT/PT e notas para review estão em `PREMIUM-STORE-COPY.md` e preenchidas na página Apple. **O salvamento da versão foi rejeitado porque faltam nome, sobrenome, telefone e e-mail do contato de review.** O texto novo dessa página está sem salvar; não considerar os metadados da versão atualizados no servidor. Nenhum contato foi inventado.
+- CI Security & Build Check do commit final: sucesso (`39615102670`). Nova execução do simulador (`39615095100`) ainda na fila na última consulta; a execução anterior com os SDKs RevenueCat passou, conforme link acima.
 
 ## Pendências antes de cobrar e enviar para review
 
 1. Account Holder revisar o contrato Apple pendente (Paid Applications Schedule). O agente não aceitou contrato.
-2. Finalizar e revisar registros Apple: screenshots de review dos IAPs e do app, App Privacy com histórico de compras/analytics, contato e direitos de conteúdo, e associação dos IAPs à versão.
+2. Finalizar e revisar registros Apple: screenshots de review dos IAPs e do app, publicar App Privacy conferido, fornecer contato de review para salvar as novas descrições/notas, direitos de conteúdo, e associação dos IAPs à versão.
 3. Archive assinado, TestFlight e teste em iPhone: compra de cada plano, cancelamento, restauração com mesmo Apple ID, expiração, troca de conta, login e exclusão.
 4. Conferir preços, idioma, termos e todos os botões no paywall nativo com produtos reais do sandbox. Validar a recuperação de billing e mudança mensal/anual no mesmo nível.
 
