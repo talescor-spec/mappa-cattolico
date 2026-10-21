@@ -96,3 +96,8 @@ https://fideora.app está em produção com HTTPS; www redireciona para a raiz. 
 ## Backend exclusivo preparado — 21/10/2026
 
 Projeto sysuottboucultzzaagv configurado com três tabelas e nove políticas RLS. Teste real de isolamento/exclusão com dois usuários passou em dez propriedades; fixtures revertidas. Cliente e CSP da branch preparados para o projeto exclusivo, sem promover Premium nem trocar o backend da produção. Auth URL/SMTP e nome no painel continuam pendentes devido à indisponibilidade da conexão do navegador. Build, 20 testes e 24 verificações estruturais passaram. Ver DEDICATED-SUPABASE.md.
+
+
+## Preparação TestFlight — estado atualizado
+
+O titular informou aceite do contrato Apple e confirmou recebimento/login por e-mail. Backend exclusivo ativado em fideora.app, conforme DEDICATED-SUPABASE.md. O workflow iOS Simulator 39652187002 do commit 54bc3091fd2546997008b7183211fb4d94b8632a terminou com sucesso, compilando e abrindo o app. Não há nova evidência de archive assinado, upload/processamento TestFlight ou compra/restauração em iPhone. As pendências históricas de contrato e backend acima ficam substituídas por esta atualização; contato de review e estado atual do portal não foram reconferidos. Passo a passo de assinatura, envio e aceite preparado em TESTFLIGHT-SETUP.md. Nenhuma submissão Apple foi executada.
