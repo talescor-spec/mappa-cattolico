@@ -1,0 +1,95 @@
+name: App Store screenshots
+on:
+  push:
+    branches: [fideora-appstore-assets]
+    paths: [".github/workflows/appstore-screenshots.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [iphone, ipad]
+    env:
+      MAESTRO_CLI_NO_ANALYTICS: "true"
+      MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Build unchanged application for Simulator
+        run: |
+          mkdir -p qa/store
+          ios/App/ci_scripts/ci_post_clone.sh
+          xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App -derivedDataPath /tmp/fideora-store -onlyUsePackageVersionsFromResolvedFile > qa/store/resolve.log 2>&1
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/fideora-store -onlyUsePackageVersionsFromResolvedFile CODE_SIGNING_ALLOWED=NO build > qa/store/build.log 2>&1
+      - name: Install official Maestro CLI
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      - name: Start store-sized simulator
+        env:
+          FIDEORA_DEVICE: ${{ matrix.device }}
+        run: |
+          xcrun simctl list -j > qa/store/simulators.json
+          python3 - <<'PY'
+          import json, os, subprocess
+          data = json.load(open('qa/store/simulators.json'))
+          model = 'iPhone 16 Pro' if os.environ['FIDEORA_DEVICE'] == 'iphone' else 'iPad Pro 13-inch (M4)'
+          kind = next(t['identifier'] for t in data['devicetypes'] if t['name'] == model)
+          runtime = next(r['identifier'] for r in reversed(data['runtimes']) if r['isAvailable'] and r['identifier'].startswith('com.apple.CoreSimulator.SimRuntime.iOS-'))
+          udid = subprocess.check_output(['xcrun','simctl','create','Fideora Store',kind,runtime], text=True).strip()
+          with open(os.environ['GITHUB_ENV'],'a') as f:
+              f.write('FIDEORA_SIMULATOR='+udid+'\n')
+          PY
+          open -a Simulator
+      - name: Capture Italian and Portuguese current app
+        run: |
+          xcrun simctl boot "$FIDEORA_SIMULATOR"
+          xcrun simctl bootstatus "$FIDEORA_SIMULATOR" -b
+          xcrun simctl status_bar "$FIDEORA_SIMULATOR" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
+          for FIDEORA_LOCALE in it pt; do
+            xcrun simctl uninstall "$FIDEORA_SIMULATOR" com.fideora.app || true
+            xcrun simctl install "$FIDEORA_SIMULATOR" /tmp/fideora-store/Build/Products/Debug-iphonesimulator/App.app
+            export FIDEORA_LOCALE
+            python3 - <<'PY'
+          import os, json
+          pt=os.environ['FIDEORA_LOCALE']=='pt'
+          lang='pt' if pt else 'it'
+          steps=['appId: com.fideora.app','---','- launchApp','- assertVisible: '+json.dumps('Come possiamo chiamarti?')]
+          if pt: steps+=['- tapOn: '+json.dumps('Português')]
+          steps+=['- tapOn: '+json.dumps('Fechar' if pt else 'Chiudi'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-01-today'))]
+          for n, label in [('02-bible','Bíblia' if pt else 'Bibbia'),('03-prayer','Rezar' if pt else 'Prega'),('04-notebook','Caderno' if pt else 'Quaderno')]:
+              steps+=['- tapOn: '+json.dumps(label),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-'+n))]
+          open('/tmp/fideora-store-flow.yaml','w').write('\n'.join(steps)+'\n')
+          PY
+            maestro --device "$FIDEORA_SIMULATOR" test /tmp/fideora-store-flow.yaml
+          done
+      - name: Validate actual screenshot dimensions
+        run: |
+          python3 - <<'PY'
+          import glob, struct
+          files=glob.glob('qa/store/*.png')
+          assert len(files)==8, files
+          for name in files:
+              data=open(name,'rb').read(24)
+              assert data[:8]==b'\x89PNG\r\n\x1a\n'
+              size=struct.unpack('>II',data[16:24])
+              assert size in [(1206,2622),(2064,2752)], (name,size)
+              print(name,size)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fideora-appstore-${{ matrix.device }}
+          path: qa/store/
