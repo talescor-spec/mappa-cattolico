@@ -43,7 +43,7 @@ O titular já tem um projeto Fideora funcional no Xcode, com a equipe correta. E
 
 Para garantir que o Xcode analise a configuração atualizada, scripts/setup-xcode-cloud-mac.sh prepara um novo checkout no HD externo THALES HD 500GB, sem substituir o projeto anterior. Ele coloca projeto, dependências, cache npm e temporários em Fideora-Build no HD e abre o Xcode; não compila o binário nativo nem faz upload. O script é apenas para essa ativação inicial. DerivedData/Archives já configurados no HD permanecem como estão; Xcode/macOS ainda podem usar caches internos próprios.
 
-1. Abrir o Fideora no Xcode e escolher **Product → Xcode Cloud → Create Workflow**. Selecionar o produto App/com.fideora.app e a equipe CZ7QKZBQC8. Não criar outro app na Apple.
+1. Abrir o Fideora no Xcode e escolher **Integrate → Create Workflow**. Selecionar o produto App/com.fideora.app e a equipe CZ7QKZBQC8. Não criar outro app na Apple.
 2. Revisar o workflow: usar a branch **fideora-premium-v1**, nunca main. Na primeira ativação, manter **Deployment Preparation = None** e não adicionar distribuição TestFlight ainda. Isso evita colidir com 1.0.0 (1) antes de configurar o contador Cloud.
 3. Em **Grant Access**, conectar o GitHub **talescor-spec/mappa-cattolico**. Selecionar somente esse repositório, sem ampliar acesso a Herbalia ou outros projetos. A autorização de acesso e qualquer acordo novo apresentado pela Apple devem ser revisados pelo titular.
 4. Completar a ativação e iniciar o primeiro build na branch fideora-premium-v1. Depois da ativação, o agente pode configurar os itens seguintes pelo App Store Connect. O Mac deixa de ser necessário para compilar ou enviar as próximas revisões.
@@ -77,13 +77,13 @@ Somente declarar a distribuição automática concluída depois de conferir work
 - Conferência do lockfile em checkout limpo: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39674679092, código 2ee092c330d1bda62db1d5d20a46bee438e26228. Registrar o resultado quando terminar; não confundir esse CI sem assinatura com um upload TestFlight.
 - Nenhum workflow Xcode Cloud foi criado, nenhuma chave privada foi extraída e nenhum upload novo foi feito nesta preparação. A ativação inicial continua pendente no Mac.
 
-Comando de preparo inicial no Mac (script desta revisão, em endereço imutável):
+Comando de preparo inicial no Mac (script versionado na branch do projeto):
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/talescor-spec/mappa-cattolico/2ee092c330d1bda62db1d5d20a46bee438e26228/scripts/setup-xcode-cloud-mac.sh | bash
+curl -fsSL https://raw.githubusercontent.com/talescor-spec/mappa-cattolico/fideora-premium-v1/scripts/setup-xcode-cloud-mac.sh | bash
 ```
 
-O script é uma conveniência para baixar um checkout atualizado e abrir o projeto no HD externo. A ativação Apple continua sendo feita pelo titular no menu Product → Xcode Cloud → Create Workflow. Depois dessa ligação inicial, configurar workflow, contador e grupo interno no painel, validar o primeiro upload e então considerar o fluxo ativo.
+O script é uma conveniência para baixar um checkout atualizado e abrir o projeto no HD externo. A ativação Apple continua sendo feita pelo titular no menu Integrate → Create Workflow. Depois dessa ligação inicial, configurar workflow, contador e grupo interno no painel, validar o primeiro upload e então considerar o fluxo ativo.
 
 ## Fontes
 

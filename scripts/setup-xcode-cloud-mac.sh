@@ -36,6 +36,6 @@ npm ci --cache "$FIDEORA_STORAGE/npm-cache" --no-audit --no-fund
 npm run cap:ios
 open ios/App/App.xcodeproj
 printf '\nProjeto preparado: %s\n' "$FIDEORA_CLOUD_PROJECT"
-printf '%s\n' 'No Xcode: Product → Xcode Cloud → Create Workflow.'
+printf '%s\n' 'No Xcode: Integrate → Create Workflow.'
 printf '%s\n' 'Use App/com.fideora.app, equipe CZ7QKZBQC8 e branch fideora-premium-v1.'
 printf '%s\n' 'Esta etapa não faz Archive local, upload ou envio para App Review.'
