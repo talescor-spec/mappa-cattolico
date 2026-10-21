@@ -43,3 +43,20 @@ Products: com.fideora.premium.monthly and com.fideora.premium.annual.
 - Sandbox test access Anybody: owner confirmed step 1 completed.
 - Review contact is already populated in App Store Connect; personal contact details are intentionally omitted from this public document.
 - No App Review submission or public release performed during preparation.
+
+## Store preparation actions completed
+
+- Saved Italian and Brazilian Portuguese descriptions from PREMIUM-STORE-COPY, including free Genesis/Exodus and no numerical Bible book count.
+- Saved the English reviewer journey notes and retained optional sign-in, existing review contact, and manual release.
+- Selected App Store eligible build 1.0.0 (5) for the version and saved.
+- Declared third-party content rights based on the historical public-domain corpus documented in README.
+- Set the app download price to zero. Premium subscriptions remain separate, unchanged purchases.
+- Prepared initial availability in Italy, Brazil and Portugal; other territories can be added before or after launch.
+- Public privacy, terms and support URLs returned HTTP 200; the live privacy policy includes RevenueCat purchase processing.
+- App Privacy contains seven types matching the app manifest, including purchase history, linked user IDs and paywall interactions. Purchase history uses Analytics and App Functionality, as required by RevenueCat documentation. Publication remains pending the owner's accuracy attestation.
+- Annual/monthly subscription group exists at the same service level with IT/PT localizations. Annual subscription review screenshot still requires an actual current screenshot; no subscription has been submitted for review.
+- Separate assets branch runs simulator capture only and does not upload a replacement TestFlight binary.
+
+Metadata evidence: ![Saved Italian description](assets/fideora-store-metadata.png).
+
+Sources consulted: https://www.revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy and https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy .
