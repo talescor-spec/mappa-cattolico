@@ -66,11 +66,13 @@ jobs:
           import os, json
           pt=os.environ['FIDEORA_LOCALE']=='pt'
           lang='pt' if pt else 'it'
-          steps=['appId: com.fideora.app','---','- launchApp','- assertVisible: '+json.dumps('Come possiamo chiamarti?')]
+          steps=['appId: com.fideora.app','---','- launchApp','- assertVisible: '+json.dumps('Come possiamo chiamarti.*')]
           if pt: steps+=['- tapOn: '+json.dumps('Português')]
           steps+=['- tapOn: '+json.dumps('Fechar' if pt else 'Chiudi'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-01-today'))]
           for n, label in [('02-bible','Bíblia' if pt else 'Bibbia'),('03-prayer','Rezar' if pt else 'Prega'),('04-notebook','Caderno' if pt else 'Quaderno')]:
               steps+=['- tapOn: '+json.dumps(label),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-'+n))]
+          steps+=['- tapOn: '+json.dumps('Conhecer Premium' if pt else 'Scopri Premium'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-05-premium'))]
+          steps+=['- tapOn: '+json.dumps('Ver planos' if pt else 'Vedi i piani'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-06-plans'))]
           open('/tmp/fideora-store-flow.yaml','w').write('\n'.join(steps)+'\n')
           PY
             maestro --device "$FIDEORA_SIMULATOR" test --debug-output qa/store/maestro-debug /tmp/fideora-store-flow.yaml
@@ -80,7 +82,7 @@ jobs:
           python3 - <<'PY'
           import glob, struct
           files=glob.glob('qa/store/*.png')
-          assert len(files)==8, files
+          assert len(files)==12, files
           for name in files:
               data=open(name,'rb').read(24)
               assert data[:8]==b'\x89PNG\r\n\x1a\n'
