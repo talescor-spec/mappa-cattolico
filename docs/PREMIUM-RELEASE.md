@@ -86,3 +86,8 @@ Comparar uma mudança por vez com tráfego suficiente: preço anual/mescla de pl
 21/10/2026: usuário aprovou €19/mês e €59/ano com sete dias grátis no anual. Preço mensal reaberto e verificado na linha Italy (EUR) €19.00. Preço anual reaberto e verificado na linha Italy (EUR) €59.00. Trial salvo e verificado como Free for the first week em 175 países, de 21/10/2026 a No End Date. A apresentação desses dados no iPhone ainda será conferida no próximo teste StoreKit. 20 testes, build web e 24 verificações estruturais passaram novamente após a atualização dos termos. A medição de conversão ainda não foi realizada.
 
 ![Trial anual salvo no App Store Connect](assets/fideora-apple-annual-trial.jpg)
+
+
+## Domínio próprio — 21/10/2026
+
+https://fideora.app está em produção com HTTPS; www redireciona para a raiz. A PR #5 publica somente o domínio, canonical e páginas legais atuais sobre a V1 web existente. A versão Premium permanece na PR #4 até o aceite nativo. Links legais IT/PT do paywall RevenueCat publicados no novo domínio; Privacy Policy URLs Apple salvas. Descrições e URLs da página da versão Apple estão preparadas sem salvar, dependendo do contato de review. DNS HostGator preparado, mas caixa support@fideora.app ainda depende do login no portal. Callback Supabase preservado até acesso à conta correta. Ver DOMAIN-INTEGRATION.md para evidências e pendências.

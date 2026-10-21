@@ -16,9 +16,9 @@ L’account è facoltativo. Profilo e progresso possono essere sincronizzati; no
 
 Le edizioni bibliche incluse contengono 66 libri ciascuna, senza i sette deuterocanonici del canone cattolico. Non sono edizioni liturgiche ufficiali. La selezione quotidiana segue un ciclo editoriale di 14 letture, distinto dal lezionario della Messa. Il glossario non è un interlineare completo. Fideora è un progetto indipendente.
 
-Termini: https://mappa-cattolico.vercel.app/terms.html
+Termini: https://fideora.app/terms.html
 Licenza standard Apple: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-Privacy: https://mappa-cattolico.vercel.app/privacy.html
+Privacy: https://fideora.app/privacy.html
 
 ## Português
 
@@ -34,9 +34,9 @@ A conta é opcional. Perfil e progresso podem ser sincronizados; notas e intenç
 
 As edições bíblicas incluídas têm 66 livros cada, sem os sete deuterocanônicos do cânon católico. Não são edições litúrgicas oficiais. A seleção diária segue um ciclo editorial de 14 leituras, distinto do lecionário da Missa. O glossário não é um interlinear completo. Fideora é um projeto independente.
 
-Termos: https://mappa-cattolico.vercel.app/terms.html?lang=pt
+Termos: https://fideora.app/terms.html?lang=pt
 Licença padrão Apple: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-Privacidade: https://mappa-cattolico.vercel.app/privacy.html?lang=pt
+Privacidade: https://fideora.app/privacy.html?lang=pt
 
 ## Review notes
 
