@@ -56,3 +56,12 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 1. Entrar no portal HostGator aberto para confirmar o serviço de e-mail disponível, provisionar support@fideora.app e testar envio/recepção. Se houver contratação, solicitar autorização para o preço concreto antes de comprar. A senha da caixa deve ser definida pelo titular.
 2. Abrir a conta Supabase com acesso ao projeto kgyqpedwgilotlwyhmnb, autorizar as URLs exatas indicadas acima e só então alterar o callback do app. Site URL global e demais apps devem ser preservados.
 3. Completar os dados reais de contato da revisão Apple, salvar os metadados e executar o aceite StoreKit em build assinado antes de submeter.
+
+## Atualização HostGator após login do titular — 21/10/2026
+
+- Login no Portal do Cliente confirmado. Plano M ativo inclui e-mail básico cPanel/Roundcube, sem contratar Titan ou iniciar teste pago.
+- Plataforma cPanel ativada para fideora.app; painel exibiu “E-mail cPanel ativo com sucesso!”. O aviso informa que próximos domínios adicionados ao plano recebem cPanel automaticamente e essa escolha não permite migrar para Titan gratuito.
+- Cadastro da primeira caixa preparado: support@fideora.app, quota de 1024 MB, sem armazenamento ilimitado.
+- Caixa ainda NÃO criada. A confirmação da senha está vazia e o botão de criação está desabilitado. O campo senha apresentava preenchimento mascarado do navegador; nenhuma senha foi lida, gerada, copiada ou enviada pelo agente.
+- Handoff ao titular para definir uma senha própria, confirmá-la e submeter “Criar Conta de E-mail”. Política do navegador exige que o titular conclua a entrada, confirmação e submissão de novas credenciais. Evidência: assets/fideora-mail-setup.jpg.
+- Teste de entrega de e-mail e atualização dos canais públicos de suporte aguardam existência confirmada da caixa. Nenhuma mensagem enviada. Callback Supabase continua pendente do acesso à conta correta, conforme seção anterior.
