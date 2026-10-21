@@ -2,7 +2,13 @@
 
 Data: 21/10/2026.
 
-**Implementação V1 concluída. Build web validada. Compilação e abertura no simulador iOS comprovadas. A submissão à Apple permanece bloqueada por assinatura, conta Apple e validação em aparelho físico.**
+Versão publicada: https://mappa-cattolico.vercel.app
+
+Código integrado à branch principal: https://github.com/talescor-spec/mappa-cattolico/pull/2
+
+Cadastro Apple: https://appstoreconnect.apple.com/apps/6825337165/distribution (1.0.0, Prepare for Submission). Bundle ID `com.fideora.app` registrado na equipe `CZ7QKZBQC8`.
+
+**Implementação V1 concluída. Build web validada. Compilação e abertura no simulador iOS comprovadas. A submissão à Apple permanece bloqueada pelo contrato Apple atualizado, assinatura e validação em aparelho físico.**
 
 ## O que mudou
 
@@ -27,20 +33,24 @@ Data: 21/10/2026.
 | Banco | Escrita/leitura própria, bloqueio entre contas, rejeição de atualização antiga, remoção do conteúdo de tombstone e cascata de exclusão testados em transação revertida |
 | Navegador | Leitura, busca, glossário, nota/destaque, estudo persistente após recarga, Rosário, novena e idioma testados na prévia |
 | Responsividade | 390×844 e 320×568 sem rolagem horizontal; desktop 1440 px revisado visualmente |
-| iOS | Xcode 26.6, compilação sem assinatura e abertura no simulador de iPhone concluídas; [execução com logs e captura](https://github.com/talescor-spec/mappa-cattolico/actions/runs/39541775924) |
+| iOS | Xcode 26.6, compilação sem assinatura e abertura no simulador de iPhone concluídas; [execução com logs e captura](https://github.com/talescor-spec/mappa-cattolico/actions/runs/39600583858) |
 | Abertura iOS | [Captura do simulador](assets/ios-launch-v1.png), comprova interface nativa carregada; não é teste em aparelho físico |
 
 Os testes de banco usaram identidades sintéticas e foram integralmente revertidos. Não houve exclusão de contas reais. A auditoria do projeto Supabase compartilhado apresentou alertas de outros sistemas; a implementação alterou somente estruturas Fideora. A função de exclusão existente foi revisada e testada quanto à restrição ao próprio usuário.
 
 ## O que falta para afirmar “pronto para App Review”
 
-1. Entrar no App Store Connect/Apple Developer, conferir o Bundle ID `com.fideora.app`, a equipe e o registro do aplicativo.
+1. O Account Holder deve revisar e aceitar o Paid Applications Schedule atualizado em Business. O portal informa que o contrato bloqueia o envio de novos apps. Nenhum contrato foi aceito pelo agente.
 2. Gerar archive assinado, enviar para processamento Apple e instalar pelo TestFlight em iPhone físico.
 3. Validar email/link ou código, sessão após relançamento, sincronização com duas contas, exportação e exclusão pelo app no aparelho.
-4. Preencher App Privacy, classificação etária, disponibilidade e contato de review; confirmar responsável legal e canal privado de suporte.
+4. Conferir e publicar o rascunho App Privacy contra o build assinado, definir disponibilidade e contato de review; confirmar canal privado de suporte. Descrições IT/PT-BR, URLs de suporte, copyright, notas do revisor e liberação manual já foram salvos. URLs de privacidade, subtítulos IT/PT-BR e categorias Reference/Lifestyle confirmados. Classificação etária calculada em 13+; seis tipos de dados configurados como funcionalidade, vinculados à identidade e sem tracking, ainda em rascunho.
 5. Capturar as telas reais finais nos tamanhos exigidos e anexá-las nas duas localizações.
 
-A sessão disponível do App Store Connect solicitou login. O ambiente de implementação não dispõe de certificados/perfis de assinatura verificados. Nenhuma build assinada, upload ou aprovação Apple é alegada.
+O App Store Connect está autenticado e o aplicativo foi criado (Apple ID 6825337165). A equipe e o Bundle ID foram confirmados. O ambiente de implementação não dispõe de certificados/perfis de assinatura verificados. Nenhuma build assinada, upload ou aprovação Apple é alegada.
+
+## Captura da versão publicada
+
+![Fideora V1 em italiano](assets/fideora-web-v1.png)
 
 ## Pacote de revisão
 

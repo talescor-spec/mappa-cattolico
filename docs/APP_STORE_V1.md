@@ -1,27 +1,27 @@
 # Fideora V1 — App Store package
 
-Prepared 21 October 2026. Copy draft only; not entered into App Store Connect.
+Updated 21 October 2026. Italian and Portuguese version descriptions, keywords, support/marketing URLs, copyright, reviewer notes and manual release mode saved in App Store Connect. No build uploaded or submission made. App Privacy policy URLs saved for Italian and Portuguese; six collected data types configured for App Functionality, linked to identity, no tracking; draft not published pending signed-build/infrastructure verification. Age rating saved: calculated 13+.
 
 ## Store configuration
 
 - Name: Fideora
 - Primary language: Italian
 - Additional localization: Portuguese (Brazil)
-- Category proposal: Reference; secondary Lifestyle
-- Bundle ID in source: com.fideora.app — Apple registration/team unverified
+- Category confirmed: Reference; secondary Lifestyle. Italian and Portuguese subtitles confirmed.
+- Registered Bundle ID: com.fideora.app; Apple team CZ7QKZBQC8; app ID 6825337165; SKU FIDEORA_IOS_V1
 - Version: 1.0.0; initial build number 1
 - Minimum native target: iOS 15
 - V1 contains no active in-app purchase offer or paywall. Do not describe a trial, subscription or recurring price without a separate configured and tested release.
 - Privacy URL: https://mappa-cattolico.vercel.app/privacy.html
 - Support URL: https://mappa-cattolico.vercel.app/support.html
 - Terms URL: https://mappa-cattolico.vercel.app/terms.html
-- These canonical URLs become V1 only after its production deployment. Verify them again before using in Apple metadata.
+- Canonical production is deployed with V1. Apple record: https://appstoreconnect.apple.com/apps/6825337165/distribution. The account banner requires the Account Holder to accept the updated Paid Applications Schedule in Business; no agreement was accepted by the agent.
 
 ## Italian listing
 
-**Subtitle:** Bibbia, preghiera e riflessione
+**Subtitle:** Bibbia, preghiera e studio
 
-**Promotional text:** Uno spazio per ascoltare la Parola, pregare con calma e custodire i tuoi pensieri. In italiano e portoghese, con letture disponibili anche offline.
+**Promotional text:** Uno spazio per leggere la Bibbia, pregare il Rosario e custodire i tuoi studi. In italiano e portoghese, con letture disponibili anche offline.
 
 **Description:**
 
