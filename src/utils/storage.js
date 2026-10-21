@@ -1,15 +1,23 @@
-const ROSARY_IDS = new Set(['joyful', 'luminous', 'sorrowful', 'glorious']);
-const NOVENA_IDS = new Set(['novena1', 'novena2', 'novena3', 'novena4', 'novena5']);
+const ROSARY_IDS = new Set(["joyful", "luminous", "sorrowful", "glorious"]);
+const NOVENA_IDS = new Set([
+  "novena1",
+  "novena2",
+  "novena3",
+  "novena4",
+  "novena5",
+]);
 
 function notifyLocalChange(key) {
   try {
-    window.dispatchEvent(new CustomEvent('fideora:local-change', { detail: { key } }));
+    window.dispatchEvent(
+      new CustomEvent("fideora:local-change", { detail: { key } }),
+    );
   } catch {
     // Custom events are best-effort; local persistence must still succeed without them.
   }
 }
 
-export function safeGet(key, fallback = '') {
+export function safeGet(key, fallback = "") {
   try {
     const value = window.localStorage.getItem(key);
     return value === null ? fallback : value;
@@ -34,7 +42,9 @@ export function safeGetJSON(key, fallback = {}) {
 
   try {
     const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : fallback;
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? parsed
+      : fallback;
   } catch {
     return fallback;
   }
@@ -55,19 +65,20 @@ export function clampInt(value, min, max, fallback = min) {
 }
 
 export function sanitizeDisplayName(value, maxLength = 60) {
-  return String(value ?? '')
-    .replace(/[\u0000-\u001F\u007F]/g, '')
+  return String(value ?? "")
+    .replace(/[\u0000-\u001F\u007F]/g, "")
     .trim()
     .slice(0, maxLength);
 }
 
 export function normalizeRosaryProgress(input) {
-  if (!input || typeof input !== 'object' || Array.isArray(input)) return {};
+  if (!input || typeof input !== "object" || Array.isArray(input)) return {};
   const output = {};
 
   for (const [dateKey, dayValue] of Object.entries(input)) {
-    if (typeof dateKey !== 'string' || dateKey.length > 64) continue;
-    if (!dayValue || typeof dayValue !== 'object' || Array.isArray(dayValue)) continue;
+    if (typeof dateKey !== "string" || dateKey.length > 64) continue;
+    if (!dayValue || typeof dayValue !== "object" || Array.isArray(dayValue))
+      continue;
 
     const dayOutput = {};
     for (const [mysteryId, step] of Object.entries(dayValue)) {
@@ -82,7 +93,7 @@ export function normalizeRosaryProgress(input) {
 }
 
 export function normalizeNovenaProgress(input) {
-  if (!input || typeof input !== 'object' || Array.isArray(input)) return {};
+  if (!input || typeof input !== "object" || Array.isArray(input)) return {};
   const output = {};
 
   for (const [novenaId, day] of Object.entries(input)) {

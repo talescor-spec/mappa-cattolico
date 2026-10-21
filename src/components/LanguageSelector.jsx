@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { languages, useLanguage } from '../contexts/LanguageContext';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useEffect, useRef, useState } from "react";
+import { languages, useLanguage } from "../contexts/LanguageContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function LanguageSelector({ compact = false }) {
   const { language, changeLanguage } = useLanguage();
@@ -12,8 +12,8 @@ export default function LanguageSelector({ compact = false }) {
     const onPointerDown = (event) => {
       if (ref.current && !ref.current.contains(event.target)) setOpen(false);
     };
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
   }, []);
 
   const selectLanguage = (code) => {
@@ -23,7 +23,7 @@ export default function LanguageSelector({ compact = false }) {
   };
 
   return (
-    <div className={`language-selector ${compact ? 'compact' : ''}`} ref={ref}>
+    <div className={`language-selector ${compact ? "compact" : ""}`} ref={ref}>
       <button
         className="language-trigger"
         onClick={() => setOpen((v) => !v)}
@@ -31,14 +31,18 @@ export default function LanguageSelector({ compact = false }) {
         aria-expanded={open}
       >
         <span>{languages[language].flag}</span>
-        {!compact && <span className="language-trigger-label">{languages[language].label}</span>}
+        {!compact && (
+          <span className="language-trigger-label">
+            {languages[language].label}
+          </span>
+        )}
       </button>
       {open && (
         <div className="language-menu" role="menu">
           {Object.entries(languages).map(([code, item]) => (
             <button
               key={code}
-              className={code === language ? 'active' : ''}
+              className={code === language ? "active" : ""}
               onClick={() => selectLanguage(code)}
               role="menuitem"
             >

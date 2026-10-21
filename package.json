@@ -35,5 +35,10 @@
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^6.1.1",
     "vite": "^8.3.0"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
   }
 }

@@ -1,12 +1,13 @@
-import { Capacitor } from '@capacitor/core';
-import { LOG_LEVEL, Purchases } from '@revenuecat/purchases-capacitor';
+import { Capacitor } from "@capacitor/core";
+import { LOG_LEVEL, Purchases } from "@revenuecat/purchases-capacitor";
 
-const ENTITLEMENT_ID = import.meta.env.VITE_REVENUECAT_ENTITLEMENT_ID || 'premium';
+const ENTITLEMENT_ID =
+  import.meta.env.VITE_REVENUECAT_ENTITLEMENT_ID || "premium";
 let configured = false;
 let currentAppUserID = null;
 
 export function isIOSNative() {
-  return Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
+  return Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
 }
 
 export function getEntitlementId() {
@@ -15,12 +16,12 @@ export function getEntitlementId() {
 
 async function ensureConfigured(appUserID) {
   if (!isIOSNative()) {
-    return { configured: false, reason: 'not-ios-native' };
+    return { configured: false, reason: "not-ios-native" };
   }
 
   const apiKey = import.meta.env.VITE_REVENUECAT_PUBLIC_SDK_KEY;
   if (!apiKey) {
-    return { configured: false, reason: 'missing-public-sdk-key' };
+    return { configured: false, reason: "missing-public-sdk-key" };
   }
 
   if (!configured) {
@@ -46,7 +47,7 @@ export async function initializePurchases({ appUserID } = {}) {
 }
 
 export async function syncPurchasesUser(appUserID) {
-  if (!appUserID) return { configured: false, reason: 'missing-app-user-id' };
+  if (!appUserID) return { configured: false, reason: "missing-app-user-id" };
 
   const status = await ensureConfigured(appUserID);
   if (!status.configured) return status;
@@ -101,8 +102,8 @@ export async function getCurrentOffering() {
 }
 
 export async function purchasePackage(aPackage) {
-  if (!configured) throw new Error('RevenueCat is not configured.');
-  if (!aPackage) throw new Error('A RevenueCat package is required.');
+  if (!configured) throw new Error("RevenueCat is not configured.");
+  if (!aPackage) throw new Error("A RevenueCat package is required.");
 
   const result = await Purchases.purchasePackage({ aPackage });
   return {
@@ -112,7 +113,7 @@ export async function purchasePackage(aPackage) {
 }
 
 export async function restorePurchases() {
-  if (!configured) throw new Error('RevenueCat is not configured.');
+  if (!configured) throw new Error("RevenueCat is not configured.");
 
   const { customerInfo } = await Purchases.restorePurchases();
   return {

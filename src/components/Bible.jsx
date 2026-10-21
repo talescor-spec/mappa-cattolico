@@ -1,43 +1,501 @@
-import React,{useEffect,useMemo,useState}from'react';
-import{Search,Bookmark,Check,ChevronLeft,ChevronRight,BookOpen,Highlighter,FileText,ArrowUpRight,Minus,Plus,Library}from'lucide-react';
-import{useLanguage}from'../contexts/LanguageContext';
-import{useStudy}from'../contexts/StudyContext';
-import{bookNames,lexicon}from'../data/content';
-import{searchBible}from'../utils/study';
-import{safeGetJSON,safeSetJSON}from'../utils/storage';
-import{Header,Modal}from'./UI';
-export default function Bible({bible,error,retry,location,onLocation,onSources}){
- const{language,l}=useLanguage();const{entries,write,ready}=useStudy();
- const [query,setQuery]=useState(''),[search,setSearch]=useState(''),[selected,setSelected]=useState(null),[font,setFont]=useState(()=>Number(safeGetJSON('fideoraReader').font)||21);
- const [note,setNote]=useState(''),[color,setColor]=useState(''),[saved,setSaved]=useState(false),[lex,setLex]=useState(null);
- useEffect(()=>{const timer=setTimeout(()=>setSearch(query),250);return()=>clearTimeout(timer);},[query]);
- const book=bible?.books.find(b=>b.book===location.book)||bible?.books[0];
- const chapter=book?.chapters.find(c=>c.chapter===location.chapter)||book?.chapters[0];
- const title=b=>bookNames[language][b.bookId-1];
- const results=useMemo(()=>searchBible(bible,search),[bible,search]);
- const highlights=useMemo(()=>Object.fromEntries(entries.filter(e=>e.kind==='verse').map(e=>[e.id,e])),[entries]);
- const verseId=v=>`verse:${language}:${book.book}:${chapter.chapter}:${v.number}`;
- const select=verse=>{const entry=highlights[verseId(verse)];setSelected(verse);setNote(entry?.payload.note||'');setColor(entry?.payload.color||'');setSaved(false);};
- const changeBook=id=>{onLocation({book:id,chapter:1});setQuery('');setSelected(null);};
- const move=delta=>{
-  let index=bible.books.indexOf(book),next=chapter.chapter+delta;
-  if(next<1&&index>0){index--;next=bible.books[index].chapters.length;}
-  if(next>book.chapters.length&&index<bible.books.length-1){index++;next=1;}
-  onLocation({book:bible.books[index].book,chapter:next});window.scrollTo({top:0,behavior:'smooth'});
- };
- const setSize=value=>{setFont(value);safeSetJSON('fideoraReader',{font:value});};
- const relevant=lexicon.filter(w=>w.refs.some(([b,c])=>b===book?.book&&c===chapter?.chapter));
- if(error)return <div className="empty"><BookOpen/><h2>{l('Lettura non disponibile','Leitura indisponível')}</h2><p>{l('Controlla la connessione e riprova.','Verifique sua conexão e tente novamente.')}</p><button className="button primary" onClick={retry}>{l('Riprova','Tentar novamente')}</button></div>;
- if(!bible)return <p className="loading" role="status">{l('Preparazione della Bibbia…','Preparando a Bíblia…')}</p>;
- return <>
-  <Header eyebrow={l('ASCOLTA. COMPRENDI. VIVI.','ESCUTE. COMPREENDA. VIVA.')} title={l('La Parola, con te.','A Palavra, com você.')} subtitle={l('Uno spazio per leggere e andare più a fondo.','Um espaço para ler e aprofundar.')} action={<button className="text-button" onClick={onSources}><Library size={16}/>{l('Edizioni e fonti','Edições e fontes')}</button>}/>
-  <div className="search-field"><Search size={18}/><input aria-label={l('Cerca nella Bibbia','Buscar na Bíblia')} placeholder={l('Cerca una parola nella Bibbia…','Busque uma palavra na Bíblia…')} value={query} onChange={e=>setQuery(e.target.value)}/>{query&&<button className="text-button" onClick={()=>setQuery('')}>{l('Annulla','Cancelar')}</button>}</div>
-  {query.trim().length>0?<section className="card search-results"><p className="eyebrow">{query.trim().length<3?l('SCRIVI ALMENO 3 CARATTERI','DIGITE AO MENOS 3 CARACTERES'):`${results.length===100?'100+':results.length} ${l('RISULTATI','RESULTADOS')}`}</p>{results.map(r=><button className="search-result" key={`${r.book}:${r.chapter}:${r.verse}`} onClick={()=>{onLocation({book:r.book,chapter:r.chapter,verse:r.verse});setQuery('');}}><strong>{bookNames[language][r.bookId-1]} {r.chapter},{r.verse}<ArrowUpRight size={15}/></strong><span>{r.text}</span></button>)}{query.trim().length>=3&&results.length===0&&<p>{l('Nessun versetto trovato. Prova un’altra parola.','Nenhum versículo encontrado. Tente outra palavra.')}</p>}</section>:<>
-  <div className="reader-toolbar"><div><label className="sr-only" htmlFor="book-select">{l('Libro','Livro')}</label><select id="book-select" value={book.book} onChange={e=>changeBook(e.target.value)}>{bible.books.map(b=><option value={b.book} key={b.book}>{title(b)}</option>)}</select><label className="sr-only" htmlFor="chapter-select">{l('Capitolo','Capítulo')}</label><select id="chapter-select" value={chapter.chapter} onChange={e=>onLocation({book:book.book,chapter:Number(e.target.value)})}>{book.chapters.map(c=><option key={c.chapter} value={c.chapter}>{l('Capitolo','Capítulo')} {c.chapter}</option>)}</select></div><div className="font-controls"><button className="icon-button" aria-label={l('Riduci testo','Diminuir texto')} disabled={font<=17} onClick={()=>setSize(font-2)}><Minus size={16}/></button><span>Aa</span><button className="icon-button" aria-label={l('Ingrandisci testo','Aumentar texto')} disabled={font>=31} onClick={()=>setSize(font+2)}><Plus size={16}/></button></div></div>
-  <div className="reader-layout"><article className="reader card"><p className="eyebrow">{language==='it'?'DIODATI · 1649':'ALMEIDA · 1819'}</p><h2>{title(book)} {chapter.chapter}</h2><p className="reader-hint"><Highlighter size={14}/>{l('Tocca un versetto per evidenziare o annotare.','Toque em um versículo para destacar ou anotar.')}</p><div className="scripture" style={{fontSize:`${font}px`}}>{chapter.verses.map(v=>{const entry=highlights[verseId(v)];return <button id={`verse-${v.number}`} key={v.number} className={`verse ${entry?.payload.color||''} ${location.verse===v.number?'target-verse':''}`} onClick={()=>select(v)} aria-label={`${title(book)} ${chapter.chapter},${v.number}: ${v.text}`}><sup>{v.number}</sup><span>{v.text}</span>{entry?.payload.note&&<FileText className="verse-mark" size={13}/ >}{entry?.payload.bookmarked&&<Bookmark className="verse-mark" size={13}/>}</button>;})}</div><div className="chapter-nav"><button className="text-button" disabled={book===bible.books[0]&&chapter.chapter===1} onClick={()=>move(-1)}><ChevronLeft size={16}/>{l('Precedente','Anterior')}</button><span>{chapter.chapter} / {book.chapters.length}</span><button className="text-button" disabled={book===bible.books.at(-1)&&chapter.chapter===book.chapters.length} onClick={()=>move(1)}>{l('Successivo','Próximo')}<ChevronRight size={16}/></button></div></article>
-  <aside className="reader-sidebar"><section className="card"><p className="eyebrow">{l('IL TUO STUDIO','SEU ESTUDO')}</p><h3>{l('Fermati su una parola.','Pare em uma palavra.')}</h3><p>{l('Un glossario essenziale per avvicinarti al greco e all’ebraico.','Um glossário essencial para se aproximar do grego e do hebraico.')}</p><div className="lexicon-list">{(relevant.length?relevant:lexicon.slice(0,4)).map(w=><button key={w.id} onClick={()=>setLex(w)}><span className="original-word" dir="auto">{w.word}</span><span>{w.translit}<small>{w.strong}</small></span><ChevronRight size={14}/></button>)}</div><p className="caption">{l('Schede introduttive, non un interlineare completo.','Verbetes introdutórios, não um interlinear completo.')}</p></section><section className="callout"><p className="eyebrow">LECTIO DIVINA</p><p>{l('Leggi. Medita. Prega. Rimani in silenzio.','Leia. Medite. Reze. Permaneça em silêncio.')}</p></section></aside></div>
-  </>}
-  {selected&&<Modal title={`${title(book)} ${chapter.chapter},${selected.number}`} onClose={()=>setSelected(null)}><blockquote>{selected.text}</blockquote><div className="highlight-colors"><span>{l('Evidenzia','Destacar')}</span>{['gold','sage','rose',''].map(c=><button key={c} className={`color-dot ${c||'clear'} ${color===c?'chosen':''}`} aria-label={c===''?l('Senza colore','Sem cor'):l('Colore','Cor')+' '+({gold:l('oro','dourado'),sage:l('salvia','verde'),rose:l('rosa','rosa')}[c])} aria-pressed={color===c} onClick={()=>{setColor(c);setSaved(false);}}>{color===c&&<Check size={16}/>}</button>)}</div><label htmlFor="verse-note">{l('La tua nota','Sua anotação')}</label><textarea id="verse-note" value={note} maxLength={10000} rows={5} placeholder={l('Che cosa ti dice questa Parola?','O que essa Palavra diz a você?')} onChange={e=>{setNote(e.target.value);setSaved(false);}}/><div className="button-row"><button className="button secondary" disabled={!ready} onClick={()=>{const previous=highlights[verseId(selected)]?.payload||{};write(verseId(selected),'verse',{...previous,language,book:book.book,chapter:chapter.chapter,verse:selected.number,note,color,bookmarked:!previous.bookmarked});setSaved(true);}}><Bookmark size={16}/>{highlights[verseId(selected)]?.payload.bookmarked?l('Rimuovi preferito','Remover favorito'):l('Salva preferito','Salvar favorito')}</button><button className="button primary" disabled={!ready} onClick={()=>{write(verseId(selected),'verse',{...highlights[verseId(selected)]?.payload,language,book:book.book,chapter:chapter.chapter,verse:selected.number,note,color});setSaved(true);}}>{saved?<Check size={16}/>:<FileText size={16}/ >}{saved?l('Salvato','Salvo'):l('Salva nota','Salvar nota')}</button></div></Modal>}
-  {lex&&<Modal title={l('Dentro la parola','Dentro da palavra')} onClose={()=>setLex(null)}><div className="lexicon-detail"><span className="eyebrow">{lex.lang[language==='it'?0:1]} · {lex.strong}</span><h3 dir="auto">{lex.word}</h3><em>{lex.translit}</em><p>{lex.meaning[language==='it'?0:1]}</p><h4>{l('Leggi nel contesto','Leia no contexto')}</h4>{lex.refs.map(([b,c,v])=><button className="button secondary" key={`${b}${c}${v}`} onClick={()=>{onLocation({book:b,chapter:c,verse:v});setLex(null);setQuery('');}}>{bookNames[language][bible.books.find(x=>x.book===b).bookId-1]} {c},{v}<ArrowUpRight size={14}/></button>)}<p className="caption">{l('Riferimenti lessicali: Strong (1890); definizioni e note editoriali Fideora. Le forme sono lemmi o espressioni introduttive, non un allineamento parola per parola.','Referências lexicais: Strong (1890); definições e notas editoriais Fideora. As formas são lemas ou expressões introdutórias, não um alinhamento palavra por palavra.')}</p></div></Modal>}
- </>;
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Search,
+  Bookmark,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+  Highlighter,
+  FileText,
+  ArrowUpRight,
+  Minus,
+  Plus,
+  Library,
+} from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useStudy } from "../contexts/StudyContext";
+import { bookNames, lexicon } from "../data/content";
+import { searchBible } from "../utils/study";
+import { safeGetJSON, safeSetJSON } from "../utils/storage";
+import { Header, Modal } from "./UI";
+export default function Bible({
+  bible,
+  error,
+  retry,
+  location,
+  onLocation,
+  onSources,
+}) {
+  const { language, l } = useLanguage();
+  const { entries, write, ready } = useStudy();
+  const [query, setQuery] = useState(""),
+    [search, setSearch] = useState(""),
+    [selected, setSelected] = useState(null),
+    [font, setFont] = useState(
+      () => Number(safeGetJSON("fideoraReader").font) || 21,
+    );
+  const [note, setNote] = useState(""),
+    [color, setColor] = useState(""),
+    [saved, setSaved] = useState(false),
+    [lex, setLex] = useState(null);
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(query), 250);
+    return () => clearTimeout(timer);
+  }, [query]);
+  const book =
+    bible?.books.find((b) => b.book === location.book) || bible?.books[0];
+  const chapter =
+    book?.chapters.find((c) => c.chapter === location.chapter) ||
+    book?.chapters[0];
+  const title = (b) => bookNames[language][b.bookId - 1];
+  const results = useMemo(() => searchBible(bible, search), [bible, search]);
+  const highlights = useMemo(
+    () =>
+      Object.fromEntries(
+        entries.filter((e) => e.kind === "verse").map((e) => [e.id, e]),
+      ),
+    [entries],
+  );
+  const verseId = (v) =>
+    `verse:${language}:${book.book}:${chapter.chapter}:${v.number}`;
+  const select = (verse) => {
+    const entry = highlights[verseId(verse)];
+    setSelected(verse);
+    setNote(entry?.payload.note || "");
+    setColor(entry?.payload.color || "");
+    setSaved(false);
+  };
+  const changeBook = (id) => {
+    onLocation({ book: id, chapter: 1 });
+    setQuery("");
+    setSelected(null);
+  };
+  const move = (delta) => {
+    let index = bible.books.indexOf(book),
+      next = chapter.chapter + delta;
+    if (next < 1 && index > 0) {
+      index--;
+      next = bible.books[index].chapters.length;
+    }
+    if (next > book.chapters.length && index < bible.books.length - 1) {
+      index++;
+      next = 1;
+    }
+    onLocation({ book: bible.books[index].book, chapter: next });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const setSize = (value) => {
+    setFont(value);
+    safeSetJSON("fideoraReader", { font: value });
+  };
+  useEffect(() => {
+    if (!location.verse || !bible) return;
+    const timer = setTimeout(
+      () =>
+        document
+          .getElementById(`verse-${location.verse}`)
+          ?.scrollIntoView({ block: "center", behavior: "auto" }),
+      40,
+    );
+    return () => clearTimeout(timer);
+  }, [bible, location.book, location.chapter, location.verse]);
+  const relevant = lexicon.filter((w) =>
+    w.refs.some(([b, c]) => b === book?.book && c === chapter?.chapter),
+  );
+  if (error)
+    return (
+      <div className="empty">
+        <BookOpen />
+        <h2>{l("Lettura non disponibile", "Leitura indisponível")}</h2>
+        <p>
+          {l(
+            "Controlla la connessione e riprova.",
+            "Verifique sua conexão e tente novamente.",
+          )}
+        </p>
+        <button className="button primary" onClick={retry}>
+          {l("Riprova", "Tentar novamente")}
+        </button>
+      </div>
+    );
+  if (!bible)
+    return (
+      <p className="loading" role="status">
+        {l("Preparazione della Bibbia…", "Preparando a Bíblia…")}
+      </p>
+    );
+  return (
+    <>
+      <Header
+        eyebrow={l("ASCOLTA. COMPRENDI. VIVI.", "ESCUTE. COMPREENDA. VIVA.")}
+        title={l("La Parola, con te.", "A Palavra, com você.")}
+        subtitle={l(
+          "Uno spazio per leggere e andare più a fondo.",
+          "Um espaço para ler e aprofundar.",
+        )}
+        action={
+          <button className="text-button" onClick={onSources}>
+            <Library size={16} />
+            {l("Edizioni e fonti", "Edições e fontes")}
+          </button>
+        }
+      />
+      <div className="search-field">
+        <Search size={18} />
+        <input
+          aria-label={l("Cerca nella Bibbia", "Buscar na Bíblia")}
+          placeholder={l(
+            "Cerca una parola nella Bibbia…",
+            "Busque uma palavra na Bíblia…",
+          )}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        {query && (
+          <button className="text-button" onClick={() => setQuery("")}>
+            {l("Annulla", "Cancelar")}
+          </button>
+        )}
+      </div>
+      {query.trim().length > 0 ? (
+        <section className="card search-results">
+          <p className="eyebrow">
+            {query.trim().length < 3
+              ? l("SCRIVI ALMENO 3 CARATTERI", "DIGITE AO MENOS 3 CARACTERES")
+              : `${results.length === 100 ? "100+" : results.length} ${l("RISULTATI", "RESULTADOS")}`}
+          </p>
+          {results.map((r) => (
+            <button
+              className="search-result"
+              key={`${r.book}:${r.chapter}:${r.verse}`}
+              onClick={() => {
+                onLocation({
+                  book: r.book,
+                  chapter: r.chapter,
+                  verse: r.verse,
+                });
+                setQuery("");
+              }}
+            >
+              <strong>
+                {bookNames[language][r.bookId - 1]} {r.chapter},{r.verse}
+                <ArrowUpRight size={15} />
+              </strong>
+              <span>{r.text}</span>
+            </button>
+          ))}
+          {query.trim().length >= 3 && results.length === 0 && (
+            <p>
+              {l(
+                "Nessun versetto trovato. Prova un’altra parola.",
+                "Nenhum versículo encontrado. Tente outra palavra.",
+              )}
+            </p>
+          )}
+        </section>
+      ) : (
+        <>
+          <div className="reader-toolbar">
+            <div>
+              <label className="sr-only" htmlFor="book-select">
+                {l("Libro", "Livro")}
+              </label>
+              <select
+                id="book-select"
+                value={book.book}
+                onChange={(e) => changeBook(e.target.value)}
+              >
+                {bible.books.map((b) => (
+                  <option value={b.book} key={b.book}>
+                    {title(b)}
+                  </option>
+                ))}
+              </select>
+              <label className="sr-only" htmlFor="chapter-select">
+                {l("Capitolo", "Capítulo")}
+              </label>
+              <select
+                id="chapter-select"
+                value={chapter.chapter}
+                onChange={(e) =>
+                  onLocation({
+                    book: book.book,
+                    chapter: Number(e.target.value),
+                  })
+                }
+              >
+                {book.chapters.map((c) => (
+                  <option key={c.chapter} value={c.chapter}>
+                    {l("Capitolo", "Capítulo")} {c.chapter}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="font-controls">
+              <button
+                className="icon-button"
+                aria-label={l("Riduci testo", "Diminuir texto")}
+                disabled={font <= 17}
+                onClick={() => setSize(font - 2)}
+              >
+                <Minus size={16} />
+              </button>
+              <span>Aa</span>
+              <button
+                className="icon-button"
+                aria-label={l("Ingrandisci testo", "Aumentar texto")}
+                disabled={font >= 31}
+                onClick={() => setSize(font + 2)}
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+          </div>
+          <div className="reader-layout">
+            <article className="reader card">
+              <p className="eyebrow">
+                {language === "it" ? "DIODATI · 1649" : "ALMEIDA · 1819"}
+              </p>
+              <h2>
+                {title(book)} {chapter.chapter}
+              </h2>
+              <p className="reader-hint">
+                <Highlighter size={14} />
+                {l(
+                  "Tocca un versetto per evidenziare o annotare.",
+                  "Toque em um versículo para destacar ou anotar.",
+                )}
+              </p>
+              <div className="scripture" style={{ fontSize: `${font}px` }}>
+                {chapter.verses.map((v) => {
+                  const entry = highlights[verseId(v)];
+                  return (
+                    <button
+                      id={`verse-${v.number}`}
+                      key={v.number}
+                      className={`verse ${entry?.payload.color || ""} ${location.verse === v.number ? "target-verse" : ""}`}
+                      onClick={() => select(v)}
+                      aria-label={`${title(book)} ${chapter.chapter},${v.number}: ${v.text}`}
+                    >
+                      <sup>{v.number}</sup>
+                      <span>{v.text}</span>
+                      {entry?.payload.note && (
+                        <FileText className="verse-mark" size={13} />
+                      )}
+                      {entry?.payload.bookmarked && (
+                        <Bookmark className="verse-mark" size={13} />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="chapter-nav">
+                <button
+                  className="text-button"
+                  disabled={book === bible.books[0] && chapter.chapter === 1}
+                  onClick={() => move(-1)}
+                >
+                  <ChevronLeft size={16} />
+                  {l("Precedente", "Anterior")}
+                </button>
+                <span>
+                  {chapter.chapter} / {book.chapters.length}
+                </span>
+                <button
+                  className="text-button"
+                  disabled={
+                    book === bible.books.at(-1) &&
+                    chapter.chapter === book.chapters.length
+                  }
+                  onClick={() => move(1)}
+                >
+                  {l("Successivo", "Próximo")}
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </article>
+            <aside className="reader-sidebar">
+              <section className="card">
+                <p className="eyebrow">{l("IL TUO STUDIO", "SEU ESTUDO")}</p>
+                <h3>{l("Fermati su una parola.", "Pare em uma palavra.")}</h3>
+                <p>
+                  {l(
+                    "Un glossario essenziale per avvicinarti al greco e all’ebraico.",
+                    "Um glossário essencial para se aproximar do grego e do hebraico.",
+                  )}
+                </p>
+                <div className="lexicon-list">
+                  {(relevant.length ? relevant : lexicon.slice(0, 4)).map(
+                    (w) => (
+                      <button key={w.id} onClick={() => setLex(w)}>
+                        <span className="original-word" dir="auto">
+                          {w.word}
+                        </span>
+                        <span>
+                          {w.translit}
+                          <small>{w.strong}</small>
+                        </span>
+                        <ChevronRight size={14} />
+                      </button>
+                    ),
+                  )}
+                </div>
+                <p className="caption">
+                  {l(
+                    "Schede introduttive, non un interlineare completo.",
+                    "Verbetes introdutórios, não um interlinear completo.",
+                  )}
+                </p>
+              </section>
+              <section className="callout">
+                <p className="eyebrow">LECTIO DIVINA</p>
+                <p>
+                  {l(
+                    "Leggi. Medita. Prega. Rimani in silenzio.",
+                    "Leia. Medite. Reze. Permaneça em silêncio.",
+                  )}
+                </p>
+              </section>
+            </aside>
+          </div>
+        </>
+      )}
+      {selected && (
+        <Modal
+          title={`${title(book)} ${chapter.chapter},${selected.number}`}
+          onClose={() => setSelected(null)}
+        >
+          <blockquote>{selected.text}</blockquote>
+          <div className="highlight-colors">
+            <span>{l("Evidenzia", "Destacar")}</span>
+            {["gold", "sage", "rose", ""].map((c) => (
+              <button
+                key={c}
+                className={`color-dot ${c || "clear"} ${color === c ? "chosen" : ""}`}
+                aria-label={
+                  c === ""
+                    ? l("Senza colore", "Sem cor")
+                    : l("Colore", "Cor") +
+                      " " +
+                      {
+                        gold: l("oro", "dourado"),
+                        sage: l("salvia", "verde"),
+                        rose: l("rosa", "rosa"),
+                      }[c]
+                }
+                aria-pressed={color === c}
+                onClick={() => {
+                  setColor(c);
+                  setSaved(false);
+                }}
+              >
+                {color === c && <Check size={16} />}
+              </button>
+            ))}
+          </div>
+          <label htmlFor="verse-note">{l("La tua nota", "Sua anotação")}</label>
+          <textarea
+            id="verse-note"
+            value={note}
+            maxLength={10000}
+            rows={5}
+            placeholder={l(
+              "Che cosa ti dice questa Parola?",
+              "O que essa Palavra diz a você?",
+            )}
+            onChange={(e) => {
+              setNote(e.target.value);
+              setSaved(false);
+            }}
+          />
+          <div className="button-row">
+            <button
+              className="button secondary"
+              disabled={!ready}
+              onClick={() => {
+                const previous = highlights[verseId(selected)]?.payload || {};
+                write(verseId(selected), "verse", {
+                  ...previous,
+                  language,
+                  book: book.book,
+                  chapter: chapter.chapter,
+                  verse: selected.number,
+                  note,
+                  color,
+                  bookmarked: !previous.bookmarked,
+                });
+                setSaved(true);
+              }}
+            >
+              <Bookmark size={16} />
+              {highlights[verseId(selected)]?.payload.bookmarked
+                ? l("Rimuovi preferito", "Remover favorito")
+                : l("Salva preferito", "Salvar favorito")}
+            </button>
+            <button
+              className="button primary"
+              disabled={!ready}
+              onClick={() => {
+                write(verseId(selected), "verse", {
+                  ...highlights[verseId(selected)]?.payload,
+                  language,
+                  book: book.book,
+                  chapter: chapter.chapter,
+                  verse: selected.number,
+                  note,
+                  color,
+                });
+                setSaved(true);
+              }}
+            >
+              {saved ? <Check size={16} /> : <FileText size={16} />}
+              {saved ? l("Salvato", "Salvo") : l("Salva nota", "Salvar nota")}
+            </button>
+          </div>
+        </Modal>
+      )}
+      {lex && (
+        <Modal
+          title={l("Dentro la parola", "Dentro da palavra")}
+          onClose={() => setLex(null)}
+        >
+          <div className="lexicon-detail">
+            <span className="eyebrow">
+              {lex.lang[language === "it" ? 0 : 1]} · {lex.strong}
+            </span>
+            <h3 dir="auto">{lex.word}</h3>
+            <em>{lex.translit}</em>
+            <p>{lex.meaning[language === "it" ? 0 : 1]}</p>
+            <h4>{l("Leggi nel contesto", "Leia no contexto")}</h4>
+            {lex.refs.map(([b, c, v]) => (
+              <button
+                className="button secondary"
+                key={`${b}${c}${v}`}
+                onClick={() => {
+                  onLocation({ book: b, chapter: c, verse: v });
+                  setLex(null);
+                  setQuery("");
+                }}
+              >
+                {
+                  bookNames[language][
+                    bible.books.find((x) => x.book === b).bookId - 1
+                  ]
+                }{" "}
+                {c},{v}
+                <ArrowUpRight size={14} />
+              </button>
+            ))}
+            <p className="caption">
+              {l(
+                "Riferimenti lessicali: Strong (1890); definizioni e note editoriali Fideora. Le forme sono lemmi o espressioni introduttive, non un allineamento parola per parola.",
+                "Referências lexicais: Strong (1890); definições e notas editoriais Fideora. As formas são lemas ou expressões introdutórias, não um alinhamento palavra por palavra.",
+              )}
+            </p>
+          </div>
+        </Modal>
+      )}
+    </>
+  );
 }

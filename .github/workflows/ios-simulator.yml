@@ -2,7 +2,15 @@ name: iOS Simulator
 on:
   push:
     branches: [fideora-v1-italiano]
-    paths: ['src/**', 'public/**', 'ios/**', 'package*.json', 'capacitor.config.json', '.github/workflows/ios-simulator.yml']
+    paths:
+      [
+        "src/**",
+        "public/**",
+        "ios/**",
+        "package*.json",
+        "capacitor.config.json",
+        ".github/workflows/ios-simulator.yml",
+      ]
   workflow_dispatch:
 permissions:
   contents: read
@@ -17,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
           cache: npm
       - run: npm ci
       - run: npm test
