@@ -86,7 +86,7 @@ export async function getSubscriptionStatus() {
     return { configured: false, isPremium: false, customerInfo: null };
   }
 
-  const customerInfo = await Purchases.getCustomerInfo();
+  const { customerInfo } = await Purchases.getCustomerInfo();
   return {
     configured: true,
     isPremium: hasPremiumEntitlement(customerInfo),
@@ -114,7 +114,7 @@ export async function purchasePackage(aPackage) {
 export async function restorePurchases() {
   if (!configured) throw new Error('RevenueCat is not configured.');
 
-  const customerInfo = await Purchases.restorePurchases();
+  const { customerInfo } = await Purchases.restorePurchases();
   return {
     customerInfo,
     isPremium: hasPremiumEntitlement(customerInfo),

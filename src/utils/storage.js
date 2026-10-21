@@ -72,7 +72,7 @@ export function normalizeRosaryProgress(input) {
     const dayOutput = {};
     for (const [mysteryId, step] of Object.entries(dayValue)) {
       if (!ROSARY_IDS.has(mysteryId)) continue;
-      dayOutput[mysteryId] = clampInt(step, 0, 53, 0);
+      dayOutput[mysteryId] = clampInt(step, 0, 67, 0);
     }
 
     if (Object.keys(dayOutput).length) output[dateKey] = dayOutput;

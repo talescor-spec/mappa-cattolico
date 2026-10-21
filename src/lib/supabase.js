@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { authStorage } from './secureStorage';
 
 // Supabase URL and publishable key are intentionally client-safe values.
 // Authorization is enforced by RLS, never by hiding the publishable key.
@@ -14,6 +15,7 @@ export const supabasePublishableKey =
 export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
   auth: {
     persistSession: true,
+    storage: authStorage,
     autoRefreshToken: true,
     detectSessionInUrl: true,
   },

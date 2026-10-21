@@ -10,3 +10,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </AuthProvider>
   </React.StrictMode>,
 )
+
+// Cache only public app assets. Auth and personal cloud responses are never cached.
+import { Capacitor } from '@capacitor/core';
+if (!Capacitor.isNativePlatform() && 'serviceWorker' in navigator && import.meta.env.PROD) {
+ window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
