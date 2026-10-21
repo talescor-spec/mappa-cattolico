@@ -21,17 +21,33 @@ O titular informou aceite do contrato Apple e confirmou recebimento de e-mail/lo
 
 Pré-requisitos: Xcode com componentes iOS instalados e conta Apple Developer adicionada; Node 22 ou 24; Git. O app usa recursos empacotados, não uma URL web remota. A branch correta é fideora-premium-v1; main ainda contém a versão web gratuita.
 
-Os comandos abaixo criam uma pasta nova na Mesa, sem substituir projetos existentes. Nenhuma senha ou chave privada deve ser colocada no Terminal ou no chat.
+O titular escolheu usar HD externo por falta de espaço no Mac. Os comandos abaixo abrem um seletor para escolher uma pasta no disco externo e criam o projeto, dependências e cache npm nesse disco. Também preparam pastas para DerivedData e Archives. Nenhuma pasta existente é substituída. O Xcode e o macOS ainda podem usar espaço interno para componentes e caches do sistema; não é uma promessa de uso interno zero.
+
+Conecte o disco, abra o Terminal e cole o bloco inteiro. Na janela, escolha o HD externo ou uma pasta dentro dele. Esta preparação não move nem apaga projetos antigos. Não executar o roteiro antigo que criava uma pasta na Mesa.
 
 ```sh
-FIDEORA_TESTFLIGHT_DIR="$(mktemp -d "$HOME/Desktop/Fideora-TestFlight.XXXXXX")"
+bash <<'FIDEORA_SETUP'
+set -e
+FIDEORA_EXTERNAL_ROOT="$(osascript -e 'POSIX path of (choose folder with prompt "Escolha uma pasta no HD externo para o Fideora")')"
+case "$FIDEORA_EXTERNAL_ROOT" in
+  /Volumes/*) ;;
+  *) echo "Selecione uma pasta do HD externo em /Volumes."; exit 1 ;;
+esac
+test -w "$FIDEORA_EXTERNAL_ROOT"
+FIDEORA_EXTERNAL_STORAGE="${FIDEORA_EXTERNAL_ROOT%/}/Fideora-Build"
+mkdir -p "$FIDEORA_EXTERNAL_STORAGE/DerivedData" "$FIDEORA_EXTERNAL_STORAGE/Archives" "$FIDEORA_EXTERNAL_STORAGE/npm-cache"
+FIDEORA_TESTFLIGHT_DIR="$(mktemp -d "$FIDEORA_EXTERNAL_STORAGE/Projeto.XXXXXX")"
 git clone --single-branch --branch fideora-premium-v1 https://github.com/talescor-spec/mappa-cattolico.git "$FIDEORA_TESTFLIGHT_DIR"
 cd "$FIDEORA_TESTFLIGHT_DIR"
 git checkout b4329504bb79013bca4b81f698cae99be09a6cc3
-npm ci
+npm ci --cache "$FIDEORA_EXTERNAL_STORAGE/npm-cache"
 npm run cap:ios
+printf '\nProjeto: %s\nDerivedData: %s\nArchives: %s\n' "$FIDEORA_TESTFLIGHT_DIR" "$FIDEORA_EXTERNAL_STORAGE/DerivedData" "$FIDEORA_EXTERNAL_STORAGE/Archives"
 open ios/App/App.xcodeproj
+FIDEORA_SETUP
 ```
+
+Antes de usar Archive, abra Xcode → Settings → Locations. Configure Derived Data e Archives como Custom e selecione as duas pastas criadas dentro de Fideora-Build no HD externo. Esses ajustes são do Xcode e podem afetar outros projetos. Preserve os arquivos antigos; trocar os caminhos não os transfere automaticamente. Mantenha o disco conectado enquanto usar o projeto. Nenhuma mudança no HD do titular foi executada pelo agente.
 
 No Xcode:
 
@@ -72,5 +88,6 @@ Usar a descrição Premium e Review notes de PREMIUM-STORE-COPY.md. Italian is t
 
 - https://developer.apple.com/documentation/xcode/distributing-your-app-for-beta-testing-and-releases
 - https://developer.apple.com/help/app-store-connect/test-a-beta-version/testing-subscriptions-and-in-app-purchases-in-testflight/
+- https://help.apple.com/xcode/mac/current/en.lproj/deva52afe8a4.html
 - CI: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39652187002
 - Gate permanente: APP_STORE_REVIEW_GATE.md e .github/skills/apple-appstore-reviewer/SKILL.md.
