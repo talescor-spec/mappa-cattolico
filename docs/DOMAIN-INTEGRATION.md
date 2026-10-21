@@ -38,3 +38,37 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 - Callback Supabase permanece no endereço Vercel autorizado. O painel está autenticado em outra conta, sem acesso ao projeto compartilhado metrics-dashboard. O conector consegue ler esse projeto, mas não oferece edição de Auth URL Configuration. Antes de trocar o callback do app, adicionar exatamente https://fideora.app e https://fideora.app/ na lista do projeto correto, preservando os outros aplicativos e a Site URL global.
 - Produção web: alteração limitada a páginas legais atuais, referência canônica e URLs de documentação. Funcionalidades Premium não publicadas por essa alteração.
 - Validação local da integração: 10 testes da base de produção, build e 24 verificações estruturais passaram. Testes de compra/Trial do app continuam pendentes.
+
+## Resultado verificado em produção
+
+- PR #5 incorporada ao main: `a1c976c28c2e4c38711a67f4df4c4da6af6bb4d1`.
+- Deployment Vercel `dpl_5LHZnDh3kbBuHoh4SJJX3WtwCdPQ`: READY, com aliases fideora.app e www.fideora.app atribuídos.
+- HTTPS: raiz 200; www redireciona 308 para https://fideora.app/. Raiz e páginas privacy/terms/support responderam 200. Canonical da raiz aponta para https://fideora.app/.
+- DNS público consultado: A, CNAME, MX, SPF e DKIM correspondem aos registros salvos. Isso não equivale a teste de entrega de e-mail.
+- CI Security & Build da integração: sucesso, run 39637628202. Testes locais, build e verificações estruturais passaram.
+- RevenueCat: URLs de termos e privacidade IT/PT verificadas na tabela Localization. Offering default mostra Published após publicar a alteração. Preços dinâmicos e regras de trial preservados; números de prévia Test Store não representam preços Apple.
+- App Store / App Privacy: URLs IT e PT salvas no novo domínio. Alterações serão lançadas com a próxima versão. Não houve submissão à revisão.
+- App Store / versão 1.0.0: descrições, Support URL e Marketing URL IT/PT preparados com o domínio novo. Permanecem sem salvar na página de versão enquanto faltar contato de review. Os valores pessoais eventualmente preenchidos pelo titular foram preservados.
+- Evidência visual do site: assets/fideora-domain-live.jpg.
+
+## Próximos acessos necessários
+
+1. Entrar no portal HostGator aberto para confirmar o serviço de e-mail disponível, provisionar support@fideora.app e testar envio/recepção. Se houver contratação, solicitar autorização para o preço concreto antes de comprar. A senha da caixa deve ser definida pelo titular.
+2. Abrir a conta Supabase com acesso ao projeto kgyqpedwgilotlwyhmnb, autorizar as URLs exatas indicadas acima e só então alterar o callback do app. Site URL global e demais apps devem ser preservados.
+3. Completar os dados reais de contato da revisão Apple, salvar os metadados e executar o aceite StoreKit em build assinado antes de submeter.
+
+## Atualização HostGator após login do titular — 21/10/2026
+
+- Login no Portal do Cliente confirmado. Plano M ativo inclui e-mail básico cPanel/Roundcube, sem contratar Titan ou iniciar teste pago.
+- Plataforma cPanel ativada para fideora.app; painel exibiu “E-mail cPanel ativo com sucesso!”. O aviso informa que próximos domínios adicionados ao plano recebem cPanel automaticamente e essa escolha não permite migrar para Titan gratuito.
+- Cadastro da primeira caixa preparado: support@fideora.app, quota de 1024 MB, sem armazenamento ilimitado.
+- Caixa ainda NÃO criada. A confirmação da senha está vazia e o botão de criação está desabilitado. O campo senha apresentava preenchimento mascarado do navegador; nenhuma senha foi lida, gerada, copiada ou enviada pelo agente.
+- Handoff ao titular para definir uma senha própria, confirmá-la e submeter “Criar Conta de E-mail”. Política do navegador exige que o titular conclua a entrada, confirmação e submissão de novas credenciais. Evidência: assets/fideora-mail-setup.jpg.
+- Teste de entrega de e-mail e atualização dos canais públicos de suporte aguardam existência confirmada da caixa. Nenhuma mensagem enviada. Callback Supabase continua pendente do acesso à conta correta, conforme seção anterior.
+
+## Caixa criada pelo titular — 21/10/2026
+
+- Titular confirmou a criação de support@fideora.app após definir a senha no portal HostGator.
+- Suporte e privacidade IT/PT atualizados com o contato privado support@fideora.app, incluindo link mailto nas páginas públicas e no conteúdo exibido dentro do app. Issues continuam como alternativa para relatos técnicos públicos sem dados pessoais.
+- Não houve acesso ao conteúdo da caixa, leitura de senha nem envio de mensagens. A verificação adicional do painel ficou indisponível por demora da conexão do navegador; não é apresentada como concluída.
+- DNS e acesso HTTPS às páginas serão conferidos após publicação. Entrega de mensagens ainda não foi testada. O retorno de autenticação Supabase permanece no endereço antigo até acesso à conta correta.
