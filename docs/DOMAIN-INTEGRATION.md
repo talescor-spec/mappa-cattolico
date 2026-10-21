@@ -81,3 +81,7 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 - DNS público reconferido: MX prioridade 0 para mail.fideora.app, A mail 108.167.132.224, SPF v=spf1 mx include:websitewelcome.com ~all e chave DKIM publicada.
 - Verificação HTTP das páginas legais do domínio: resposta 200 e presença do link mailto:support@fideora.app. Isso não comprova entrega da caixa de e-mail.
 - A conexão com o navegador não respondeu às tentativas de ler o painel nesta etapa; não houve captura atual da caixa nem teste visual adicional. A criação da caixa é informação confirmada pelo titular. Não houve envio de e-mail nem teste de recebimento.
+
+## Backend exclusivo — atualização de 21/10/2026
+
+Esta seção substitui as pendências históricas de Supabase acima. O titular reutilizou o projeto vazio sysuottboucultzzaagv, renomeou para Fideora e informou configuração das URLs Auth e SMTP. Confirmou recebimento do e-mail e login. A API do banco confirmou um usuário com e-mail confirmado, login registrado e perfil/progresso criados automaticamente. Cliente, CSP e callback foram atualizados para o backend exclusivo e https://fideora.app. Nenhum dado do Funnel Metrics foi alterado. Ver SUPABASE-CUTOVER.md para estado de publicação e limites da validação.
