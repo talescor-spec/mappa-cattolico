@@ -49,7 +49,7 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 - RevenueCat: URLs de termos e privacidade IT/PT verificadas na tabela Localization. Offering default mostra Published após publicar a alteração. Preços dinâmicos e regras de trial preservados; números de prévia Test Store não representam preços Apple.
 - App Store / App Privacy: URLs IT e PT salvas no novo domínio. Alterações serão lançadas com a próxima versão. Não houve submissão à revisão.
 - App Store / versão 1.0.0: descrições, Support URL e Marketing URL IT/PT preparados com o domínio novo. Permanecem sem salvar na página de versão enquanto faltar contato de review. Os valores pessoais eventualmente preenchidos pelo titular foram preservados.
-- Evidência visual do site: assets/fideora-domain-live.jpg.
+- Evidência visual do site: https://github.com/talescor-spec/mappa-cattolico/blob/fideora-premium-v1/docs/assets/fideora-domain-live.jpg.
 
 ## Próximos acessos necessários
 
@@ -63,7 +63,7 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 - Plataforma cPanel ativada para fideora.app; painel exibiu “E-mail cPanel ativo com sucesso!”. O aviso informa que próximos domínios adicionados ao plano recebem cPanel automaticamente e essa escolha não permite migrar para Titan gratuito.
 - Cadastro da primeira caixa preparado: support@fideora.app, quota de 1024 MB, sem armazenamento ilimitado.
 - Caixa ainda NÃO criada. A confirmação da senha está vazia e o botão de criação está desabilitado. O campo senha apresentava preenchimento mascarado do navegador; nenhuma senha foi lida, gerada, copiada ou enviada pelo agente.
-- Handoff ao titular para definir uma senha própria, confirmá-la e submeter “Criar Conta de E-mail”. Política do navegador exige que o titular conclua a entrada, confirmação e submissão de novas credenciais. Evidência: assets/fideora-mail-setup.jpg.
+- Handoff ao titular para definir uma senha própria, confirmá-la e submeter “Criar Conta de E-mail”. Política do navegador exige que o titular conclua a entrada, confirmação e submissão de novas credenciais. Evidência do cadastro preparado: https://github.com/talescor-spec/mappa-cattolico/blob/fideora-premium-v1/docs/assets/fideora-mail-setup.jpg.
 - Teste de entrega de e-mail e atualização dos canais públicos de suporte aguardam existência confirmada da caixa. Nenhuma mensagem enviada. Callback Supabase continua pendente do acesso à conta correta, conforme seção anterior.
 
 ## Caixa criada pelo titular — 21/10/2026
@@ -72,3 +72,12 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 - Suporte e privacidade IT/PT atualizados com o contato privado support@fideora.app, incluindo link mailto nas páginas públicas e no conteúdo exibido dentro do app. Issues continuam como alternativa para relatos técnicos públicos sem dados pessoais.
 - Não houve acesso ao conteúdo da caixa, leitura de senha nem envio de mensagens. A verificação adicional do painel ficou indisponível por demora da conexão do navegador; não é apresentada como concluída.
 - DNS e acesso HTTPS às páginas serão conferidos após publicação. Entrega de mensagens ainda não foi testada. O retorno de autenticação Supabase permanece no endereço antigo até acesso à conta correta.
+
+## Publicação do contato de suporte
+
+- Código web publicado: main e441b96606c96fdab68892ede179d9014e433d0a. Alteração equivalente preservada na branch Premium (02baaffcfe9f6704d9ec1e806b8eabbe9ec32499).
+- Vercel: deployment dpl_47NaPY8kmfc2nZYJfGMXBtAoZDjK, target production, READY, aliases fideora.app e www.fideora.app atribuídos.
+- Validação: build de produção e 10 testes passaram; workflow Security & Build Check 39642532806 concluiu com sucesso. Links mailto e conteúdo IT/PT conferidos nos arquivos gerados.
+- DNS público reconferido: MX prioridade 0 para mail.fideora.app, A mail 108.167.132.224, SPF v=spf1 mx include:websitewelcome.com ~all e chave DKIM publicada.
+- Verificação HTTP das páginas legais do domínio: resposta 200 e presença do link mailto:support@fideora.app. Isso não comprova entrega da caixa de e-mail.
+- A conexão com o navegador não respondeu às tentativas de ler o painel nesta etapa; não houve captura atual da caixa nem teste visual adicional. A criação da caixa é informação confirmada pelo titular. Não houve envio de e-mail nem teste de recebimento.
