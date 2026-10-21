@@ -9,7 +9,7 @@ Atualização: 21/10/2026. Decisão atual do titular: reaproveitar e renomear o 
 - Nome exibido atualmente: talescor-spec’s Project. Nome autorizado: Fideora.
 - Região apresentada no print: us-west-2. Reaproveitar este projeto preserva sua região; Frankfurt não se aplica a esta decisão.
 - O titular confirmou que Public, Auth, Storage e Edge Functions estão vazios e autorizou editar/renomear/reutilizar o projeto. O print confirma ausência de tabelas e views em public; os demais estados são confirmação do titular.
-- As conexões Supabase disponíveis negam acesso a este ID. Nenhuma migração ou mudança de nome foi executada. É necessário reautorizar a integração incluindo esta organização/projeto.
+- Acesso liberado na conexão Supabase da organização vmrhiclzffhlmjwvzhcz. Schema aplicado e validado. Nome de exibição ainda é talescor-spec’s Project; a ferramenta de banco não oferece mudança de nome ou configuração de Auth e a conexão do navegador não respondeu nesta etapa.
 - O pedido atual substitui a criação de outro projeto junto do Herbalia. Não é necessária contratação de plano nem liberação de vaga para reaproveitar este projeto já existente.
 
 ## Tentativa anterior de criar outro projeto
@@ -52,6 +52,28 @@ Não há registros nessas três tabelas para copiar neste momento. Isso não sig
 
 FIDEORA-SETUP.sql reúne as seis migrações já versionadas, em uma transação, com proteção que recusa schema public com tabelas/views ou presença de usuários/buckets. O cabeçalho identifica o único destino autorizado. A proteção por conteúdo não substitui conferir o ID no painel; não é possível comprovar o project ref apenas pelo banco padrão.
 
-O pacote foi revisado estaticamente contra as seis migrações. Não foi aplicado nem testado no banco destino por falta de acesso. Ao aplicar, conferir RLS e grants com os advisors e testes entre dois usuários. Não executar no backend do Funnel Metrics ou do Herbalia.
+Pacote aplicado com sucesso somente em sysuottboucultzzaagv, migração 20261021181147_fideora_dedicated_initial_schema. A instalação e os testes do banco estão descritos abaixo. Não executar novamente: a proteção inicial recusa um schema já ocupado. Não executar no Funnel Metrics ou no Herbalia.
 
-Após conexão, configurar Site URL https://fideora.app e redirects exatos, validar SMTP, obter somente a chave publishable e então atualizar URL/chave/CSP/callback no app. O hostname e a chave do backend antigo continuam publicados até concluir a configuração e validação do destino.
+Após conexão, configurar Site URL https://fideora.app e redirects exatos, validar SMTP, obter somente a chave publishable e então atualizar URL/chave/CSP/callback no app. A branch Premium prepara o hostname e a chave publishable do backend exclusivo; a produção web mantém o backend antigo até concluir Auth/SMTP e validar a troca.
+
+## Instalação e verificação concluídas — 21/10/2026
+
+- Metadata confirmada por API: ID sysuottboucultzzaagv, organização vmrhiclzffhlmjwvzhcz, região us-west-2, ACTIVE_HEALTHY. Nome de exibição continua talescor-spec’s Project.
+- Antes da migração: nenhuma tabela/view em public, nenhum usuário Auth, nenhum bucket e nenhuma Edge Function.
+- Migração fideora_dedicated_initial_schema aplicada com sucesso, versão 20261021181147.
+- Três tabelas com RLS ativo e nove políticas: fideora_profiles, fideora_progress, fideora_study_entries. authenticated recebe apenas SELECT/INSERT/UPDATE. anon não recebe acesso a tabelas nem à função de exclusão.
+- Teste transacional real de dez propriedades passou: visibilidade própria, atualização própria, bloqueio de escrita entre usuários, rejeição de inserção em outro usuário, rejeição de escrita antiga, remoção do conteúdo de tombstone, bloqueio anônimo, exclusão própria com cascade e preservação do outro usuário. Os dois usuários fictícios e dados de teste foram revertidos por ROLLBACK. Consulta posterior confirmou Auth e dados vazios.
+- Script reproduzível: SUPABASE-ISOLATION-TEST.sql. Usar apenas no projeto dedicado com autorização de teste.
+- Data API com a chave publishable: /auth/v1/settings retornou 200, e-mail habilitado, inscrição habilitada e confirmação de e-mail obrigatória. As três tabelas retornaram 401 para chamada anônima, como esperado.
+- Advisor de segurança apresenta somente um aviso intencional sobre public.fideora_delete_own_account() ser SECURITY DEFINER e executável por authenticated. A função não aceita usuário alvo, deriva auth.uid(), exige sessão e usa search_path vazio. Testes confirmaram bloqueio anônimo e preservação do outro usuário. Referência: https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable. Não é descrito como zero avisos.
+- Cliente preparado na branch Premium: URL e chave publishable correspondentes ao projeto exclusivo, CSP HTTPS/WSS restrito ao novo host e callback padrão https://fideora.app. Vercel não apresenta variáveis de ambiente que substituam esses valores. Nenhuma chave secret/service_role foi obtida ou adicionada ao cliente.
+- Build passou, 20 testes passaram e 24 verificações estruturais passaram. Isso não comprova login real por e-mail, compra StoreKit, TestFlight ou aprovação Apple.
+
+## Pendências para ativar o backend na produção
+
+1. Renomear o projeto no painel para Fideora: https://supabase.com/dashboard/project/sysuottboucultzzaagv/settings/general.
+2. Auth URLs: https://supabase.com/dashboard/project/sysuottboucultzzaagv/auth/url-configuration. Site URL https://fideora.app; Redirect URLs exatos https://fideora.app e https://fideora.app/. O app também aceita código/link de e-mail manualmente; retorno automático para iOS não é declarado validado.
+3. SMTP: https://supabase.com/dashboard/project/sysuottboucultzzaagv/auth/smtp. Configurar o envio público com o provedor da caixa support@fideora.app e seus dados reais de SMTP. O titular deve inserir a senha diretamente no painel. A existência da caixa não configura o SMTP do Supabase. O remetente deve ser autorizado no provedor. Manter a confirmação de e-mail.
+4. Validar com o titular um recebimento e login reais e só então preparar e publicar o mesmo ajuste no main. Nenhum e-mail foi enviado pelo agente. Produção continua no projeto compartilhado até esse aceite; não afirmar migração concluída.
+
+O conector de banco não oferece edição de nome, Site URL, Redirect URLs ou SMTP. A conexão do navegador não respondeu às tentativas de acesso e de reconexão nesta etapa; nenhuma sessão alternativa foi usada. As três ações acima permanecem necessárias no painel.

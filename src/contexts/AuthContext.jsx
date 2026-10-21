@@ -214,7 +214,7 @@ export function AuthProvider({ children }) {
       options: {
         emailRedirectTo:
           import.meta.env.VITE_AUTH_REDIRECT_URL ||
-          "https://mappa-cattolico.vercel.app",
+          "https://fideora.app",
         data: {
           display_name: sanitizeDisplayName(displayName),
           locale: locale(lang),

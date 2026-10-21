@@ -91,3 +91,8 @@ Comparar uma mudança por vez com tráfego suficiente: preço anual/mescla de pl
 ## Domínio próprio — 21/10/2026
 
 https://fideora.app está em produção com HTTPS; www redireciona para a raiz. A PR #5 publica somente o domínio, canonical e páginas legais atuais sobre a V1 web existente. A versão Premium permanece na PR #4 até o aceite nativo. Links legais IT/PT do paywall RevenueCat publicados no novo domínio; Privacy Policy URLs Apple salvas. Descrições e URLs da página da versão Apple estão preparadas sem salvar, dependendo do contato de review. DNS HostGator preparado, mas caixa support@fideora.app ainda depende do login no portal. Callback Supabase preservado até acesso à conta correta. Ver DOMAIN-INTEGRATION.md para evidências e pendências.
+
+
+## Backend exclusivo preparado — 21/10/2026
+
+Projeto sysuottboucultzzaagv configurado com três tabelas e nove políticas RLS. Teste real de isolamento/exclusão com dois usuários passou em dez propriedades; fixtures revertidas. Cliente e CSP da branch preparados para o projeto exclusivo, sem promover Premium nem trocar o backend da produção. Auth URL/SMTP e nome no painel continuam pendentes devido à indisponibilidade da conexão do navegador. Build, 20 testes e 24 verificações estruturais passaram. Ver DEDICATED-SUPABASE.md.
