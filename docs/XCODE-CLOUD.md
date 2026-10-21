@@ -6,6 +6,8 @@
 
 O código e os ajustes de iPhone estão salvos na branch fideora-premium-v1. O GitHub compila e abre uma versão sem assinatura no simulador; não há workflow de distribuição. A build assinada 1.0.0 (1) foi enviada pelo titular e instalada pelo TestFlight. O painel Apple exibe “Get started in Xcode”: não existe produto/workflow Xcode Cloud ativado nesta equipe.
 
+![App Store Connect exige a ativação inicial no Xcode](assets/fideora-xcode-cloud-activation.jpg)
+
 Escolha: Xcode Cloud, adequado ao projeto Capacitor existente. Não migrar o app para Expo apenas para compilar. A ativação inicial exige Xcode no Mac e autorização do repositório; não é uma dependência recorrente do Mac para cada build. Preparar código e validação antes de solicitar essa etapa.
 
 ## Riscos
@@ -26,6 +28,53 @@ GitHub → preparo e testes → archive assinado na Apple → processamento → 
 ## Notas de revisão
 
 Italian default, Portuguese optional. Free Genesis/Exodus and daily excerpt; other included books and advanced features require Apple IAP through RevenueCat. Email sync is optional. This change prepares build/distribution infrastructure; no app behavior, prices, entitlements or backend schema change. App Review readiness is not asserted.
+
+## Configuração preparada no repositório
+
+- Scheme App compartilhado, archive Release e equipe CZ7QKZBQC8 em Debug/Release.
+- Script executável ios/App/ci_scripts/ci_post_clone.sh: Node 22 ou 24, instalação reprodutível npm ci, testes, preflight e geração/sincronização dos recursos iOS. O build falha se qualquer etapa falhar. Em Xcode Cloud, recusa equipe ou branch diferentes e exige o arquivo de resolução Swift.
+- GitHub Actions executa o mesmo script no macOS, resolve dependências Swift, compila e abre o simulador. Não contém assinatura privada nem upload para Apple.
+- Notas de TestFlight versionadas em ios/App/TestFlight/WhatToTest.it-IT.txt e WhatToTest.pt-BR.txt.
+- Testes de falha do fluxo: equipe/branch erradas, referência de branch manual, falha de testes e falha de preflight.
+
+## Ativação única no Xcode
+
+O titular já tem um projeto Fideora funcional no Xcode, com a equipe correta. Ele pode iniciar a ativação por esse projeto; não precisa fazer outro archive local. O servidor deve selecionar a branch remota fideora-premium-v1 atualizada, que contém os scripts e o scheme compartilhado.
+
+Para garantir que o Xcode analise a configuração atualizada, scripts/setup-xcode-cloud-mac.sh prepara um novo checkout no HD externo THALES HD 500GB, sem substituir o projeto anterior. Ele coloca projeto, dependências, cache npm e temporários em Fideora-Build no HD e abre o Xcode; não compila o binário nativo nem faz upload. O script é apenas para essa ativação inicial. DerivedData/Archives já configurados no HD permanecem como estão; Xcode/macOS ainda podem usar caches internos próprios.
+
+1. Abrir o Fideora no Xcode e escolher **Product → Xcode Cloud → Create Workflow**. Selecionar o produto App/com.fideora.app e a equipe CZ7QKZBQC8. Não criar outro app na Apple.
+2. Revisar o workflow: usar a branch **fideora-premium-v1**, nunca main. Na primeira ativação, manter **Deployment Preparation = None** e não adicionar distribuição TestFlight ainda. Isso evita colidir com 1.0.0 (1) antes de configurar o contador Cloud.
+3. Em **Grant Access**, conectar o GitHub **talescor-spec/mappa-cattolico**. Selecionar somente esse repositório, sem ampliar acesso a Herbalia ou outros projetos. A autorização de acesso e qualquer acordo novo apresentado pela Apple devem ser revisados pelo titular.
+4. Completar a ativação e iniciar o primeiro build na branch fideora-premium-v1. Depois da ativação, o agente pode configurar os itens seguintes pelo App Store Connect. O Mac deixa de ser necessário para compilar ou enviar as próximas revisões.
+
+## Finalização no App Store Connect após ativar
+
+| Campo | Configuração |
+|---|---|
+| Nome | Fideora · TestFlight |
+| Repositório | talescor-spec/mappa-cattolico |
+| Start condition | Mudança em fideora-premium-v1; sem PRs nem main |
+| Arquivos relevantes | src, public, ios, scripts, tests, package.json/package-lock.json, capacitor.config.json |
+| Ambiente | macOS/Xcode estáveis suportados, sem betas |
+| Projeto/scheme | ios/App/App.xcodeproj · App |
+| Action | Archive · iOS · Release |
+| Deployment Preparation | TestFlight and App Store; elegível para review futura, sem submissão automática |
+| Postaction | TestFlight Internal Testing → Fideora QA Interno |
+| Destinatários | Somente grupo existente; não convidar pessoas novas |
+| Next Build Number | 2, ou maior que qualquer build enviada enquanto isso |
+| Segredos adicionais | Nenhum certificado/chave privada no GitHub; assinatura gerenciada pela Apple |
+
+Para o contador: Xcode Cloud → Settings → Build Number → Edit Next Build Number. Ajustar antes do primeiro envio para TestFlight. O número no projeto continua 1; no Cloud, a Apple atribui e incrementa o número da build. Não sobrescrever CFBundleVersion por script nem tentar deduzir a build a partir do SHA.
+
+Somente declarar a distribuição automática concluída depois de conferir workflow ativo, archive Cloud assinado, upload processado e nova build disponível no grupo interno. Até lá, o status é **preparado no GitHub; aguardando ativação inicial no Xcode**.
+
+## Evidência de validação
+
+- 25 testes e 24 verificações estruturais aprovados localmente. XML do scheme e sintaxe dos scripts conferidos. O preparo Mac foi verificado para recusar execução em Linux antes de modificar arquivos.
+- CI de preparação: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39672828582. O mesmo post-clone passou no macOS; a resolução Swift e a compilação nativa passaram. A conclusão da abertura no simulador deve ser conferida no run.
+- Package.resolved foi copiado da resolução efetiva desse CI: Capacitor 8.5.2, ION Filesystem 2.0.1, PurchasesHybridCommon 19.12.0 e Purchases iOS 5.95.0, com revisões Git reais. O CI seguinte exige somente essas versões do lockfile.
+- Nenhum workflow Xcode Cloud foi criado, nenhuma chave privada foi extraída e nenhum upload novo foi feito nesta preparação. A ativação inicial continua pendente no Mac.
 
 ## Fontes
 

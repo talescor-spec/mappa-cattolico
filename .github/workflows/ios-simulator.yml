@@ -31,14 +31,14 @@ jobs:
         run: ios/App/ci_scripts/ci_post_clone.sh
       - name: Resolve and record Swift dependencies
         run: |
-          xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App -derivedDataPath /tmp/fideora-derived > /tmp/fideora-resolve.log 2>&1
+          xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App -derivedDataPath /tmp/fideora-derived -onlyUsePackageVersionsFromResolvedFile > /tmp/fideora-resolve.log 2>&1
           mkdir -p qa/artifacts
           cp ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved qa/artifacts/Package.resolved
           echo FIDEORA_SPM_LOCK_BEGIN
           cat qa/artifacts/Package.resolved
           echo FIDEORA_SPM_LOCK_END
       - name: Build unsigned iOS simulator app
-        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/fideora-derived CODE_SIGNING_ALLOWED=NO build > /tmp/fideora-xcode.log 2>&1
+        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/fideora-derived -onlyUsePackageVersionsFromResolvedFile CODE_SIGNING_ALLOWED=NO build > /tmp/fideora-xcode.log 2>&1
       - name: Launch on iPhone simulator
         run: |
           mkdir -p qa/artifacts
@@ -54,6 +54,7 @@ jobs:
         run: |
           mkdir -p qa/artifacts
           cp /tmp/fideora-xcode.log qa/artifacts/xcode.log || true
+          cp /tmp/fideora-resolve.log qa/artifacts/swift-resolve.log || true
           xcodebuild -version > qa/artifacts/xcode-version.txt
       - uses: actions/upload-artifact@v4
         if: always()
