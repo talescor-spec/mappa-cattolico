@@ -6,10 +6,10 @@ Atualização: 21/10/2026. Decisão atual do titular: reaproveitar e renomear o 
 
 - Projeto existente: sysuottboucultzzaagv (https://sysuottboucultzzaagv.supabase.co).
 - Organização apresentada pelo titular: talescor-spec’s Org.
-- Nome exibido atualmente: talescor-spec’s Project. Nome autorizado: Fideora.
+- Nome de exibição Fideora confirmado pela API após os ajustes do titular.
 - Região apresentada no print: us-west-2. Reaproveitar este projeto preserva sua região; Frankfurt não se aplica a esta decisão.
 - O titular confirmou que Public, Auth, Storage e Edge Functions estão vazios e autorizou editar/renomear/reutilizar o projeto. O print confirma ausência de tabelas e views em public; os demais estados são confirmação do titular.
-- Acesso liberado na conexão Supabase da organização vmrhiclzffhlmjwvzhcz. Schema aplicado e validado. Nome de exibição ainda é talescor-spec’s Project; a ferramenta de banco não oferece mudança de nome ou configuração de Auth e a conexão do navegador não respondeu nesta etapa.
+- Acesso liberado na conexão Supabase da organização vmrhiclzffhlmjwvzhcz. Schema aplicado e validado. Nome Fideora confirmado após ajuste do titular. A ferramenta de banco não oferece configuração de Auth e a conexão do navegador não respondeu nesta etapa.
 - O pedido atual substitui a criação de outro projeto junto do Herbalia. Não é necessária contratação de plano nem liberação de vaga para reaproveitar este projeto já existente.
 
 ## Tentativa anterior de criar outro projeto
@@ -58,7 +58,7 @@ Após conexão, configurar Site URL https://fideora.app e redirects exatos, vali
 
 ## Instalação e verificação concluídas — 21/10/2026
 
-- Metadata confirmada por API: ID sysuottboucultzzaagv, organização vmrhiclzffhlmjwvzhcz, região us-west-2, ACTIVE_HEALTHY. Nome de exibição continua talescor-spec’s Project.
+- Metadata confirmada por API: ID sysuottboucultzzaagv, organização vmrhiclzffhlmjwvzhcz, região us-west-2, ACTIVE_HEALTHY. Nome de exibição Fideora confirmado na consulta posterior aos ajustes do titular.
 - Antes da migração: nenhuma tabela/view em public, nenhum usuário Auth, nenhum bucket e nenhuma Edge Function.
 - Migração fideora_dedicated_initial_schema aplicada com sucesso, versão 20261021181147.
 - Três tabelas com RLS ativo e nove políticas: fideora_profiles, fideora_progress, fideora_study_entries. authenticated recebe apenas SELECT/INSERT/UPDATE. anon não recebe acesso a tabelas nem à função de exclusão.
@@ -100,3 +100,7 @@ O servidor br878 foi identificado no cPanel da hospedagem existente. A HostGator
 - HTML e bundle JavaScript publicados retornaram HTTP 200 por acesso autenticado. O bundle contém o hostname novo e não contém o hostname antigo. A CSP entregue aponta HTTPS/WSS somente ao projeto dedicado.
 - GitHub Security & Build Check 39652197485 passou. O workflow iOS Simulator 39652187002 ainda estava em execução na última consulta; não é declarado aprovado.
 - Inspeção visual e login real permanecem pendentes devido à conexão indisponível do navegador e à configuração Auth/SMTP ainda necessária. A produção fideora.app não foi promovida para este preview.
+
+## Retorno do titular após configuração do painel
+
+O titular informou que concluiu os ajustes. A API confirmou nome Fideora e ACTIVE_HEALTHY. A configuração exata de Auth URLs e SMTP ainda não foi inspecionada, pois a conexão do navegador voltou a não responder. Consulta agregada confirmou zero usuários Auth e zero logins; nenhum recebimento de e-mail ou login real pode ser declarado aprovado. O próximo teste deve ocorrer no preview, usando o código ou copiando o link de autenticação para o próprio app, sem consumir o link no domínio de produção que ainda aponta à origem antiga. Não colar códigos ou links de autenticação no chat. A produção permanece na origem antiga até esse teste.
