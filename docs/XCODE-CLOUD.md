@@ -55,11 +55,11 @@ Para garantir que o Xcode analise a configuração atualizada, scripts/setup-xco
 | Nome | Fideora · TestFlight |
 | Repositório | talescor-spec/mappa-cattolico |
 | Start condition | Mudança em fideora-premium-v1; sem PRs nem main |
-| Arquivos relevantes | src, public, ios, scripts, tests, package.json/package-lock.json, capacitor.config.json |
+| Arquivos relevantes | Qualquer mudança na branch; ignorar commits que alterem somente docs/ |
 | Ambiente | macOS/Xcode estáveis suportados, sem betas |
 | Projeto/scheme | ios/App/App.xcodeproj · App |
 | Action | Archive · iOS · Release |
-| Deployment Preparation | TestFlight and App Store; elegível para review futura, sem submissão automática |
+| Distribution Preparation | App Store Connect; elegível para review futura, sem submissão automática |
 | Postaction | TestFlight Internal Testing → Fideora QA Interno |
 | Destinatários | Somente grupo existente; não convidar pessoas novas |
 | Next Build Number | 2, ou maior que qualquer build enviada enquanto isso |
@@ -79,7 +79,12 @@ Somente declarar a distribuição automática concluída depois de conferir work
 - Next Build Number ajustado para 2 no App Store Connect antes da primeira execução.
 - Primeira execução Cloud: build 2, 1534b863-2d5f-4504-a8cb-df37ac0e5520, iniciada manualmente na branch fideora-premium-v1, commit 1b8160840e339d59b392091b240e4c353b3b2441. Ação inicial Build - iOS, sem upload. O seletor de schemes para Archive estava vazio antes dessa primeira execução; não foi possível salvar o rascunho de distribuição. Não confundir esse rascunho com configuração publicada.
 - A build 2 falhou no guard de equipe antes de instalar dependências. O log da Apple confirmou CI_TEAM_ID=1f404b10-6425-4a63-9483-a4bc8a3f49d7 (UUID da equipe App Store Connect), diferente do identificador de assinatura CZ7QKZBQC8. Corrigido o guard para o UUID observado; a assinatura mantém CZ7QKZBQC8. Testes recusam equipe ausente, diferente e o uso indevido do identificador de assinatura nesse campo. Sem dependências npm, a catalogação dos schemes também falhou nessa execução.
+- Build Cloud 3, 0749b4f6-5437-4057-9ff6-d221577d7994, commit 29e6107f9df9fe6523e0ca09823d00f61519fd88: Succeeded. Post-clone passou na Apple, dependências resolvidas e compilação iOS aprovada. O esquema App ficou disponível para configuração do archive.
+- Workflow Fideora · TestFlight salvo e ativo às 18:44: início manual e push somente em fideora-premium-v1; PRs/tags desativados; commits somente em docs/ ignorados; cache permitido; Archive iOS/App com Distribution Preparation = App Store Connect; postação TestFlight Internal Testing para Fideora QA Interno (um membro existente). Sem novos convites e sem submissão pública.
+- Build 4 iniciada manualmente com esse workflow para validar archive, assinatura e entrega; não declarar disponível no iPhone antes de conferir o processamento TestFlight.
 - Nenhuma chave privada foi extraída e nenhuma submissão para App Review foi realizada.
+
+![Workflow ativo: branch premium, archive App e grupo interno](assets/fideora-xcode-cloud-workflow.jpg)
 
 Comando de preparo inicial no Mac (script versionado na branch do projeto):
 
