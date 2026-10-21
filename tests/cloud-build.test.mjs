@@ -30,7 +30,7 @@ function prepare(overrides = {}) {
       ...process.env,
       PATH: `${bin}:${process.env.PATH}`,
       CI_XCODE_CLOUD: "TRUE",
-      CI_TEAM_ID: "CZ7QKZBQC8",
+      CI_TEAM_ID: "1f404b10-6425-4a63-9483-a4bc8a3f49d7",
       CI_BRANCH: "fideora-premium-v1",
       CI_GIT_REF: "",
       CI_PRIMARY_REPOSITORY_PATH: root,
@@ -45,7 +45,7 @@ function prepare(overrides = {}) {
 }
 
 test("cloud build refuses a different team or branch before preparing a release", () => {
-  for (const override of [{ CI_TEAM_ID: "OTHERTEAM" }, { CI_BRANCH: "main" }, { CI_BRANCH: "" }]) {
+  for (const override of [{ CI_TEAM_ID: "OTHERTEAM" }, { CI_TEAM_ID: "" }, { CI_TEAM_ID: "CZ7QKZBQC8" }, { CI_BRANCH: "main" }, { CI_BRANCH: "" }]) {
     const result = prepare(override);
     assert.equal(result.status, 1);
     assert.deepEqual(result.calls, []);

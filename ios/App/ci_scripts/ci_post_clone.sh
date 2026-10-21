@@ -3,8 +3,10 @@ set -eu
 
 # Xcode Cloud runs this next to App.xcodeproj, before resolving Swift packages.
 if [ "${CI_XCODE_CLOUD:-}" = "TRUE" ]; then
-  if [ "${CI_TEAM_ID:-}" != "CZ7QKZBQC8" ]; then
-    echo "Fideora: use Apple team CZ7QKZBQC8." >&2
+  # Xcode Cloud supplies the App Store Connect team UUID here. The signing
+  # team's CZ7QKZBQC8 identifier remains in project.pbxproj.
+  if [ "${CI_TEAM_ID:-}" != "1f404b10-6425-4a63-9483-a4bc8a3f49d7" ]; then
+    echo "Fideora: use the configured App Store Connect team." >&2
     exit 1
   fi
   FIDEORA_BRANCH="${CI_BRANCH:-}"

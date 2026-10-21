@@ -67,15 +67,19 @@ Para garantir que o Xcode analise a configuração atualizada, scripts/setup-xco
 
 Para o contador: Xcode Cloud → Settings → Build Number → Edit Next Build Number. Ajustar antes do primeiro envio para TestFlight. O número no projeto continua 1; no Cloud, a Apple atribui e incrementa o número da build. Não sobrescrever CFBundleVersion por script nem tentar deduzir a build a partir do SHA.
 
-Somente declarar a distribuição automática concluída depois de conferir workflow ativo, archive Cloud assinado, upload processado e nova build disponível no grupo interno. Até lá, o status é **preparado no GitHub; aguardando ativação inicial no Xcode**.
+Somente declarar a distribuição automática concluída depois de conferir workflow ativo, archive Cloud assinado, upload processado e nova build disponível no grupo interno. A ativação inicial foi concluída pelo titular em 21/10/2026; a configuração da distribuição e o primeiro upload continuam em validação.
 
 ## Evidência de validação
 
 - 25 testes e 24 verificações estruturais aprovados localmente. XML do scheme e sintaxe dos scripts conferidos. O preparo Mac foi verificado para recusar execução em Linux antes de modificar arquivos.
 - CI de preparação: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39672828582, concluído com sucesso. O mesmo post-clone passou no macOS; resolução Swift, compilação nativa, instalação e abertura no simulador foram aprovadas.
 - Package.resolved foi copiado da resolução efetiva desse CI: Capacitor 8.5.2, ION Filesystem 2.0.1, PurchasesHybridCommon 19.12.0 e Purchases iOS 5.95.0, com revisões Git reais. O CI seguinte exige somente essas versões do lockfile.
-- Conferência do lockfile em checkout limpo: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39674679092, código 2ee092c330d1bda62db1d5d20a46bee438e26228. Registrar o resultado quando terminar; não confundir esse CI sem assinatura com um upload TestFlight.
-- Nenhum workflow Xcode Cloud foi criado, nenhuma chave privada foi extraída e nenhum upload novo foi feito nesta preparação. A ativação inicial continua pendente no Mac.
+- Conferência do lockfile em checkout limpo: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39674679092, código 2ee092c330d1bda62db1d5d20a46bee438e26228, concluída com sucesso. Resolução estrita, compilação e abertura no simulador aprovadas. Esse CI sem assinatura não é um upload TestFlight.
+- Produto Xcode Cloud criado: 71065e69-da01-400d-a130-d7c0b7870704, vinculado ao app Fideora 6825337165. Workflow inicial: 72A9DAC1-40CA-4668-90A5-B82BC97B071C.
+- Next Build Number ajustado para 2 no App Store Connect antes da primeira execução.
+- Primeira execução Cloud: build 2, 1534b863-2d5f-4504-a8cb-df37ac0e5520, iniciada manualmente na branch fideora-premium-v1, commit 1b8160840e339d59b392091b240e4c353b3b2441. Ação inicial Build - iOS, sem upload. O seletor de schemes para Archive estava vazio antes dessa primeira execução; não foi possível salvar o rascunho de distribuição. Não confundir esse rascunho com configuração publicada.
+- A build 2 falhou no guard de equipe antes de instalar dependências. O log da Apple confirmou CI_TEAM_ID=1f404b10-6425-4a63-9483-a4bc8a3f49d7 (UUID da equipe App Store Connect), diferente do identificador de assinatura CZ7QKZBQC8. Corrigido o guard para o UUID observado; a assinatura mantém CZ7QKZBQC8. Testes recusam equipe ausente, diferente e o uso indevido do identificador de assinatura nesse campo. Sem dependências npm, a catalogação dos schemes também falhou nessa execução.
+- Nenhuma chave privada foi extraída e nenhuma submissão para App Review foi realizada.
 
 Comando de preparo inicial no Mac (script versionado na branch do projeto):
 
