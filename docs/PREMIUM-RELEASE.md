@@ -30,8 +30,11 @@ O leitor contém edições históricas de 66 livros por idioma, sem deuterocanô
 - Apple: grupo `22500299`; mensal `6825362133`; anual `6825368737`.
 - Ambos os planos estão no nível 1 do mesmo grupo Apple. Duração mensal de um mês e anual de um ano; sem compromisso anual parcelado. Localizações dos produtos e do grupo salvas em italiano e português do Brasil.
 - URLs de notificações Apple → RevenueCat salvas para produção e sandbox. Ainda sem transações para comprovar entrega dessas notificações.
-- Preços base iniciais para Itália: €4,99/mês e €29,99/ano, com equivalências locais calculadas pela Apple. O SDK mostra o preço do storefront, sem valores fixos no código do paywall. Sem trial nesta primeira configuração; sem oferta vitalícia.
+- Preços base aprovados pelo usuário e salvos para Itália: **€19,00/mês e €59,00/ano**, com equivalências locais recalculadas pela Apple nos 175 países/regiões. No Brasil, a tabela Apple resultou em R$99,90/mês e R$299,90/ano. O SDK mostra o preço do storefront, sem valores fixos no código do paywall. **Anual: teste grátis de sete dias para contas elegíveis. Mensal: sem trial.** Sem oferta vitalícia. Essa configuração substitui a hipótese inicial de €4,99/€29,99.
 - A prévia do editor RevenueCat pode usar preços fictícios do Test Store ($9,99/$79,99). Esses valores não são os preços base Apple configurados. O código de produção rejeita chaves Test Store.
+- Trial Apple anual salvo: oferta gratuita de uma semana, início em 21/10/2026, sem data final, 175 países/regiões. Após o trial, cobrança do ano integral se não houver cancelamento. A elegibilidade é determinada pela Apple no grupo de assinaturas.
+- Paywall RevenueCat atualizado e publicado com regra nativa de oferta introdutória: Prova gratis / Experimente grátis e duração de sete dias apenas na variante elegível; Abbonati / Assinar na variante regular. Total anual continua dinâmico e destacado; equivalente mensal é secundário. A duração está localizada como 7 giorni / 7 dias: se a duração Apple mudar, atualizar também essas duas traduções.
+- Fluxo comercial é exclusivamente Apple IAP/RevenueCat. O usuário informou que não utiliza mais Stripe; nenhuma integração Stripe foi adicionada ou reativada.
 - Nenhuma cobrança, compra real ou submissão à Apple foi efetuada pelo agente.
 
 ## Insights estudados e aplicação
@@ -61,7 +64,7 @@ Os posts foram lidos na sessão conectada do X, pois a busca pública não recup
 - Prévia final disponível: https://mappa-cattolico-2wiek2tjr-thales-projects-54040b4e.vercel.app (commit `1bc1a95797ad3d1719e71b363c8c98c9a57b6148`). Produção permanece na V1 gratuita enquanto falta aceite StoreKit.
 - Rascunho App Privacy salvo com sete tipos de dados. Compras, User ID e Product Interaction: funcionamento e analytics, vinculados à identidade, sem tracking. A prévia não apresenta mais a classificação contraditória de identificadores/interações como dados desvinculados. Publicação final ainda pendente.
 - Descrições IT/PT e notas para review estão em `PREMIUM-STORE-COPY.md` e preenchidas na página Apple. **O salvamento da versão foi rejeitado porque faltam nome, sobrenome, telefone e e-mail do contato de review.** O texto novo dessa página está sem salvar; não considerar os metadados da versão atualizados no servidor. Nenhum contato foi inventado.
-- CI Security & Build Check do commit final: sucesso (`39615102670`). Nova execução do simulador (`39615095100`) ainda na fila na última consulta; a execução anterior com os SDKs RevenueCat passou, conforme link acima.
+- CI Security & Build Check do commit final: sucesso (`39615102670`). Execução do simulador `39615095100` terminou sem executar etapas: job `119273890785` cancelado, lista de steps vazia (o run aparece como failure). Isso não é evidência de compilação dessa revisão. A execução anterior com os SDKs RevenueCat passou, conforme link acima; manter o aceite nativo final pendente.
 
 ## Pendências antes de cobrar e enviar para review
 
@@ -74,6 +77,12 @@ A publicação do paywall no RevenueCat e a criação dos produtos Apple não si
 
 ## Próximo experimento
 
-Comparar uma mudança por vez com tráfego suficiente: preço anual/mescla de planos, três etapas vs oferta mais curta, com/sem trial quando configurado. Medir compra paga por instalação, receita líquida por usuário, reembolso, cancelamento e retenção; trial iniciado não equivale a venda. Nenhum ganho percentual é alegado sem teste controlado no Fideora.
+Comparar uma mudança por vez com tráfego suficiente: preço anual/mescla de planos, três etapas vs oferta mais curta, anual com sete dias de trial vs anual sem trial em experimento posterior. Medir compra paga por instalação, receita líquida por usuário, reembolso, cancelamento e retenção; trial iniciado não equivale a venda. Nenhum ganho percentual é alegado sem teste controlado no Fideora.
 
 ![Oferta contextual em português](assets/fideora-premium-mobile.png)
+
+## Evidência da atualização de preços e trial
+
+21/10/2026: usuário aprovou €19/mês e €59/ano com sete dias grátis no anual. Preço mensal reaberto e verificado na linha Italy (EUR) €19.00. Preço anual reaberto e verificado na linha Italy (EUR) €59.00. Trial salvo e verificado como Free for the first week em 175 países, de 21/10/2026 a No End Date. A apresentação desses dados no iPhone ainda será conferida no próximo teste StoreKit. 20 testes, build web e 24 verificações estruturais passaram novamente após a atualização dos termos. A medição de conversão ainda não foi realizada.
+
+![Trial anual salvo no App Store Connect](assets/fideora-apple-annual-trial.jpg)
