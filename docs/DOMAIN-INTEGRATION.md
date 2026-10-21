@@ -65,3 +65,10 @@ Official website and legal URLs use https://fideora.app. Italian is primary and 
 - Caixa ainda NÃO criada. A confirmação da senha está vazia e o botão de criação está desabilitado. O campo senha apresentava preenchimento mascarado do navegador; nenhuma senha foi lida, gerada, copiada ou enviada pelo agente.
 - Handoff ao titular para definir uma senha própria, confirmá-la e submeter “Criar Conta de E-mail”. Política do navegador exige que o titular conclua a entrada, confirmação e submissão de novas credenciais. Evidência: assets/fideora-mail-setup.jpg.
 - Teste de entrega de e-mail e atualização dos canais públicos de suporte aguardam existência confirmada da caixa. Nenhuma mensagem enviada. Callback Supabase continua pendente do acesso à conta correta, conforme seção anterior.
+
+## Caixa criada pelo titular — 21/10/2026
+
+- Titular confirmou a criação de support@fideora.app após definir a senha no portal HostGator.
+- Suporte e privacidade IT/PT atualizados com o contato privado support@fideora.app, incluindo link mailto nas páginas públicas e no conteúdo exibido dentro do app. Issues continuam como alternativa para relatos técnicos públicos sem dados pessoais.
+- Não houve acesso ao conteúdo da caixa, leitura de senha nem envio de mensagens. A verificação adicional do painel ficou indisponível por demora da conexão do navegador; não é apresentada como concluída.
+- DNS e acesso HTTPS às páginas serão conferidos após publicação. Entrega de mensagens ainda não foi testada. O retorno de autenticação Supabase permanece no endereço antigo até acesso à conta correta.
