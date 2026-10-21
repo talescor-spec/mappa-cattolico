@@ -35,3 +35,14 @@ export function dailyVerses(book, chapter, verses, daily) {
   if (book !== daily.book || chapter !== daily.chapter) return [];
   return verses.filter((v) => v.number >= daily.start && v.number <= daily.end);
 }
+
+// A small, shared reading sample. Advanced study tools still require Premium.
+export const FREE_BIBLE_BOOKS = Object.freeze(["Gen", "Exod"]);
+export function canReadBook(book, isPremium) {
+  return Boolean(book && (isPremium || FREE_BIBLE_BOOKS.includes(book)));
+}
+export function readingAccess(book, chapter, isPremium, daily) {
+  if (canReadBook(book, isPremium)) return "full";
+  if (book === daily?.book && chapter === daily?.chapter) return "daily";
+  return "locked";
+}

@@ -2187,6 +2187,20 @@ main {
   min-width: 44px;
   min-height: 44px;
 }
+.modal-head h2:focus {
+  outline: none;
+}
+.modal-head > .modal-close {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+.modal-close svg { width: 16px; height: 16px; }
+.onboarding-name { margin-bottom: 24px; }
 
 /* Premium follows the same calm editorial language as the reading experience. */
 .premium-card {

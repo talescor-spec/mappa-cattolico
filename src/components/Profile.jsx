@@ -132,8 +132,8 @@ export default function Profile({ onSources, onLegal }) {
                     "Perfil associado à sua conta.",
                   )
                 : l(
-                    "Senza account: i dati rimangono su questo dispositivo.",
-                    "Sem conta: os dados permanecem neste dispositivo.",
+                    "Profilo su questo dispositivo. Puoi attivare la sincronizzazione via email qui sotto.",
+                    "Perfil neste dispositivo. Você pode ativar a sincronização por e-mail abaixo.",
                   )}
             </p>
           </section>

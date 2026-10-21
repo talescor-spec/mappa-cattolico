@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { BookOpen, Heart, PenLine, Check, ChevronRight } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
-import { safeSetJSON } from "../utils/storage";
+import { safeGet, safeSet, safeSetJSON, sanitizeDisplayName } from "../utils/storage";
 import { Mark, Modal } from "./UI";
 export default function Onboarding({ bible, onFinish }) {
   const { l, language, changeLanguage } = useLanguage();
   const [step, setStep] = useState(0),
+    [name, setName] = useState(() => safeGet("fideoraUserName")),
     [goal, setGoal] = useState("read"),
     [minutes, setMinutes] = useState(5);
   const goals = [
@@ -26,6 +27,8 @@ export default function Onboarding({ bible, onFinish }) {
   const passage = bible?.books.find((b) => b.book === "John")?.chapters[0]
     ?.verses[0]?.text;
   const finish = (premium) => {
+    const displayName = sanitizeDisplayName(name);
+    if (displayName) safeSet("fideoraUserName", displayName);
     safeSetJSON("fideoraRoutine", { goal, minutes });
     onFinish(premium);
   };
@@ -38,21 +41,19 @@ export default function Onboarding({ bible, onFinish }) {
       onClose={() => finish(false)}
     >
       <div className="onboarding">
-        <div className="onboarding-progress" aria-label={`${step + 1} / 3`}>
-          {[0, 1, 2].map((n) => (
+        <div className="onboarding-progress" aria-label={`${step + 1} / 4`}>
+          {[0, 1, 2, 3].map((n) => (
             <span key={n} className={n <= step ? "active" : ""} />
           ))}
         </div>
         {step === 0 && (
           <>
             <Mark />
-            <h3>
-              {l("Che cosa desideri coltivare?", "O que você deseja cultivar?")}
-            </h3>
+            <h3>{l("Come possiamo chiamarti?", "Como podemos chamar você?")}</h3>
             <p>
               {l(
-                "Scegli da dove iniziare. Il tuo obiettivo resta su questo dispositivo.",
-                "Escolha por onde começar. Seu objetivo fica neste dispositivo.",
+                "Un piccolo spazio tutto tuo. Il nome è facoltativo e puoi cambiarlo nel Profilo.",
+                "Um pequeno espaço seu. O nome é opcional e pode ser alterado no Perfil.",
               )}
             </p>
             <div className="onboard-language">
@@ -69,6 +70,22 @@ export default function Onboarding({ bible, onFinish }) {
                 Português
               </button>
             </div>
+            <label htmlFor="onboarding-name">{l("Il tuo nome", "Seu nome")}</label>
+            <input
+              id="onboarding-name"
+              className="onboarding-name"
+              autoComplete="given-name"
+              maxLength={60}
+              value={name}
+              placeholder={l("Come ti chiami?", "Como você se chama?")}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </>
+        )}
+        {step === 1 && (
+          <>
+            <h3>{l("Che cosa desideri coltivare?", "O que você deseja cultivar?")}</h3>
+            <p>{l("Scegli da dove iniziare.", "Escolha por onde começar.")}</p>
             <div className="onboard-options">
               {goals.map(([id, Icon, it, pt]) => (
                 <button
@@ -85,7 +102,7 @@ export default function Onboarding({ bible, onFinish }) {
             </div>
           </>
         )}
-        {step === 1 && (
+        {step === 2 && (
           <>
             <h3>
               {l(
@@ -126,7 +143,7 @@ export default function Onboarding({ bible, onFinish }) {
             )}
           </>
         )}
-        {step === 2 && (
+        {step === 3 && (
           <>
             <span className="completion-mark">
               <Check />
@@ -184,9 +201,9 @@ export default function Onboarding({ bible, onFinish }) {
         )}
         <button
           className="button primary wide"
-          onClick={() => (step < 2 ? setStep(step + 1) : finish(true))}
+          onClick={() => (step < 3 ? setStep(step + 1) : finish(true))}
         >
-          {step < 2
+          {step < 3
             ? l("Continua", "Continuar")
             : l(
                 "Scopri il percorso completo",
@@ -199,15 +216,6 @@ export default function Onboarding({ bible, onFinish }) {
             {l("Indietro", "Voltar")}
           </button>
         )}
-        <button
-          className="text-button free-choice"
-          onClick={() => finish(false)}
-        >
-          {l(
-            "Inizia con la lettura gratuita",
-            "Começar com a leitura gratuita",
-          )}
-        </button>
       </div>
     </Modal>
   );

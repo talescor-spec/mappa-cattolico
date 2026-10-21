@@ -392,8 +392,8 @@ function Fideora() {
             <h3>{l("Testi biblici", "Textos bíblicos")}</h3>
             <p>
               {l(
-                "Italiano: Bibbia Diodati (1649). Português: Almeida (edizione 1819). Entrambe sono edizioni storiche in pubblico dominio, con 66 libri ciascuna.",
-                "Italiano: Bíblia Diodati (1649). Português: Almeida (edição de 1819). Ambas são edições históricas em domínio público, com 66 livros cada.",
+                "Italiano: Bibbia Diodati (1649). Português: Almeida (edizione 1819). Entrambe sono edizioni storiche in pubblico dominio.",
+                "Italiano: Bíblia Diodati (1649). Português: Almeida (edição de 1819). Ambas são edições históricas em domínio público.",
               )}
             </p>
             <p>

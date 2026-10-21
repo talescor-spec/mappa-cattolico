@@ -5,6 +5,8 @@ import {
   hasEntitlement,
   canUseFeature,
   dailyVerses,
+  canReadBook,
+  readingAccess,
 } from "../src/utils/access.js";
 import { createPurchasesClient } from "../src/services/purchasesClient.js";
 const active = {
@@ -210,4 +212,20 @@ test("billing queue recovers after a failed identity change", async () => {
   f.sdk.logIn = login;
   await f.client.refresh("B", "it");
   assert.deepEqual(f.calls.at(-1), ["info", "B"]);
+});
+
+// The partial reader must remain bounded after a deep link or entitlement expiry.
+test("free reader permits initial books and only the current daily excerpt elsewhere", () => {
+  const daily = { book: "Luke", chapter: 24, start: 13, end: 35 };
+  assert.equal(canReadBook("Gen", false), true);
+  assert.equal(canReadBook("Exod", false), true);
+  assert.equal(canReadBook("Lev", false), false);
+  assert.equal(readingAccess("Luke", 24, false, daily), "daily");
+  assert.equal(readingAccess("Luke", 23, false, daily), "locked");
+  assert.equal(readingAccess("Rev", 1, false, daily), "locked");
+  assert.equal(readingAccess("Lev", 1, true, daily), "full");
+  assert.equal(readingAccess("Lev", 1, false, daily), "locked");
+  assert.equal(canUseFeature("search", false), false);
+  assert.equal(canUseFeature("annotations", false), false);
+  assert.equal(canUseFeature("lexicon", false), false);
 });

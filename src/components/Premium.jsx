@@ -4,7 +4,7 @@ import { usePremium } from "../contexts/PremiumContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { Modal } from "./UI";
 const labels = {
-  bible: ["Tutta la Bibbia, al tuo ritmo.", "Toda a Bíblia, no seu ritmo."],
+  bible: ["Esplora le Scritture, al tuo ritmo.", "Explore as Escrituras, no seu ritmo."],
   search: ["Ritrova la Parola che cerchi.", "Encontre a Palavra que procura."],
   annotations: [
     "Dai spazio alle tue riflessioni.",
@@ -110,8 +110,8 @@ export function PremiumOffer() {
             [
               "Leggi e approfondisci",
               "Leia e aprofunde",
-              "66 libri per lingua, ricerca e parole greche/ebraiche.",
-              "66 livros por idioma, busca e palavras gregas/hebraicas.",
+              "Le edizioni bibliche incluse, ricerca e glossario greco/ebraico.",
+              "As edições bíblicas incluídas, busca e glossário grego/hebraico.",
             ],
             [
               "Custodisci ciò che impari",
@@ -170,16 +170,6 @@ export function PremiumOffer() {
             {l("Privacy", "Privacidade")}
           </a>
         </div>
-        <button
-          className="text-button free-choice"
-          disabled={busy}
-          onClick={close}
-        >
-          {l(
-            "Continua con la lettura gratuita",
-            "Continuar com a leitura gratuita",
-          )}
-        </button>
       </div>
     </Modal>
   );
@@ -210,6 +200,10 @@ export function SubscriptionPanel() {
               "A leitura diária é gratuita. Desbloqueie todas as ferramentas com Premium.",
             )}
       </p>
+      {isPremium && <p className="caption">{l(
+        "L’abbonamento è associato al tuo account Apple. La sincronizzazione via email è facoltativa.",
+        "A assinatura está associada à sua conta Apple. A sincronização por e-mail é opcional.",
+      )}</p>}
       {!isPremium && (
         <button
           className="button primary"

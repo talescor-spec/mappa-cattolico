@@ -3,6 +3,8 @@ import { Cloud, LogOut, Mail, ShieldCheck, Trash2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useStudy } from "../contexts/StudyContext";
+import { usePremium } from "../contexts/PremiumContext";
+import { safeGet } from "../utils/storage";
 import { Modal } from "./UI";
 export default function AccountPanel() {
   const { language, l } = useLanguage();
@@ -16,6 +18,8 @@ export default function AccountPanel() {
     deleteAccount,
   } = useAuth();
   const study = useStudy();
+  const { isPremium } = usePremium();
+  const [connect, setConnect] = useState(false);
   const [email, setEmail] = useState(""),
     [code, setCode] = useState(""),
     [sent, setSent] = useState(false),
@@ -43,21 +47,26 @@ export default function AccountPanel() {
       <div className="account-heading">
         <ShieldCheck size={22} />
         <div>
-          <h3>{l("Il tuo account Fideora", "Sua conta Fideora")}</h3>
+          <h3>{user ? l("Il tuo account Fideora", "Sua conta Fideora") : l("Sincronizza i tuoi dati", "Sincronize seus dados")}</h3>
           <p>
             {l(
-              "Facoltativo. La lettura del giorno e le preghiere di base sono gratuite.",
-              "Opcional. A leitura do dia e as orações básicas são gratuitas.",
+              "Collega la tua email per ritrovare profilo e progressi su un altro dispositivo. La sincronizzazione è facoltativa.",
+              "Vincule seu e-mail para recuperar perfil e progresso em outro dispositivo. A sincronização é opcional.",
             )}
           </p>
         </div>
       </div>
-      {!user ? (
+      {!user && isPremium && !connect && !sent ? (
+        <button type="button" className="button secondary" onClick={() => setConnect(true)}>
+          <Cloud size={16} />
+          {l("Attiva sincronizzazione", "Ativar sincronização")}
+        </button>
+      ) : !user ? (
         <form
           onSubmit={(e) => {
             e.preventDefault();
             act(async () => {
-              await sendMagicLink({ email, locale: language });
+              await sendMagicLink({ email, locale: language, displayName: safeGet("fideoraUserName") });
               setSent(true);
               setMessage(
                 l(
@@ -93,7 +102,7 @@ export default function AccountPanel() {
               ? l("Invio…", "Enviando…")
               : sent
                 ? l("Invia di nuovo", "Enviar novamente")
-                : l("Accedi via email", "Entrar por e-mail")}
+                : l("Collega la tua email", "Vincular meu e-mail")}
           </button>
           {sent && (
             <div className="otp-form">
