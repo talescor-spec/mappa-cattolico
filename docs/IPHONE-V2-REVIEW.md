@@ -34,3 +34,41 @@ Apple exibiu compra anual sandbox bem-sucedida e a tela do app confirmou Premium
 ## Notas de review
 
 Free reading now includes Genesis and Exodus plus the daily devotional excerpt. Other books and advanced study/prayer tools require Premium. Purchase does not require email authentication; optional email login enables sync. Existing personal data remains accessible/exportable after expiry. See PREMIUM-STORE-COPY.md for the final bilingual store copy and review steps. No signed-device acceptance is claimed for this new revision until tested.
+
+## Verificação da revisão
+
+Código: aec9e2a67f390b9761c01c685f8b807c95d19427, branch fideora-premium-v1. Testes locais: 21 aprovados; build/Capacitor sync e 24 verificações de preflight aprovados. CI iOS compilou e abriu o app no simulador com sucesso: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39669431128. Nome e idioma foram preservados após recarregar o preview. Essa verificação não substitui o teste de compras no aparelho.
+
+Preview: https://mappa-cattolico-213t5dpga-thales-projects-54040b4e.vercel.app. No navegador real foram conferidos onboarding de quatro etapas, nome na saudação e Perfil, ausência do CTA gratuito no rodapé, cópia IT/PT e ausência de overflow horizontal nas telas verificadas em 320 e 390 pontos. Ícone de fechar: 16 pontos; alvo de toque: 44 pontos. Gênesis e Êxodo aparecem gratuitos; selecionar Levítico ou avançar de Êxodo 40 abre Premium. A leitura diária exibiu somente Lucas 24,13–35, com troca de capítulo desabilitada. Não simular assinatura por flag local para validar compras.
+
+Paywall remoto wfc1f6a56c9adc4b9a: textos italiano e português sem contagem numérica publicados na RevenueCat e conferidos na lista Published. Variáveis de preço, trial e pacotes preservados. A loja Apple determina a moeda, independentemente do idioma do app. A descrição das edições e a ausência dos deuterocanônicos permanecem acessíveis em Fontes/Termos; não anunciar uma Bíblia católica completa.
+
+![Onboarding em português, com nome opcional e fechamento reduzido](assets/fideora-v2-onboarding.jpg)
+
+## Atualizar o projeto existente no Mac
+
+Fechar o Xcode e abrir o Terminal na pasta do projeto já usado para o build 1. O comando abaixo atualiza somente para o código revisado; não usa reset nem descarta ajustes locais. Se o Git apontar conflito, interromper e revisar os arquivos indicados. O arquivo project.pbxproj desta revisão não mudou em relação ao código anterior, para preservar a equipe Apple escolhida localmente.
+
+```sh
+bash <<'FIDEORA_UPDATE'
+set -e
+test -f ios/App/App.xcodeproj/project.pbxproj
+FIDEORA_EXTERNAL_STORAGE=""
+for FIDEORA_HD in /Volumes/"THALES HD 500GB"*; do
+  [ -d "$FIDEORA_HD" ] || continue
+  FIDEORA_EXTERNAL_STORAGE="$FIDEORA_HD/Fideora-Build"
+  break
+done
+test -n "$FIDEORA_EXTERNAL_STORAGE"
+mkdir -p "$FIDEORA_EXTERNAL_STORAGE/npm-cache"
+git fetch origin fideora-premium-v1
+git checkout aec9e2a67f390b9761c01c685f8b807c95d19427
+npm ci --cache "$FIDEORA_EXTERNAL_STORAGE/npm-cache"
+npm run cap:ios
+open ios/App/App.xcodeproj
+FIDEORA_UPDATE
+```
+
+No target App → General: manter Version 1.0.0 e trocar Build para **2** (ou um número superior se 2 já tiver sido usado). Confirmar equipe CZ7QKZBQC8 em Signing & Capabilities. Product → Archive → Distribute App → App Store Connect → Upload. DerivedData e Archives já foram confirmados no HD externo pelo titular; não refazer a configuração com caminhos contendo %20. Esse procedimento usa o checkout existente; não afirma que ele já foi movido para o HD externo.
+
+O nome no onboarding aparece na primeira instalação; quem já concluiu pode alterá-lo no Perfil. Após instalar a nova build, testar restauração, expiração, troca de conta e exclusão com uma conta QA antes de App Review. O perfil Premium sem login deve oferecer sincronização opcional recolhida. A revisão ainda não foi enviada ao TestFlight nem à App Review.
