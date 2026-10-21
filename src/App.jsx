@@ -30,8 +30,12 @@ import Notebook from "./components/Notebook";
 import Prayer from "./components/Prayer";
 import Profile from "./components/Profile";
 import { Header, Mark, Modal, Row } from "./components/UI";
+import { PremiumProvider, usePremium } from "./contexts/PremiumContext";
+import { PremiumCard, PremiumOffer } from "./components/Premium";
+import Onboarding from "./components/Onboarding";
 import "./styles.css";
 function HomePage({ bible, onRead, onPray, onStudy }) {
+  const { isPremium } = usePremium();
   const { l, language, t, getFormattedDate } = useLanguage();
   const { entries, write, ready } = useStudy();
   const index = language === "it" ? 0 : 1;
@@ -179,6 +183,7 @@ function HomePage({ bible, onRead, onPray, onStudy }) {
           </span>
         </button>
       </div>
+      {!isPremium && <PremiumCard feature="welcome" compact />}
       <footer className="home-footer">
         <Mark />
         <p>{l("La tua fede, ogni giorno.", "Sua fé, todos os dias.")}</p>
@@ -190,6 +195,7 @@ function HomePage({ bible, onRead, onPray, onStudy }) {
 function Fideora() {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
+  const { request } = usePremium();
   const { storageError } = useStudy();
   const [page, setPage] = useState("today"),
     [location, setLocation] = useState(() =>
@@ -366,49 +372,16 @@ function Fideora() {
         </nav>
       </div>
       {onboard && (
-        <Modal
-          title={l("Benvenuto in Fideora.", "Bem-vindo ao Fideora.")}
-          onClose={() => {
+        <Onboarding
+          bible={bible}
+          onFinish={(showPremium) => {
             safeSet("fideoraOnboarded", "1");
             setOnboard(false);
+            if (showPremium) request("welcome");
           }}
-        >
-          <div className="onboarding">
-            <Mark />
-            <h3>{l("La tua fede, ogni giorno.", "Sua fé, todos os dias.")}</h3>
-            <p>
-              {l(
-                "Leggi la Parola, trova un momento di preghiera e custodisci ciò che ti accompagna. Puoi iniziare senza un account.",
-                "Leia a Palavra, encontre um momento de oração e guarde o que acompanha você. Você pode começar sem uma conta.",
-              )}
-            </p>
-            <div className="onboard-language">
-              <button
-                className={`button ${language === "it" ? "primary" : "secondary"}`}
-                onClick={() => changeLanguage("it")}
-              >
-                Italiano
-              </button>
-              <button
-                className={`button ${language === "pt" ? "primary" : "secondary"}`}
-                onClick={() => changeLanguage("pt")}
-              >
-                Português
-              </button>
-            </div>
-            <button
-              className="button primary wide"
-              onClick={() => {
-                safeSet("fideoraOnboarded", "1");
-                setOnboard(false);
-              }}
-            >
-              {l("Inizia il tuo cammino", "Começar minha caminhada")}
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </Modal>
+        />
       )}
+      <PremiumOffer />
       {sources && (
         <Modal
           title={l("Edizioni e fonti", "Edições e fontes")}
@@ -525,9 +498,11 @@ export default function App() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <StudyProvider>
-          <Fideora />
-        </StudyProvider>
+        <PremiumProvider>
+          <StudyProvider>
+            <Fideora />
+          </StudyProvider>
+        </PremiumProvider>
       </LanguageProvider>
     </ErrorBoundary>
   );

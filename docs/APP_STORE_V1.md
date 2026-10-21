@@ -1,3 +1,5 @@
+> Premium revision (21 October 2026): this earlier free-V1 listing is historical. Use PREMIUM-RELEASE.md and PREMIUM-STORE-COPY.md for the subscription release. Do not submit the old all-free description with the Premium build.
+
 # Fideora V1 — App Store package
 
 Updated 21 October 2026. Italian and Portuguese version descriptions, keywords, support/marketing URLs, copyright, reviewer notes and manual release mode saved in App Store Connect. No build uploaded or submission made. App Privacy policy URLs saved for Italian and Portuguese; six collected data types configured for App Functionality, linked to identity, no tracking; draft not published pending signed-build/infrastructure verification. Age rating saved: calculated 13+.

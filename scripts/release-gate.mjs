@@ -17,6 +17,9 @@ const required = [
   "privacyDisclosure",
   "appStoreScreenshots",
   "bundleIdRegistered",
+  "nativePurchaseRestoreExpiry",
+  "revenueCatOfferingAndPaywall",
+  "appleSubscriptionProducts",
 ];
 const missing = required.filter(
   (key) => evidence[key]?.status !== "passed" || !evidence[key]?.reference,

@@ -1,7 +1,7 @@
 name: iOS Simulator
 on:
   push:
-    branches: [fideora-v1-italiano]
+    branches: [fideora-v1-italiano, fideora-premium-v1]
     paths:
       [
         "src/**",

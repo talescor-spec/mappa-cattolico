@@ -31,8 +31,10 @@ Supabase `auth.users.id` is the canonical Fideora user identifier and the Revenu
 
 ## Supabase placement
 
-Fideora currently shares the connected `metrics-dashboard` Supabase project but is isolated into `fideora_*` tables/functions and versioned migrations. Moving Fideora to a dedicated Supabase project later is straightforward because its database surface is namespaced and migrations are committed.
+The Premium branch is prepared for the dedicated project sysuottboucultzzaagv (us-west-2). The three Fideora tables and nine own-row RLS policies are installed there. Ten transactional isolation/account-deletion checks passed, with fixtures rolled back. See DEDICATED-SUPABASE.md for the deployment state and pending Auth URL/SMTP configuration.
+
+Public web production still uses metrics-dashboard (kgyqpedwgilotlwyhmnb) until the dedicated login is configured and accepted. Its Fideora tables were last checked with zero rows. No shared Auth users or Funnel Metrics data were copied or deleted.
 
 ## Account deletion implementation
 
-The current Supabase project has reached its Edge Function quota. `public.fideora_delete_own_account()` is therefore used for self-deletion. It accepts no target user ID, requires `authenticated`, derives the target from `auth.uid()`, and deletes only that Auth row. Do not alter it to accept arbitrary user IDs.
+The application uses the existing self-deletion RPC design. `public.fideora_delete_own_account()` is therefore used for self-deletion. It accepts no target user ID, requires `authenticated`, derives the target from `auth.uid()`, and deletes only that Auth row. Do not alter it to accept arbitrary user IDs.

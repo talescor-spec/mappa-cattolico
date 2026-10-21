@@ -2187,3 +2187,232 @@ main {
   min-width: 44px;
   min-height: 44px;
 }
+
+/* Premium follows the same calm editorial language as the reading experience. */
+.premium-card {
+  border: 1px solid #d8dfd0;
+  background: linear-gradient(120deg, #eef1e5, #faf9f2);
+  padding: 30px;
+  border-radius: 22px;
+  margin: 28px 0;
+}
+.premium-card h3 {
+  font:
+    400 30px/1.2 Georgia,
+    serif;
+  margin: 15px 0 10px;
+  color: #213d32;
+}
+.premium-card p {
+  max-width: 600px;
+  color: #617068;
+  line-height: 1.65;
+  margin: 0 0 20px;
+}
+.premium-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #6a6d40;
+}
+.premium-card.compact {
+  padding: 24px 28px;
+}
+.premium-card.compact h3 {
+  font-size: 26px;
+}
+.premium-offer {
+  text-align: center;
+  max-width: 470px;
+  margin: auto;
+}
+.premium-offer h3 {
+  font:
+    400 34px/1.15 Georgia,
+    serif;
+  letter-spacing: -0.025em;
+  margin: 14px 0 24px;
+  color: #203e32;
+}
+.premium-emblem {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  margin: 2px auto 24px;
+  border-radius: 22px;
+  background: #e9eddf;
+  color: #536347;
+}
+.premium-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  text-align: left;
+  display: grid;
+  gap: 19px;
+}
+.premium-benefits li {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+.premium-benefits svg {
+  flex: none;
+  margin-top: 3px;
+  color: #57784d;
+}
+.premium-benefits strong,
+.premium-benefits span {
+  display: block;
+}
+.premium-benefits strong {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.premium-benefits span {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #788076;
+}
+.premium-offer .caption {
+  margin: 14px 0 20px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.premium-legal {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 12px;
+  margin: 22px 0 12px;
+  color: #7c8377;
+}
+.free-choice {
+  font-size: 13px;
+  margin: 12px auto;
+  color: #677468;
+  justify-content: center;
+}
+.billing-message {
+  font-size: 13px;
+  line-height: 1.6;
+  background: #edf1e7;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 15px 0;
+  text-align: left;
+}
+.subscription-panel {
+  margin-bottom: 20px;
+}
+.subscription-panel h2 {
+  font-size: 29px;
+  margin: 18px 0 12px;
+}
+.billing-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-direction: column;
+  font-size: 13px;
+  margin-top: 20px;
+}
+.billing-actions a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.onboarding-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 4px auto 26px;
+}
+.onboarding-progress span {
+  width: 42px;
+  height: 3px;
+  background: #e7eadd;
+  border-radius: 5px;
+}
+.onboarding-progress span.active {
+  background: #47634c;
+}
+.onboard-options {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0;
+}
+.routine-option {
+  border: 1px solid #dce1d6;
+  border-radius: 13px;
+  background: #fafaf5;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 17px 18px;
+  text-align: left;
+  color: #4c5e4e;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+}
+.routine-option span {
+  flex: 1;
+}
+.routine-option.selected {
+  border-color: #55714c;
+  box-shadow: 0 0 0 1px #55714c;
+  background: #eef2e7;
+}
+.routine-time {
+  display: flex;
+  gap: 10px;
+  margin: 26px 0;
+}
+.routine-time .routine-option {
+  justify-content: center;
+  text-align: center;
+}
+.onboard-scripture {
+  font:
+    400 24px/1.5 Georgia,
+    serif;
+  margin: 30px 0 14px;
+  color: #3d5848;
+}
+.routine-plan {
+  text-align: left;
+  line-height: 1.65;
+  padding-left: 24px;
+  margin: 24px 0;
+}
+.routine-plan li {
+  padding: 8px 0 8px 4px;
+}
+@media (max-width: 600px) {
+  .premium-card,
+  .premium-card.compact {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+  .premium-card h3 {
+    font-size: 27px;
+  }
+  .premium-offer h3 {
+    font-size: 29px;
+  }
+  .routine-time {
+    gap: 7px;
+  }
+  .routine-time .routine-option {
+    padding: 16px 10px;
+  }
+  .premium-offer .premium-benefits {
+    gap: 16px;
+  }
+}

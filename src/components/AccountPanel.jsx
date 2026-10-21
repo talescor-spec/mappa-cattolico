@@ -46,8 +46,8 @@ export default function AccountPanel() {
           <h3>{l("Il tuo account Fideora", "Sua conta Fideora")}</h3>
           <p>
             {l(
-              "Facoltativo. La lettura e la preghiera sono sempre accessibili.",
-              "Opcional. A leitura e a oração continuam acessíveis.",
+              "Facoltativo. La lettura del giorno e le preghiere di base sono gratuite.",
+              "Opcional. A leitura do dia e as orações básicas são gratuitas.",
             )}
           </p>
         </div>

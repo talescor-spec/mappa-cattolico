@@ -15,6 +15,7 @@ import { useStudy } from "../contexts/StudyContext";
 import { safeGet, safeSet, sanitizeDisplayName } from "../utils/storage";
 import { Header, Row, Modal } from "./UI";
 import AccountPanel from "./AccountPanel";
+import { SubscriptionPanel } from "./Premium";
 export default function Profile({ onSources, onLegal }) {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
@@ -154,6 +155,7 @@ export default function Profile({ onSources, onLegal }) {
           )}
         </div>
         <div>
+          <SubscriptionPanel />
           <AccountPanel />
           <section className="card rows legal-rows">
             <Row
