@@ -34,7 +34,7 @@ Italian default, Portuguese optional. Free Genesis/Exodus and daily excerpt; oth
 - Scheme App compartilhado, archive Release e equipe CZ7QKZBQC8 em Debug/Release.
 - Script executável ios/App/ci_scripts/ci_post_clone.sh: Node 22 ou 24, instalação reprodutível npm ci, testes, preflight e geração/sincronização dos recursos iOS. O build falha se qualquer etapa falhar. Em Xcode Cloud, recusa equipe ou branch diferentes e exige o arquivo de resolução Swift.
 - GitHub Actions executa o mesmo script no macOS, resolve dependências Swift, compila e abre o simulador. Não contém assinatura privada nem upload para Apple.
-- Notas de TestFlight versionadas em ios/App/TestFlight/WhatToTest.it-IT.txt e WhatToTest.pt-BR.txt.
+- Notas de TestFlight versionadas em ios/App/TestFlight/WhatToTest.it.txt e WhatToTest.pt-BR.txt. O código aceito pelo TestFlight para italiano é it, não it-IT.
 - Testes de falha do fluxo: equipe/branch erradas, referência de branch manual, falha de testes e falha de preflight.
 
 ## Ativação única no Xcode
@@ -67,7 +67,7 @@ Para garantir que o Xcode analise a configuração atualizada, scripts/setup-xco
 
 Para o contador: Xcode Cloud → Settings → Build Number → Edit Next Build Number. Ajustar antes do primeiro envio para TestFlight. O número no projeto continua 1; no Cloud, a Apple atribui e incrementa o número da build. Não sobrescrever CFBundleVersion por script nem tentar deduzir a build a partir do SHA.
 
-Somente declarar a distribuição automática concluída depois de conferir workflow ativo, archive Cloud assinado, upload processado e nova build disponível no grupo interno. A ativação inicial foi concluída pelo titular em 21/10/2026; a configuração da distribuição e o primeiro upload continuam em validação.
+Distribuição automática validada em 21/10/2026: workflow ativo, archive Cloud assinado, upload processado e 1.0.0 (4) disponível no grupo interno. O próximo teste é instalar a atualização no iPhone e avaliar os ajustes V2; isso permanece separado da validação da infraestrutura e de eventual submissão para App Review.
 
 ## Evidência de validação
 
@@ -81,7 +81,9 @@ Somente declarar a distribuição automática concluída depois de conferir work
 - A build 2 falhou no guard de equipe antes de instalar dependências. O log da Apple confirmou CI_TEAM_ID=1f404b10-6425-4a63-9483-a4bc8a3f49d7 (UUID da equipe App Store Connect), diferente do identificador de assinatura CZ7QKZBQC8. Corrigido o guard para o UUID observado; a assinatura mantém CZ7QKZBQC8. Testes recusam equipe ausente, diferente e o uso indevido do identificador de assinatura nesse campo. Sem dependências npm, a catalogação dos schemes também falhou nessa execução.
 - Build Cloud 3, 0749b4f6-5437-4057-9ff6-d221577d7994, commit 29e6107f9df9fe6523e0ca09823d00f61519fd88: Succeeded. Post-clone passou na Apple, dependências resolvidas e compilação iOS aprovada. O esquema App ficou disponível para configuração do archive.
 - Workflow Fideora · TestFlight salvo e ativo às 18:44: início manual e push somente em fideora-premium-v1; PRs/tags desativados; commits somente em docs/ ignorados; cache permitido; Archive iOS/App com Distribution Preparation = App Store Connect; postação TestFlight Internal Testing para Fideora QA Interno (um membro existente). Sem novos convites e sem submissão pública.
-- Build 4 iniciada manualmente com esse workflow para validar archive, assinatura e entrega; não declarar disponível no iPhone antes de conferir o processamento TestFlight.
+- Build 4, 1c44a9f0-32df-40a4-b58f-c506ca2b9fa7, commit 29e6107f9df9fe6523e0ca09823d00f61519fd88: Succeeded, incluindo Archive - iOS e TestFlight Internal Testing - iOS. Upload processado: versão 1.0.0 (4), build App Store Connect 60d6e627-5444-4ab3-91b6-9b8644e9603c, associada automaticamente ao grupo Fideora QA Interno. Não foi necessário archive nem upload pelo Mac.
+- Notas PT-BR importadas automaticamente. Italiano estava vazio porque it-IT não é locale válido para BetaBuildLocalization; preenchido no painel para a build 4 e corrigido o nome do arquivo fonte para WhatToTest.it.txt. A correção acionará a próxima build por push, validando também o gatilho automático.
+- Quatro warnings não bloquearam o archive: dois do SDK RevenueCat UI, um do Filesystem e um arquivo antigo não referenciado no catálogo AppIcon. Nenhum erro de compilação ou de distribuição; warnings não são prova de aprovação futura do App Review.
 - Nenhuma chave privada foi extraída e nenhuma submissão para App Review foi realizada.
 
 ![Workflow ativo: branch premium, archive App e grupo interno](assets/fideora-xcode-cloud-workflow.jpg)
