@@ -27,10 +27,16 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run appstore:preflight
-      - run: npm run cap:ios
+      - name: Prepare using the Xcode Cloud post-clone script
+        run: ios/App/ci_scripts/ci_post_clone.sh
+      - name: Resolve and record Swift dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App -derivedDataPath /tmp/fideora-derived > /tmp/fideora-resolve.log 2>&1
+          mkdir -p qa/artifacts
+          cp ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved qa/artifacts/Package.resolved
+          echo FIDEORA_SPM_LOCK_BEGIN
+          cat qa/artifacts/Package.resolved
+          echo FIDEORA_SPM_LOCK_END
       - name: Build unsigned iOS simulator app
         run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/fideora-derived CODE_SIGNING_ALLOWED=NO build > /tmp/fideora-xcode.log 2>&1
       - name: Launch on iPhone simulator
