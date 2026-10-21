@@ -72,9 +72,18 @@ Somente declarar a distribuição automática concluída depois de conferir work
 ## Evidência de validação
 
 - 25 testes e 24 verificações estruturais aprovados localmente. XML do scheme e sintaxe dos scripts conferidos. O preparo Mac foi verificado para recusar execução em Linux antes de modificar arquivos.
-- CI de preparação: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39672828582. O mesmo post-clone passou no macOS; a resolução Swift e a compilação nativa passaram. A conclusão da abertura no simulador deve ser conferida no run.
+- CI de preparação: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39672828582, concluído com sucesso. O mesmo post-clone passou no macOS; resolução Swift, compilação nativa, instalação e abertura no simulador foram aprovadas.
 - Package.resolved foi copiado da resolução efetiva desse CI: Capacitor 8.5.2, ION Filesystem 2.0.1, PurchasesHybridCommon 19.12.0 e Purchases iOS 5.95.0, com revisões Git reais. O CI seguinte exige somente essas versões do lockfile.
+- Conferência do lockfile em checkout limpo: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39674679092, código 2ee092c330d1bda62db1d5d20a46bee438e26228. Registrar o resultado quando terminar; não confundir esse CI sem assinatura com um upload TestFlight.
 - Nenhum workflow Xcode Cloud foi criado, nenhuma chave privada foi extraída e nenhum upload novo foi feito nesta preparação. A ativação inicial continua pendente no Mac.
+
+Comando de preparo inicial no Mac (script desta revisão, em endereço imutável):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/talescor-spec/mappa-cattolico/2ee092c330d1bda62db1d5d20a46bee438e26228/scripts/setup-xcode-cloud-mac.sh | bash
+```
+
+O script é uma conveniência para baixar um checkout atualizado e abrir o projeto no HD externo. A ativação Apple continua sendo feita pelo titular no menu Product → Xcode Cloud → Create Workflow. Depois dessa ligação inicial, configurar workflow, contador e grupo interno no painel, validar o primeiro upload e então considerar o fluxo ativo.
 
 ## Fontes
 
