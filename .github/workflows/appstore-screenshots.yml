@@ -52,11 +52,11 @@ jobs:
           with open(os.environ['GITHUB_ENV'],'a') as f:
               f.write('FIDEORA_SIMULATOR='+udid+'\n')
           PY
-          open -a Simulator
       - name: Capture Italian and Portuguese current app
         run: |
           xcrun simctl boot "$FIDEORA_SIMULATOR"
           xcrun simctl bootstatus "$FIDEORA_SIMULATOR" -b
+          open -a Simulator
           xcrun simctl status_bar "$FIDEORA_SIMULATOR" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
           for FIDEORA_LOCALE in it pt; do
             xcrun simctl uninstall "$FIDEORA_SIMULATOR" com.fideora.app || true
@@ -73,7 +73,7 @@ jobs:
               steps+=['- tapOn: '+json.dumps(label),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(os.path.abspath('qa/store/'+lang+'-'+n))]
           open('/tmp/fideora-store-flow.yaml','w').write('\n'.join(steps)+'\n')
           PY
-            maestro --device "$FIDEORA_SIMULATOR" test /tmp/fideora-store-flow.yaml
+            maestro --device "$FIDEORA_SIMULATOR" test --debug-output qa/store/maestro-debug /tmp/fideora-store-flow.yaml
           done
       - name: Validate actual screenshot dimensions
         run: |
