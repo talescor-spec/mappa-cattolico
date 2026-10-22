@@ -57,6 +57,6 @@ Products: com.fideora.premium.monthly and com.fideora.premium.annual.
 - Annual/monthly subscription group exists at the same service level with IT/PT localizations. Annual subscription review screenshot still requires an actual current screenshot; no subscription has been submitted for review.
 - Separate assets branch runs simulator capture only and does not upload a replacement TestFlight binary.
 
-Metadata evidence: ![Saved Italian description](assets/fideora-store-metadata.png).
+Metadata evidence: ![Saved Italian description](assets/fideora-store-metadata.jpg).
 
 Sources consulted: https://www.revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy and https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy .
