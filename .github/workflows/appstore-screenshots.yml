@@ -74,7 +74,7 @@ jobs:
           import os, json
           pt=os.environ['FIDEORA_LOCALE']=='pt'
           lang='pt' if pt else 'it'
-          steps=['appId: com.fideora.app','---','- launchApp','- assertVisible: '+json.dumps('Chiudi')]
+          steps=['appId: com.fideora.app','---','- launchApp','- extendedWaitUntil:','    visible: Chiudi','    timeout: 120000']
           if pt: steps+=['- tapOn: '+json.dumps('Português')]
           steps+=['- tapOn: '+json.dumps('Fechar' if pt else 'Chiudi'),'- waitForAnimationToEnd','- takeScreenshot: '+json.dumps(lang+'-01-today')]
           for n, label in [('02-bible','Bíblia' if pt else 'Bibbia'),('03-prayer','Rezar' if pt else 'Prega'),('04-notebook','Caderno' if pt else 'Quaderno')]:
@@ -109,4 +109,3 @@ jobs:
           name: fideora-appstore-${{ matrix.device }}
           path: qa/store/
           include-hidden-files: true
-
