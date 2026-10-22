@@ -53,7 +53,7 @@ Products: com.fideora.premium.monthly and com.fideora.premium.annual.
 - Set the app download price to zero. Premium subscriptions remain separate, unchanged purchases.
 - Prepared initial availability in Italy, Brazil and Portugal; other territories can be added before or after launch.
 - Public privacy, terms and support URLs returned HTTP 200; the live privacy policy includes RevenueCat purchase processing.
-- App Privacy contains seven types matching the app manifest, including purchase history, linked user IDs and paywall interactions. Purchase history uses Analytics and App Functionality, as required by RevenueCat documentation. Publication remains pending the owner's accuracy attestation.
+- App Privacy contains seven types matching the app manifest, including purchase history, linked user IDs and paywall interactions. Purchase history uses Analytics and App Functionality, as required by RevenueCat documentation. The owner explicitly authorized publication, and App Store Connect confirmed the declaration as Published on 2026-10-22.
 - Annual/monthly subscription group exists at the same service level with IT/PT localizations. Annual subscription review screenshot still requires an actual current screenshot; no subscription has been submitted for review.
 - Separate assets branch runs simulator capture only and does not upload a replacement TestFlight binary.
 
@@ -69,8 +69,17 @@ Sources consulted: https://www.revenuecat.com/docs/platform-resources/apple-plat
 - Captures use the same application source as tested build 5. Only capture automation and review documentation changed on the assets branch; no replacement TestFlight binary was uploaded.
 - All 17 PNGs and the complete ZIP were saved successfully as owner deliverables. Their private file identifiers are intentionally omitted here.
 - Apple version 1.0.0 still has the tested build 5 selected. Italian/Portuguese descriptions and reviewer notes are saved. Both subscription products have appropriate reviewer notes saved.
-- App Privacy policy URLs were checked in both localizations. The declaration remains unpublished, pending the owner's accuracy attestation.
+- App Privacy policy URLs were checked in both localizations. The owner authorized the accuracy attestation and the declaration was published on 2026-10-22; the live page confirms Published.
 - App Store screenshot upload was attempted through the documented file chooser. The chooser supports multiple images, but Chrome blocked setFiles because the ChatGPT extension needs "Allow access to file URLs" enabled. No screenshots were uploaded. User action is required before retrying; do not report the store page as complete until the gallery counts and both subscription review screenshots are verified after upload.
-- No App Review submission or public release has been performed. Remaining gates: browser file access and asset upload; privacy publication; assembling the first app/subscription review submission.
+- No App Review submission or public release has been performed. Remaining gates: successful asset upload and assembling the first app/subscription review submission.
 
 The user-facing browser instructions for this blocker are supplied by the control-browser runtime's Chromium file-upload troubleshooting guide. This is a technical permission requirement; it is separate from the owner's App Privacy accuracy attestation.
+
+## Authorized publication and upload retry — 2026-10-22 UTC
+
+- The owner confirmed enabling Chrome file URL access and explicitly authorized App Privacy publication. The final Publish action completed; App Store Connect displays Published.
+- The documented file chooser now accepts selection, resolving the previous extension permission error. However, Apple reports a generic upload error for all four Italian iPhone images. A single-image retry after reloading produced the same error. The gallery remains at zero; no successful upload is claimed.
+- The browser runs on the owner’s Mac. The generated asset paths belong to the separate workspace, and their availability on the Mac is unverified. File-URL inspection was blocked by the browser URL policy; no workaround was attempted. Safest next step: owner downloads and extracts the prepared ZIP on the Mac or external drive, then supplies the actual extracted folder path for the documented chooser.
+- Both subscription review screenshots are still pending. No replacement binary or App Review submission was made.
+
+Publication evidence: ![App Privacy published](assets/fideora-privacy-published.jpg).
