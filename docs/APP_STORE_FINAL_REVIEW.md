@@ -60,3 +60,17 @@ Products: com.fideora.premium.monthly and com.fideora.premium.annual.
 Metadata evidence: ![Saved Italian description](assets/fideora-store-metadata.jpg).
 
 Sources consulted: https://www.revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy and https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy .
+
+## Final preparation checkpoint — 2026-10-22 UTC
+
+- Native iPhone capture job passed: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39696755771/job/119555892537 . Twelve native PNGs were produced at 1206 × 2622; four marketing screens per language were selected after visual inspection.
+- Native iPad capture passed after allowing enough time for cold WebKit initialization: https://github.com/talescor-spec/mappa-cattolico/actions/runs/39700331699 . Eight native PNGs were produced at 2064 × 2752, covering Today, Bible, Prayer and Notebook in both languages. All were inspected visually.
+- The deliverable contains 16 marketing screenshots and one Portuguese native paywall screenshot for subscription review, plus a README. The review paywall shows the simulator's US storefront prices; marketing images contain no prices.
+- Captures use the same application source as tested build 5. Only capture automation and review documentation changed on the assets branch; no replacement TestFlight binary was uploaded.
+- All 17 PNGs and the complete ZIP were saved successfully as owner deliverables. Their private file identifiers are intentionally omitted here.
+- Apple version 1.0.0 still has the tested build 5 selected. Italian/Portuguese descriptions and reviewer notes are saved. Both subscription products have appropriate reviewer notes saved.
+- App Privacy policy URLs were checked in both localizations. The declaration remains unpublished, pending the owner's accuracy attestation.
+- App Store screenshot upload was attempted through the documented file chooser. The chooser supports multiple images, but Chrome blocked setFiles because the ChatGPT extension needs "Allow access to file URLs" enabled. No screenshots were uploaded. User action is required before retrying; do not report the store page as complete until the gallery counts and both subscription review screenshots are verified after upload.
+- No App Review submission or public release has been performed. Remaining gates: browser file access and asset upload; privacy publication; assembling the first app/subscription review submission.
+
+The user-facing browser instructions for this blocker are supplied by the control-browser runtime's Chromium file-upload troubleshooting guide. This is a technical permission requirement; it is separate from the owner's App Privacy accuracy attestation.
