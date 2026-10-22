@@ -83,3 +83,23 @@ The user-facing browser instructions for this blocker are supplied by the contro
 - Both subscription review screenshots are still pending. No replacement binary or App Review submission was made.
 
 Publication evidence: ![App Privacy published](assets/fideora-privacy-published.jpg).
+
+## Store assets completed — 2026-10-22 UTC
+
+- Owner downloaded and extracted the prepared archive in Downloads. Uploads through the documented browser file chooser using the Mac paths succeeded. The earlier generic failures concerned workspace paths, not image format or dimensions.
+- All 16 marketing images are now saved in App Store Connect: four Italian iPhone, four Italian iPad, four Brazilian Portuguese iPhone, four Brazilian Portuguese iPad. The gallery filenames and device/language slots were checked after reloading the version page. No image inheritance is being mistaken for localized uploads.
+- The native Portuguese RevenueCat paywall review screenshot is attached to both annual 6825368737 and monthly 6825362133. Both persisted after reloading their respective product detail pages; Save is disabled because no edits remain unsaved. Both subscription products still have their review notes and Prepare for Submission status.
+- App Privacy was already published with the owner’s express authorization. Build 1.0.0 (5), optional sign-in and manual release remain selected. No binary or subscription pricing was changed.
+- Store metadata, privacy publication, binary selection and screenshot gates are resolved. Remaining workflow: assemble the first app version and both subscriptions in the review submission, verify Apple validation, then obtain owner approval for the final review send. The app has not been sent for review or publicly released.
+
+Asset evidence: ![Saved Portuguese iPhone screenshots](assets/fideora-store-screenshots.jpg).
+
+## Final review draft ready — 2026-10-22 UTC
+
+- Created one iOS draft containing four items: app version 1.0.0 (5), annual subscription 6825368737, monthly subscription 6825362133, and subscription group 22500299. All four are Ready for Review in the same draft.
+- A temporary isolated annual draft was corrected by removing the annual item from it and adding it to the existing app draft. The empty temporary draft disappeared; no subscription product was deleted.
+- Apple’s draft panel now lists Items Ready to Submit (4), has no Unable to Submit for Review banner, and enables Submit for Review. The prior first-subscription/group inclusion gate is resolved. This checks submission completeness, not App Review acceptance.
+- Final action deliberately not performed: Submit for Review. Owner confirmation for the final send remains pending, as previously agreed. Manual App Store release remains selected for after approval.
+- Review reference: https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-app and https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase . Add for Review stages a draft; Submit for Review sends it to Apple.
+
+Draft evidence: ![Four items ready to submit](assets/fideora-review-draft-ready.jpg).
