@@ -103,3 +103,14 @@ Asset evidence: ![Saved Portuguese iPhone screenshots](assets/fideora-store-scre
 - Review reference: https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-app and https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase . Add for Review stages a draft; Submit for Review sends it to Apple.
 
 Draft evidence: ![Four items ready to submit](assets/fideora-review-draft-ready.jpg).
+
+## Final submission sent with owner approval — 2026-10-22 UTC
+
+- The owner expressly authorized the final review send: “sim, pode enviar”.
+- Clicked Submit for Review for the prepared four-item iOS draft. App Store Connect confirmed “4 Items Submitted”.
+- Submission 30e63270-7000-4b5a-b730-d9c1b3b5c9d3 now shows Waiting for Review. All four items independently show Waiting for Review: version 1.0.0 (5), annual subscription, monthly subscription, and Fideora Premium subscription group.
+- Apple’s displayed submission timestamp is Oct 21, 2026 at 10:33 PM (account local time).
+- No public release was performed; manual release remains the selected post-approval option. Next action is to await Apple’s review outcome.
+- Live review detail: https://appstoreconnect.apple.com/apps/6825337165/distribution/reviewsubmissions/details/30e63270-7000-4b5a-b730-d9c1b3b5c9d3 .
+
+Submission evidence: ![Four items waiting for review](assets/fideora-review-submitted.jpg).
