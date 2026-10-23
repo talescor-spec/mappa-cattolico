@@ -1,6 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/it", "destination": "/", "permanent": true },
+    { "source": "/pt", "destination": "/pt/", "permanent": true }
+  ],
   "headers": [
+    { "source": "/sw.js", "headers": [
+      { "key": "Cache-Control", "value": "no-store, max-age=0" },
+      { "key": "Service-Worker-Allowed", "value": "/" }
+    ] },
+    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
     {
       "source": "/(.*)",
       "headers": [
@@ -39,6 +48,6 @@
       ]
     }
   ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "buildCommand": "node scripts/build-website.mjs",
+  "outputDirectory": "web-dist"
 }

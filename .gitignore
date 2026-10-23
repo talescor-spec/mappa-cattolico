@@ -21,3 +21,4 @@ pnpm-debug.log*
 
 supabase/.temp/
 qa/artifacts/
+web-dist/
