@@ -5,8 +5,10 @@ self.addEventListener('activate', event => {
     const keys=await caches.keys();
     await Promise.all(keys.filter(key=>key.startsWith('fideora-')).map(key=>caches.delete(key)));
     await self.clients.claim();
-    const pages=await self.clients.matchAll({type:'window'});
-    await Promise.all(pages.map(page=>page.navigate(page.url).catch(()=>{})));
     await self.registration.unregister();
+    const pages=await self.clients.matchAll({type:'window'});
+    // Do not keep activation open while waiting for a navigation that may itself
+    // wait for activation to finish. Unregister before scheduling each refresh.
+    for(const page of pages) void page.navigate(page.url).catch(()=>{});
   })());
 });
