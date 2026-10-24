@@ -13,6 +13,7 @@ RevenueCat project: Fideora (`0df93c61`). Existing paywall: `wfc1f6a56c9adc4b9a`
 - Annual selected by default, monthly alternative.
 - Store-derived total price, period, annual monthly equivalent, and introductory-offer duration.
 - Introductory copy and CTA depend on the selected package's eligible introductory offer. Current configured offer is a free annual trial; recheck this copy if changing to a paid introductory discount.
+- Close is a minimal 14-point native X icon with no background/border, a transparent 44×44 touch target, and muted light/dark colors. The shipped RevenueCatUI 5.95.0 derives its localized accessibility label from the navigate-back action.
 - Fixed header keeps Close reachable; fixed footer keeps the purchase CTA, price/renewal terms, Restore, Terms and Privacy reachable while content scrolls. No countdown, review claims or reminder promises.
 - Editor preview prices and English variable sample units are placeholders, not App Store billing values.
 
