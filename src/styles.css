@@ -2321,6 +2321,27 @@ main {
   margin: 15px 0;
   text-align: left;
 }
+.checkout-status {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: calc(90px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 32px);
+  padding: 14px 20px;
+  border: 1px solid #d9dfd3;
+  border-radius: 16px;
+  background: #faf7f0;
+  color: #173f35;
+  box-shadow: 0 8px 28px #173f351a;
+  font-size: 14px;
+  pointer-events: none;
+}
+.checkout-recovery .billing-message { margin-top: 0; }
+.checkout-recovery > .text-button { margin-top: 18px; }
 .subscription-panel {
   margin-bottom: 20px;
 }

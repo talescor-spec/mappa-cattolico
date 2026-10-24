@@ -206,8 +206,8 @@ export default function Onboarding({ bible, onFinish }) {
           {step < 3
             ? l("Continua", "Continuar")
             : l(
-                "Scopri il percorso completo",
-                "Conhecer a experiência completa",
+                "Scopri i piani Premium",
+                "Ver planos Premium",
               )}
           <ChevronRight size={17} />
         </button>

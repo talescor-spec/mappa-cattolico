@@ -25,7 +25,8 @@ export function PremiumProvider({ children }) {
   const [checking, setChecking] = useState(true),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState(""),
-    [offer, setOffer] = useState(null);
+    [offer, setOffer] = useState(null),
+    [pendingOffer, setPendingOffer] = useState(null);
   const activeOperation = useRef(false);
   const accept = useCallback((result, id) => {
     if (identity.current === id)
@@ -102,10 +103,14 @@ export function PremiumProvider({ children }) {
       options,
     );
   const request = (feature = "bible") => {
+    if (activeOperation.current) return;
     setMessage("");
-    setOffer(feature);
+    setOffer(null);
+    // Present after React closes onboarding and auth has resolved. There is no
+    // intermediate sales modal; offer is reserved for recoverable failures.
+    setPendingOffer(feature);
   };
-  const run = async (action) => {
+  const run = useCallback(async (action, feature = "welcome") => {
     if (activeOperation.current || loading) return false;
     activeOperation.current = true;
     setBusy(true);
@@ -117,6 +122,7 @@ export function PremiumProvider({ children }) {
       accept(result, id);
       if (!result.available) {
         setMessage(result.reason === "platform" ? "platform" : "unavailable");
+        if (action === "present") setOffer(feature);
         return false;
       }
       const unlocked = hasEntitlement(result.customerInfo, ENTITLEMENT_ID);
@@ -124,36 +130,48 @@ export function PremiumProvider({ children }) {
         setOffer(null);
         setMessage("active");
       } else if (action === "restore") setMessage("nothing-restored");
-      else if (result.result === "ERROR") setMessage("error");
+      else if (result.result === "ERROR") {
+        setMessage("error");
+        if (action === "present") setOffer(feature);
+      }
       return unlocked;
     } catch (error) {
       if (
         identity.current === id &&
         !error?.userCancelled &&
         String(error?.code) !== "1"
-      )
+      ) {
         setMessage("error");
+        if (action === "present") setOffer(feature);
+      }
       return false;
     } finally {
       activeOperation.current = false;
       setBusy(false);
     }
-  };
+  }, [loading, owner, language, accept]);
+  useEffect(() => {
+    if (!pendingOffer || loading || activeOperation.current) return;
+    const feature = pendingOffer;
+    setPendingOffer(null);
+    void run("present", feature);
+  }, [pendingOffer, loading, run]);
   return (
     <PremiumContext.Provider
       value={{
         isPremium,
         checking,
-        busy,
+        busy: busy || Boolean(pendingOffer),
         message,
         offer,
+        preparing: Boolean(pendingOffer) || (busy && !offer),
         request,
         close: () => {
           if (!busy) setOffer(null);
         },
         can,
         refresh,
-        subscribe: () => run("present"),
+        subscribe: () => request(offer || "welcome"),
         restore: () => run("restore"),
         manage: () => run("manage"),
       }}

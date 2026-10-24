@@ -1,5 +1,5 @@
 import React from "react";
-import { Check, Crown, Lock, ArrowUpRight, RefreshCw } from "lucide-react";
+import { Crown, Lock, ArrowUpRight, RefreshCw } from "lucide-react";
 import { usePremium } from "../contexts/PremiumContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { Modal } from "./UI";
@@ -65,7 +65,7 @@ export function PremiumMessage() {
   ) : null;
 }
 export function PremiumCard({ feature = "bible", compact = false }) {
-  const { request, checking } = usePremium();
+  const { request, checking, busy } = usePremium();
   const { l } = useLanguage();
   return (
     <section className={`premium-card ${compact ? "compact" : ""}`}>
@@ -81,7 +81,7 @@ export function PremiumCard({ feature = "bible", compact = false }) {
       </p>
       <button
         className="button primary"
-        disabled={checking}
+        disabled={checking || busy}
         onClick={() => request(feature)}
       >
         <Lock size={15} />
@@ -92,84 +92,31 @@ export function PremiumCard({ feature = "bible", compact = false }) {
   );
 }
 export function PremiumOffer() {
-  const { offer, close, subscribe, restore, busy } = usePremium();
-  const { l, language } = useLanguage();
+  const { offer, close, subscribe, restore, busy, preparing } = usePremium();
+  const { l } = useLanguage();
+  if (preparing) return (
+    <div className="checkout-status" role="status" aria-live="polite">
+      <RefreshCw size={16} aria-hidden="true" />
+      {l("Verifica in corso…", "Verificando…")}
+    </div>
+  );
   if (!offer) return null;
   return (
     <Modal title="Fideora Premium" onClose={close}>
-      <div className="premium-offer">
-        <span className="premium-emblem">
-          <Crown size={30} />
-        </span>
-        <p className="eyebrow">
-          {l("PIÙ SPAZIO ALLA TUA FEDE", "MAIS ESPAÇO PARA SUA FÉ")}
-        </p>
-        <h3>{l(...(labels[offer] || labels.welcome))}</h3>
-        <ul className="premium-benefits">
-          {[
-            [
-              "Leggi e approfondisci",
-              "Leia e aprofunde",
-              "Le edizioni bibliche incluse, ricerca e glossario greco/ebraico.",
-              "As edições bíblicas incluídas, busca e glossário grego/hebraico.",
-            ],
-            [
-              "Custodisci ciò che impari",
-              "Guarde o que aprende",
-              "Note, evidenziatori, preferiti e quaderno di studio.",
-              "Notas, destaques, favoritos e caderno de estudo.",
-            ],
-            [
-              "Ritrova un ritmo di preghiera",
-              "Encontre um ritmo de oração",
-              "Rosario guidato, novene e diario delle intenzioni.",
-              "Rosário guiado, novenas e diário de intenções.",
-            ],
-          ].map(([it, pt, dit, dpt]) => (
-            <li key={it}>
-              <Check size={18} />
-              <div>
-                <strong>{l(it, pt)}</strong>
-                <span>{l(dit, dpt)}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+      <div className="premium-offer checkout-recovery">
+        <PremiumMessage />
         <button
           className="button primary wide"
           disabled={busy}
           onClick={subscribe}
         >
-          {busy ? l("Attendi…", "Aguarde…") : l("Vedi i piani", "Ver planos")}
+          {busy ? l("Attendi…", "Aguarde…") : l("Riprova", "Tentar novamente")}
           <ArrowUpRight size={17} />
         </button>
-        <p className="caption">
-          {l(
-            "Scegli tra mensile e annuale. Prezzo totale, durata e rinnovo sono mostrati prima della conferma Apple.",
-            "Escolha entre mensal e anual. Preço total, duração e renovação aparecem antes da confirmação Apple.",
-          )}
-        </p>
-        <PremiumMessage />
         <button className="text-button" disabled={busy} onClick={restore}>
           <RefreshCw size={14} />
           {l("Ripristina acquisti", "Restaurar compras")}
         </button>
-        <div className="premium-legal">
-          <a
-            href={`/terms.html?lang=${language}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {l("Termini", "Termos")}
-          </a>
-          <a
-            href={`/privacy.html?lang=${language}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {l("Privacy", "Privacidade")}
-          </a>
-        </div>
       </div>
     </Modal>
   );
