@@ -3,7 +3,7 @@ import { BookOpen, Heart, PenLine, Check, ChevronRight } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { safeGet, safeSet, safeSetJSON, sanitizeDisplayName } from "../utils/storage";
 import { Mark, Modal } from "./UI";
-export default function Onboarding({ bible, onFinish }) {
+export default function Onboarding({ bible, onFinish, hardPaywall = false }) {
   const { l, language, changeLanguage } = useLanguage();
   const [step, setStep] = useState(0),
     [name, setName] = useState(() => safeGet("fideoraUserName")),
@@ -38,7 +38,7 @@ export default function Onboarding({ bible, onFinish }) {
         "Il tuo cammino, un passo alla volta.",
         "Sua caminhada, um passo por vez.",
       )}
-      onClose={() => finish(false)}
+      onClose={hardPaywall ? undefined : () => finish(false)}
     >
       <div className="onboarding">
         <div className="onboarding-progress" aria-label={`${step + 1} / 4`}>
@@ -164,8 +164,8 @@ export default function Onboarding({ bible, onFinish }) {
             <ol className="routine-plan">
               <li>
                 {l(
-                  "Leggi il brano gratuito di oggi.",
-                  "Leia a passagem gratuita de hoje.",
+                  hardPaywall ? "Inizia dalla lettura di oggi." : "Leggi il brano gratuito di oggi.",
+                  hardPaywall ? "Comece pela leitura de hoje." : "Leia a passagem gratuita de hoje.",
                 )}
               </li>
               <li>

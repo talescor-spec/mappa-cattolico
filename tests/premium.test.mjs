@@ -46,6 +46,10 @@ function fake({ native = true, apiKey = "appl_test", retained = null } = {}) {
       return { customerInfo: infos };
     },
     getOfferings: async () => ({
+      all: { hard_paywall: {
+        identifier: "hard_paywall",
+        availablePackages: [{ identifier: "$rc_annual" }],
+      } },
       current: {
         identifier: "default",
         availablePackages: [{ identifier: "$rc_annual" }],
@@ -212,6 +216,29 @@ test("billing queue recovers after a failed identity change", async () => {
   f.sdk.logIn = login;
   await f.client.refresh("B", "it");
   assert.deepEqual(f.calls.at(-1), ["info", "B"]);
+});
+
+test("hard checkout uses its isolated offering and disables the legacy native close control", async () => {
+  const f = fake();
+  await f.client.present(null, "it", { hardPaywall: true });
+  const options = f.calls.find(c => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "hard_paywall");
+  assert.equal(options.displayCloseButton, false);
+  assert.equal(options.presentationConfiguration.ios, "FULL_SCREEN");
+});
+test("missing hard offering cannot fall back to the dismissible default", async () => {
+  const f = fake();
+  f.sdk.getOfferings = async () => ({ current: { availablePackages: [{}] }, all: {} });
+  assert.equal((await f.client.present(null, "pt", { hardPaywall: true })).reason, "offering");
+  assert.equal(f.calls.some(c => c[0] === "paywall"), false);
+});
+test("hard checkout cancellation never fabricates access and active subscribers skip presentation", async () => {
+  const f = fake();
+  assert.equal(hasEntitlement((await f.client.present(null, "it", { hardPaywall: true })).customerInfo), false);
+  f.setInfo(active);
+  const count = f.calls.filter(c => c[0] === "paywall").length;
+  assert.equal((await f.client.present(null, "it", { hardPaywall: true })).result, "NOT_PRESENTED");
+  assert.equal(f.calls.filter(c => c[0] === "paywall").length, count);
 });
 
 // The partial reader must remain bounded after a deep link or entitlement expiry.

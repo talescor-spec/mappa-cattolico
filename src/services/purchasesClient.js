@@ -48,7 +48,7 @@ export function createPurchasesClient({
         if (!(await connect(user, lang))) return unavailable();
         return { available: true, customerInfo: await info() };
       }),
-    present: (user, lang) =>
+    present: (user, lang, { hardPaywall = false } = {}) =>
       serial(async () => {
         if (!(await connect(user, lang))) return unavailable();
         const before = await info();
@@ -58,12 +58,18 @@ export function createPurchasesClient({
             customerInfo: before,
             result: "NOT_PRESENTED",
           };
-        const offering = (await sdk.getOfferings())?.current;
+        const offerings = await sdk.getOfferings();
+        // A separate remote design removes the editor's close component without
+        // changing the experience of existing app versions. Never silently fall
+        // back to the dismissible default if this offering is unavailable.
+        const offering = hardPaywall
+          ? offerings?.all?.hard_paywall
+          : offerings?.current;
         if (!offering?.availablePackages?.length)
           return { ...unavailable(), reason: "offering" };
         const { result } = await ui.presentPaywall({
           offering,
-          displayCloseButton: true,
+          displayCloseButton: !hardPaywall,
           presentationConfiguration: { ios: "FULL_SCREEN" },
         });
         // UI result / local flags never grant access; only CustomerInfo does.

@@ -75,22 +75,22 @@ export function Modal({ title, children, onClose, wide = false }) {
       className={`modal ${wide ? "wide" : ""}`}
       onCancel={(e) => {
         e.preventDefault();
-        onClose();
+        onClose?.();
       }}
       onClick={(e) => {
-        if (e.target === ref.current) onClose();
+        if (e.target === ref.current) onClose?.();
       }}
     >
       <div className="modal-inner">
         <header className="modal-head">
           <h2 id={titleId} ref={heading} tabIndex={-1}>{title}</h2>
-          <button
+          {onClose && <button
             className="icon-button modal-close"
             aria-label={l("Chiudi", "Fechar")}
             onClick={onClose}
           >
             <X size={16} />
-          </button>
+          </button>}
         </header>
         {children}
       </div>

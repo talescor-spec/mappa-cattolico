@@ -6,8 +6,9 @@ export const state = {
   present: async () => ({ available: true, customerInfo: state.info, result: 'CANCELLED' }),
 };
 export const useAuth = () => state.auth;
-export const useLanguage = () => ({ language: state.language, l: (it, pt) => state.language === 'pt' ? pt : it });
+export const useLanguage = () => ({ language: state.language, l: (it, pt) => state.language === 'pt' ? pt : it, changeLanguage: lang => { state.language = lang; }, getFormattedDate: () => 'Today', t: value => value });
 export const ENTITLEMENT_ID = 'premium';
+export const isIOSNative = () => true;
 export const billing = {
   refresh: async () => ({ available: true, customerInfo: state.info }),
   subscribe: async () => () => {},

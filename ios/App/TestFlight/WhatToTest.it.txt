@@ -1,9 +1,10 @@
-Fideora — revisione dopo il primo test su iPhone.
+Fideora — hard paywall dopo l’onboarding.
 
-- Nome facoltativo nell'onboarding, italiano e portoghese.
-- Pulsante di chiusura più discreto e nessun link gratuito nel piè di pagina iniziale.
-- Genesi ed Esodo gratuiti; altri libri inclusi con indicazione Premium. Il brano del giorno resta gratuito.
-- Dopo l'acquisto, sincronizzazione email facoltativa nel Profilo.
-- Descrizioni delle edizioni senza conteggio dei libri. La valuta segue lo storefront Apple.
+- Su una nuova installazione, completa l’onboarding: l’offerta deve aprirsi automaticamente, senza X e senza accesso gratuito ai contenuti principali.
+- Verifica il mensile senza prova e l’idoneità ai 7 giorni di prova dell’annuale. Prezzi e valuta provengono dall’App Store.
+- Acquisto e ripristino: solo una prova o un abbonamento valido sblocca Bibbia, preghiera, lettura quotidiana e quaderno.
+- Annullare la conferma, perdere la connessione o riaprire l’app non deve sbloccare contenuti. Alla scadenza si torna alla schermata bloccata; disattivare il rinnovo conserva l’accesso fino alla scadenza.
+- Il link Account del paywall torna alla schermata bloccata. Account e dati, esportazione, eliminazione, termini, privacy e aiuto restano disponibili senza sbloccare i contenuti.
+- Le installazioni già configurate prima di questo aggiornamento mantengono i precedenti limiti gratuiti. Una reinstallazione senza dati entra nel nuovo flusso.
 
-Verificare acquisto annuale e mensile, idoneità alla prova annuale di 7 giorni, ripristino e scadenza. Verificare accesso email, riapertura, sincronizzazione consentita ed eliminazione soltanto di un account di prova. Controllare lettura offline, link legali/supporto e confini tra libri gratuiti e Premium. Non pubblicare ricevute o dati personali nei feedback pubblici.
+Provare italiano e portoghese, sincronizzazione facoltativa, riapertura e lettura offline con abbonamento valido. Eliminare solo account di prova; non pubblicare ricevute o dati personali nei feedback pubblici.

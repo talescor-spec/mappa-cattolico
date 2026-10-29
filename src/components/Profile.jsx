@@ -16,7 +16,7 @@ import { safeGet, safeSet, sanitizeDisplayName } from "../utils/storage";
 import { Header, Row, Modal } from "./UI";
 import AccountPanel from "./AccountPanel";
 import { SubscriptionPanel } from "./Premium";
-export default function Profile({ onSources, onLegal }) {
+export default function Profile({ onSources, onLegal, restricted = false }) {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
   const { entries } = useStudy();
@@ -155,7 +155,7 @@ export default function Profile({ onSources, onLegal }) {
           )}
         </div>
         <div>
-          <SubscriptionPanel />
+          {!restricted && <SubscriptionPanel />}
           <AccountPanel />
           <section className="card rows legal-rows">
             <Row

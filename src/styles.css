@@ -2321,6 +2321,24 @@ main {
   margin: 15px 0;
   text-align: left;
 }
+.hard-paywall-gate {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(28px, env(safe-area-inset-top)) 22px max(28px, env(safe-area-inset-bottom));
+  background: #f7f5ef;
+}
+.hard-paywall-card { width: min(100%, 460px); text-align: center; }
+.hard-paywall-card > svg { color: #263f32; margin: 0 auto 22px; }
+.hard-paywall-card h1 { font-size: clamp(30px, 7vw, 42px); line-height: 1.12; margin: 16px 0; }
+.hard-paywall-card > p { line-height: 1.6; }
+.hard-paywall-card > .text-button { margin: 18px auto; }
+.hard-paywall-card > select { width: auto; margin: 18px auto 0; }
+.hard-paywall-benefits { list-style: none; padding: 0; margin: 28px 0; text-align: left; }
+.hard-paywall-benefits li { display: flex; align-items: center; gap: 12px; padding: 11px 0; }
+.hard-paywall-benefits svg { flex-shrink: 0; color: #263f32; }
+.hard-paywall-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 18px; margin-top: 24px; }
+.hard-paywall-links .text-button { font-size: 12px; }
 .checkout-status {
   position: fixed;
   z-index: 100;

@@ -102,22 +102,24 @@ export function PremiumProvider({ children }) {
         hasEntitlement(snapshot.customerInfo, ENTITLEMENT_ID),
       options,
     );
-  const request = (feature = "bible") => {
+  const request = useCallback((feature = "bible", options) => {
     if (activeOperation.current) return;
     setMessage("");
     setOffer(null);
     // Present after React closes onboarding and auth has resolved. There is no
     // intermediate sales modal; offer is reserved for recoverable failures.
-    setPendingOffer(feature);
-  };
-  const run = useCallback(async (action, feature = "welcome") => {
+    setPendingOffer({ feature, options });
+  }, []);
+  const run = useCallback(async (action, feature = "welcome", options) => {
     if (activeOperation.current || loading) return false;
     activeOperation.current = true;
     setBusy(true);
     setMessage("");
     const id = owner;
     try {
-      const result = await billing[action](id, language);
+      const result = options
+        ? await billing[action](id, language, options)
+        : await billing[action](id, language);
       if (identity.current !== id) return false;
       accept(result, id);
       if (!result.available) {
@@ -152,9 +154,9 @@ export function PremiumProvider({ children }) {
   }, [loading, owner, language, accept]);
   useEffect(() => {
     if (!pendingOffer || loading || activeOperation.current) return;
-    const feature = pendingOffer;
+    const { feature, options } = pendingOffer;
     setPendingOffer(null);
-    void run("present", feature);
+    void run("present", feature, options);
   }, [pendingOffer, loading, run]);
   return (
     <PremiumContext.Provider

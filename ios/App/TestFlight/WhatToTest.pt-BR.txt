@@ -1,9 +1,10 @@
-Fideora — revisão após o primeiro teste no iPhone.
+Fideora — hard paywall após onboarding.
 
-- Nome opcional no onboarding, italiano e português.
-- Fechamento mais discreto e remoção do link gratuito no rodapé inicial.
-- Gênesis e Êxodo gratuitos; demais livros incluídos identificados como Premium. O trecho diário continua gratuito.
-- Após a compra, sincronização por e-mail opcional no Perfil.
-- Descrições das edições sem contagem de livros. A moeda acompanha a loja Apple.
+- Em uma instalação nova, conclua o onboarding: a oferta deve abrir automaticamente, sem X e sem acesso gratuito ao conteúdo principal.
+- Confirme o mensal sem trial e a elegibilidade aos 7 dias de teste no anual. Preços e moeda vêm da loja Apple.
+- Compra e restauração: somente trial/assinatura válida libera Bíblia, oração, leitura diária e caderno.
+- Cancelar a confirmação, perder conexão ou reabrir o app não deve liberar conteúdo. Uma assinatura expirada volta à tela bloqueada; cancelar a renovação mantém acesso até o vencimento.
+- O link Conta do paywall volta à tela bloqueada. Conta e dados, exportação, exclusão, termos, privacidade e ajuda continuam disponíveis ali, sem liberar conteúdo.
+- Instalações que já haviam concluído onboarding antes desta atualização preservam os limites gratuitos anteriores. Reinstalar sem dados entra no novo fluxo.
 
-Conferir compra anual e mensal, elegibilidade do trial anual de 7 dias, restauração e expiração. Conferir login por e-mail, reabertura, sincronização consentida e exclusão somente de conta de teste. Verificar leitura offline, links legais/suporte e limites entre livros gratuitos e Premium. Não publicar recibos ou dados pessoais em feedback público.
+Testar em italiano e português. Conferir sincronização opcional, reabertura e leitura offline com assinatura válida. Excluir somente contas de teste; não publicar recibos ou dados pessoais em feedback público.

@@ -33,6 +33,9 @@ import { Header, Mark, Modal, Row } from "./components/UI";
 import { PremiumProvider, usePremium } from "./contexts/PremiumContext";
 import { PremiumCard, PremiumOffer } from "./components/Premium";
 import Onboarding from "./components/Onboarding";
+import HardPaywallGate from "./components/HardPaywallGate";
+import { isIOSNative } from "./services/purchases";
+import { ENTRY_ACCESS_KEY, initializeEntryAccess, entryScreen } from "./utils/entryAccess";
 import "./styles.css";
 function HomePage({ bible, onRead, onPray, onStudy }) {
   const { isPremium } = usePremium();
@@ -192,10 +195,13 @@ function HomePage({ bible, onRead, onPray, onStudy }) {
     </>
   );
 }
-function Fideora() {
+export function Fideora() {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
-  const { request } = usePremium();
+  const { request, checking, isPremium } = usePremium();
+  const [entryMode] = useState(() => initializeEntryAccess({
+    native: isIOSNative(), read: safeGet, write: safeSet,
+  }));
   const { storageError } = useStudy();
   const [page, setPage] = useState("today"),
     [location, setLocation] = useState(() =>
@@ -227,6 +233,22 @@ function Fideora() {
     safeSetJSON("fideoraLastReading", value);
     navigate("bible");
   };
+  const screen = entryScreen({ onboard, mode: entryMode, checking, isPremium });
+  if (screen === "onboarding") return (
+    <Onboarding
+      bible={bible}
+      hardPaywall={entryMode === "hard"}
+      onFinish={(showPremium) => {
+        // Never persist completion without the hard cohort marker: a partial
+        // storage failure must not classify this new install as a legacy one.
+        if (entryMode !== "hard" || safeSet(ENTRY_ACCESS_KEY, "hard"))
+          safeSet("fideoraOnboarded", "1");
+        setOnboard(false);
+        if (entryMode !== "hard" && showPremium) request("welcome");
+      }}
+    />
+  );
+  if (screen !== "content") return <HardPaywallGate checking={screen === "checking"} />;
   const tabs = [
     ["today", Home, l("Oggi", "Hoje")],
     ["bible", BookOpen, l("Bibbia", "Bíblia")],
@@ -371,16 +393,6 @@ function Fideora() {
           ))}
         </nav>
       </div>
-      {onboard && (
-        <Onboarding
-          bible={bible}
-          onFinish={(showPremium) => {
-            safeSet("fideoraOnboarded", "1");
-            setOnboard(false);
-            if (showPremium) request("welcome");
-          }}
-        />
-      )}
       <PremiumOffer />
       {sources && (
         <Modal
