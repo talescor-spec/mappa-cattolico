@@ -38,3 +38,23 @@ New iOS installations complete onboarding before a subscription-only content gat
 - Removed the close icon/button. Added the explicit Account/Conta footer link (Close paywall action, system navigation disabled), returning to the locked entry screen where account, export, deletion and support are accessible. This link never grants access to app content. Restore, Terms and Privacy remain in the native footer.
 - Prices and annual introductory offer are still derived from the existing App Store products. Editor preview dollar prices are sample values, not a change to live prices.
 - Physical iPhone purchase, restoration and expiry acceptance remain unverified. Signed build/distribution status will be recorded separately. This document does not assert App Review approval.
+
+## Annual trial visibility audit — 29 October 2026
+
+Scope: remote hard-paywall copy only; retain all Apple products, pricing, restore/account paths and access checks described above. The device screenshot supplied by the tester shows the non-introductory state (annual price, “Assinar”, no trial text). The editor has an eligibility-dependent introductory rule, but the offer is only mentioned in small copy and the primary annual badge still says Recommended.
+
+| Priority | Area | Finding | Evidence | Review impact | Remediation | Effort | Confidence |
+|---|---|---|---|---|---|---|---|
+| P2 | Trial prominence | Trial is not prominent on the annual selection | Supplied build 7 screenshot and remote annual card | Eligible new subscribers may miss the test offer | Highlight seven free days on annual selection and CTA for eligible users; keep post-trial price and renewal clear | Small | Verified UI |
+| P1 | Eligibility | Device shows default paid state; actual account eligibility is unverified | Screenshot has “Assinar”, while editor intro preview has trial CTA | Must not promise free days to an ineligible Apple account | Preserve eligibility-dependent copy, verify annual introductory configuration and preview both states | Small | Verified state; account cause unverified |
+
+Reviewer journey and notes: same hard entry flow, Apple confirmation, restore, account/data, legal and offline behavior as above. Verify annual eligible/ineligible and monthly states in IT/PT. No new binary, permissions, data collection or product is required for a remote copy change. Physical confirmation of eligibility remains a separate tester check.
+
+Annual offer configuration verified in App Store Connect on 29 October: com.fideora.premium.annual is Approved, with “Free for the first week” in 175 introductory-offer territories; the Brazil row is R$299.90 plus that introductory week. The supplied device screenshot uses the default paid state, but account-specific eligibility cannot be established from the screenshot.
+
+Remote copy updated for eligible introductory offers in both locales:
+- PT: badge “7 DIAS GRÁTIS”; CTA “Começar meus 7 dias grátis”; annual subtitle “7 dias grátis, depois [store price]/ano”, with equivalent monthly price and explicit post-trial renewal terms.
+- IT: badge “7 GIORNI GRATIS”; CTA “Inizia i tuoi 7 giorni gratis”; corresponding annual price and renewal disclosure.
+- The default/ineligible state keeps the ordinary paid CTA and Recommended badge; no free trial is promised for an ineligible account. Monthly has no new introductory offer. No price, store product, purchase eligibility or client code changed.
+
+Editor validation: eligible annual IT/PT displays the badge, CTA, post-trial price and renewal text; default PT retains “Assinar” and “Recomendado”. iPhone 17 Pro preview checked; this is remote design verification, not an Apple purchase acceptance test.
