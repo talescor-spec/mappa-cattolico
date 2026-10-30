@@ -58,3 +58,16 @@ Remote copy updated for eligible introductory offers in both locales:
 - The default/ineligible state keeps the ordinary paid CTA and Recommended badge; no free trial is promised for an ineligible account. Monthly has no new introductory offer. No price, store product, purchase eligibility or client code changed.
 
 Editor validation: eligible annual IT/PT displays the badge, CTA, post-trial price and renewal text; default PT retains “Assinar” and “Recomendado”. iPhone 17 Pro preview checked; this is remote design verification, not an Apple purchase acceptance test.
+
+## Plan visibility audit — 29 October 2026, before layout changes
+
+The supplied App Store screenshot has the original dismissible paywall (X, three footer links, one-week trial wording), rather than the separate hard offering. Apple confirmation in the second screenshot verifies a one-week annual trial is offered to this account; no purchase completion is evidenced. Both designs share the tall header/feature layout.
+
+| Priority | Area | Finding | Evidence | Review impact | Remediation | Effort | Confidence |
+|---|---|---|---|---|---|---|---|
+| P2 | Plan visibility | Monthly card falls beneath fixed checkout footer | IMG_5103 on physical iPhone | Customers cannot compare plans without discovering scroll | Compact header/features and keep both plan cards above footer; verify both published designs in PT/IT | Small | Verified screenshot |
+| P1 | Subscription clarity | Layout compression must retain trial, total annual/monthly price, renewal, restore and legal links | Current remote design | Smaller layout must not obscure material terms | Retain package pricing and eligibility rules, readable footer, and existing dismissal/account behavior | Small | Design constraint |
+
+Reviewer journey and App Review notes remain as above; this is a remote layout change only, with no binary, product, entitlement, permission or price change. Verify annual trial/default and monthly state in both locales and small/large editor previews; physical-device layout acceptance remains pending.
+
+Layout result: both remote paywalls published. Hidden decorative motif and secondary promise; feature list retains all three icons/titles with hidden detailed descriptions, zero vertical row padding, and list bottom margin reduced from 24 to 12. Products, eligibility, prices, annual intro copy and monthly/default copy are retained. Public design keeps its X; hard design keeps Account and no X. Published-version preview confirms both cards and total monthly price above checkout footer on iPhone 13 mini (375×812), PT annual eligible, and IT preview was checked for both designs before final motif compaction. iPhone 17 Pro was checked during layout iteration. The 375×667 SE requires content scrolling; no claim is made that all content fits without scrolling on every screen or accessibility text size. Physical-device recheck remains pending. Remote publication verified via Latest changes published a few seconds ago in both version selectors. No app code or price change, no new binary or App Review submission.
