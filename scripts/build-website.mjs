@@ -1,18 +1,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { copy } from '../website/content.mjs';
+import { startPage } from '../website/start.mjs';
 
 const out = 'web-dist';
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
 fs.cpSync('website/assets', `${out}/assets`, { recursive: true });
-for (const file of ['site.css', 'site.js', 'sw.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
+for (const file of ['site.css', 'site.js', 'growth.js', 'sw.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['icon.svg', 'icon-192.png']) fs.copyFileSync(`public/${file}`, `${out}/${file}`);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const apple = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.1 12.5c0-2 1.6-3 1.7-3.1-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.3.7-2.9.7-.6 0-1.5-.7-2.5-.7-1.3 0-2.5.8-3.2 1.9-1.4 2.3-.4 5.8.9 7.7.6.9 1.3 1.9 2.3 1.8.9 0 1.3-.6 2.5-.6 1.2 0 1.5.6 2.6.6s1.7-1 2.3-1.8c.7-1 1-2 1-2-.1 0-1.8-.7-1.8-2.9ZM15.2 6.6c.5-.6.9-1.5.8-2.3-.7 0-1.6.5-2.2 1.1-.5.6-1 1.5-.9 2.3.9 0 1.8-.4 2.3-1.1Z"/></svg>';
 const mark = '<img src="/icon.svg" width="34" height="34" alt="">';
 const arrow = '<span aria-hidden="true">↗</span>';
-const storeURL = (lang, position) => `https://apps.apple.com/${lang === 'pt' ? 'br' : 'it'}/app/fideora/id6825337165?utm_source=fideora_site&utm_medium=website&utm_campaign=fideora_launch&utm_content=${position}_${lang}`;
+const storeURL = (lang, position) => `https://apps.apple.com/${lang === 'pt' ? 'br' : 'it'}/app/fideora/id6825337165?pt=129505215&ct=fd2_site_${lang}&mt=8&utm_source=fideora_site&utm_medium=website&utm_campaign=fideora_launch&utm_content=${position}_${lang}`;
 const button = (c, lang, position, label=c.cta, cls='primary') => `<a class="button ${cls}" data-store="${position}" href="${storeURL(lang, position)}">${apple}${esc(label)}${arrow}</a>`;
 const phone = (c, name, eager=false) => `<div class="phone"><img src="/assets/${name}.jpg" width="600" height="1300" alt="${esc(c.screen)} — ${name}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"></div>`;
 const navIds = ['esperienza','app','premium','faq'];
@@ -20,7 +21,7 @@ function page(lang) {
   const c = copy[lang];
   const prefix = lang === 'pt' ? '/pt/' : '/';
   const legal = kind => `/${kind}.html?lang=${lang}`;
-  return `<!doctype html><html lang="${c.lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>${esc(c.title)}</title><meta name="description" content="${esc(c.description)}"><link rel="canonical" href="https://fideora.app${prefix}"><link rel="alternate" hreflang="it" href="https://fideora.app/"><link rel="alternate" hreflang="pt-BR" href="https://fideora.app/pt/"><link rel="alternate" hreflang="x-default" href="https://fideora.app/"><meta property="og:type" content="website"><meta property="og:site_name" content="Fideora"><meta property="og:title" content="${esc(c.title)}"><meta property="og:description" content="${esc(c.description)}"><meta property="og:url" content="https://fideora.app${prefix}"><meta property="og:image" content="https://fideora.app/assets/social.png"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/icon.svg"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="preload" as="image" href="/assets/today.jpg"><link rel="stylesheet" href="/site.css"><script src="/site.js" defer></script></head><body>
+  return `<!doctype html><html lang="${c.lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f8f5"><title>${esc(c.title)}</title><meta name="description" content="${esc(c.description)}"><link rel="canonical" href="https://fideora.app${prefix}"><link rel="alternate" hreflang="it" href="https://fideora.app/"><link rel="alternate" hreflang="pt-BR" href="https://fideora.app/pt/"><link rel="alternate" hreflang="x-default" href="https://fideora.app/"><meta property="og:type" content="website"><meta property="og:site_name" content="Fideora"><meta property="og:title" content="${esc(c.title)}"><meta property="og:description" content="${esc(c.description)}"><meta property="og:url" content="https://fideora.app${prefix}"><meta property="og:image" content="https://fideora.app/assets/social.png"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/icon.svg"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="preload" as="image" href="/assets/today.jpg"><link rel="stylesheet" href="/site.css"><script src="/site.js" defer></script><script src="/growth.js" defer></script></head><body>
   <a class="skip" href="#main">${c.skip}</a>
   <header class="header"><div class="nav wrap"><a class="brand" href="${prefix}" aria-label="Fideora">${mark}<span>Fideora</span></a><nav class="desktop-nav" aria-label="${lang==='it'?'Navigazione principale':'Navegação principal'}">${c.nav.map((x,i)=>`<a href="#${navIds[i]}">${x}</a>`).join('')}</nav><div class="nav-actions"><div class="languages" aria-label="${lang==='it'?'Lingua':'Idioma'}"><a href="/" lang="it" ${lang==='it'?'aria-current="page"':''}>IT</a><span>/</span><a href="/pt/" lang="pt-BR" ${lang==='pt'?'aria-current="page"':''}>PT</a></div><a class="nav-download" data-store="nav" href="${storeURL(lang,'nav')}">${c.download}${arrow}</a></div></div></header>
   <main id="main"><section class="hero wrap"><div class="hero-copy"><p class="eyebrow"><span class="dot"></span>${c.eyebrow}</p><h1>${c.hero}</h1><p class="intro">${c.intro}</p><div class="hero-actions">${button(c,lang,'hero')}<a class="text-link" href="#app">${c.secondary}<span aria-hidden="true">↓</span></a></div><p class="micro">${c.micro}</p></div><div class="hero-art"><div class="orb"></div><div class="hero-phone">${phone(c,'today',true)}</div><div class="floating-note"><span aria-hidden="true">✦</span><p>${c.heroNote}</p></div><p class="image-caption">${c.screen}</p></div></section>
@@ -39,6 +40,8 @@ function page(lang) {
 fs.writeFileSync(`${out}/index.html`, page('it'));
 fs.mkdirSync(`${out}/pt`);
 fs.writeFileSync(`${out}/pt/index.html`, page('pt'));
+fs.writeFileSync(`${out}/come-iniziare.html`, startPage('it'));
+fs.writeFileSync(`${out}/pt/come-iniziare.html`, startPage('pt'));
 const policies = JSON.parse(fs.readFileSync('website/legal-copy.json', 'utf8'));
 for (const kind of ['privacy','terms','support']) {
   const sections = Object.entries(policies).map(([lang,c])=>`<section lang="${lang}" id="${lang}"><h1>${esc(c[kind].title)}</h1>${c[kind].sections.map(([h,p])=>`<h2>${esc(h)}</h2><p>${esc(p)}</p>`).join('')}</section>`).join('');
@@ -51,3 +54,4 @@ fs.writeFileSync(`${out}/sitemap.xml`, '<?xml version="1.0" encoding="UTF-8"?><u
 const files = fs.readdirSync(out, {recursive:true}).filter(p=>fs.statSync(path.join(out,p)).isFile());
 if(files.some(f => /\.json$|\.jsx$|manifest\.webmanifest|\/bible\//.test(f))) throw new Error('Native app data must not be published with the marketing site');
 console.log(`Fideora website built: ${files.length} files. Italian + Portuguese. No application bundle or Bible corpus.`);
+
