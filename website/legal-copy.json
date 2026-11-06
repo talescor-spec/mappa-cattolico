@@ -26,6 +26,10 @@
         [
           "Contatti e diritti",
           "Puoi chiedere assistenza, accesso, rettifica o cancellazione scrivendo a support@fideora.app. Per eliminare l’account puoi anche usare gli strumenti nel Profilo. Non inviare password o codici di accesso e non pubblicare dati di account o intenzioni private nelle Issues pubbliche. Ultimo aggiornamento: 21 ottobre 2026."
+        ],
+        [
+          "Misurazione del sito e delle comunicazioni",
+          "Sul sito misuriamo visite, visualizzazioni della dimostrazione e clic verso App Store, con un identificativo temporaneo di sessione, lingua, tipo di dispositivo e codice della campagna. Non salviamo email, note, intenzioni o indirizzi IP in questi eventi, e non usiamo cookie pubblicitari. Rispettiamo i segnali Do Not Track e Global Privacy Control. Per le email inviate registriamo consegna, apertura e clic tramite Brevo; aperture e clic possono comprendere attività automatica. Gli eventi di prova e abbonamento ricevuti da RevenueCat sono registrati con un identificativo pseudonimizzato per misurare il servizio; i test sono separati dai risultati reali. Questi dati sono conservati nell’infrastruttura Supabase usata per le metriche del progetto."
         ]
       ]
     },
@@ -115,6 +119,10 @@
         [
           "Contato e direitos",
           "Solicite suporte, acesso, correção ou exclusão pelo e-mail support@fideora.app. Para excluir a conta você também pode usar as ferramentas do Perfil. Não envie senhas ou códigos de acesso e não publique dados de conta ou intenções privadas nas Issues públicas. Atualização: 21 de outubro de 2026."
+        ],
+        [
+          "Medição do site e das comunicações",
+          "No site medimos visitas, visualizações da demonstração e cliques para a App Store, com um identificador temporário de sessão, idioma, tipo de aparelho e código da campanha. Não salvamos email, notas, intenções ou endereços IP nesses eventos e não usamos cookies de publicidade. Respeitamos os sinais Do Not Track e Global Privacy Control. Nos emails enviados registramos entrega, abertura e cliques pela Brevo; aberturas e cliques podem incluir atividade automática. Os eventos de teste e assinatura recebidos do RevenueCat são registrados com identificador pseudonimizado para medir o serviço; testes ficam separados dos resultados reais. Esses dados são armazenados na infraestrutura Supabase usada para as métricas do projeto."
         ]
       ]
     },
@@ -178,4 +186,3 @@
     }
   }
 }
-

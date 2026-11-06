@@ -14,3 +14,13 @@ Store links include source/campaign and CTA position, and preserve safe inbound 
 
 Review: `node --check website/site.js`, `node --check website/sw.js`, `node scripts/build-website.mjs`; validate the live domain in desktop/mobile widths, tabs with mouse/keyboard, language links, FAQs, legal pages and App Store CTA. `/bible/it.json`, `/bible/pt.json`, former app bundles and the PWA manifest must return 404 in production. Confirm an existing offline worker migrates to the site after reconnection.
 
+
+## Conversion measurement — 6 November 2026
+
+Annual: 7 trial days then EUR 59/year (BRL 299.90/year); monthly: 3 trial days then EUR 7.99/month (BRL 49.90/month), for Apple-eligible accounts. Apple determines eligibility, currency and terms. This supersedes the historical reference prices above.
+
+The homepage compares monthly and annual plans; `/come-iniziare.html` and `/pt/come-iniziare.html` demonstrate the actual app and explain the subscription gate before installation. Apple campaign links use the provider token generated in App Store Connect and separate tokens per email lane.
+
+`growth.js` records session-level page views, visible demonstrations and store clicks in the existing backend. No email, customer content or Apple identity is sent. It respects DNT/GPC and uses sessionStorage rather than persistent advertising cookies. QA requests include `fm_test=1` and are excluded from production reports. The privacy notice describes this measurement. No website event can record a trial or purchase: these come from the authenticated RevenueCat webhook. Apple downloads and RevenueCat paywall reports remain separate official sources; email-to-purchase attribution is not inferred.
+
+Validation: build and five behavioral tests passed; live mobile layout checked at 390px, all images loaded with no horizontal overflow, and campaign parameters reached App Store. Test page and store-click events are stored separately. RevenueCat test webhook returned HTTP 200 without recording a conversion. Physical-device purchase completion remains unverified.
