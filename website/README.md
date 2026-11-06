@@ -13,3 +13,4 @@ Security boundary: the website build does not ship any application JS, Bible cor
 Store links include source/campaign and CTA position, and preserve safe inbound UTM campaign fields. This is link tagging, not complete click/install/purchase attribution. No pixel, cookie banner or new analytics service has been added. Native app authentication, purchases and subscriptions are unchanged. Email-return URLs on the site show app login guidance and remove returned tokens from the visible URL; users complete login with the email code/link in the native app.
 
 Review: `node --check website/site.js`, `node --check website/sw.js`, `node scripts/build-website.mjs`; validate the live domain in desktop/mobile widths, tabs with mouse/keyboard, language links, FAQs, legal pages and App Store CTA. `/bible/it.json`, `/bible/pt.json`, former app bundles and the PWA manifest must return 404 in production. Confirm an existing offline worker migrates to the site after reconnection.
+
