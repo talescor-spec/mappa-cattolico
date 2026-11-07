@@ -1,3 +1,5 @@
+import { Capacitor } from "@capacitor/core";
+import { subscriptionManagementURL } from "../utils/billingPlatform.js";
 import React, { useState } from "react";
 import { Cloud, LogOut, Mail, ShieldCheck, Trash2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
@@ -223,16 +225,16 @@ export default function AccountPanel() {
           </p>
           <p>
             {l(
-              "Un eventuale abbonamento Apple non viene annullato eliminando l’account: gestiscilo nelle impostazioni Apple.",
-              "Uma eventual assinatura Apple não é cancelada ao excluir a conta: gerencie-a nos Ajustes da Apple.",
+              "Un eventuale abbonamento dello store non viene annullato eliminando l’account: gestiscilo nelle impostazioni dello store.",
+              "Uma eventual assinatura da loja não é cancelada ao excluir a conta: gerencie-a nas configurações da loja.",
             )}
           </p>
           <a
-            href="https://apps.apple.com/account/subscriptions"
+            href={subscriptionManagementURL(Capacitor.getPlatform())}
             target="_blank"
             rel="noreferrer"
           >
-            {l("Gestisci abbonamenti Apple", "Gerenciar assinaturas Apple")}
+            {l("Gestisci abbonamenti nello store", "Gerenciar assinaturas na loja")}
           </a>
           <div className="button-row">
             <button

@@ -47,8 +47,8 @@ export default function HardPaywallGate({ checking }) {
           <RefreshCw size={15} />{l("Ripristina acquisti", "Restaurar compras")}
         </button>
         <p className="caption">{l(
-          "Un abbonamento o una prova idonea attiva sblocca Fideora. Prezzi e condizioni sono indicati prima della conferma Apple.",
-          "Uma assinatura ou um teste elegível ativo libera o Fideora. Preços e condições são apresentados antes da confirmação da Apple.",
+          "Un abbonamento o una prova idonea attiva sblocca Fideora. Prezzi e condizioni sono indicati prima della conferma nello store.",
+          "Uma assinatura ou um teste elegível ativo libera o Fideora. Preços e condições são apresentados antes da confirmação na loja.",
         )}</p>
         <footer className="hard-paywall-links">
           <button className="text-button" disabled={busy} onClick={() => setPanel("account")}>{l("Account e dati", "Conta e dados")}</button>

@@ -1,3 +1,5 @@
+import { Capacitor } from "@capacitor/core";
+import { subscriptionManagementURL } from "../utils/billingPlatform.js";
 import React from "react";
 import { Crown, Lock, ArrowUpRight, RefreshCw } from "lucide-react";
 import { usePremium } from "../contexts/PremiumContext";
@@ -41,8 +43,8 @@ export function PremiumMessage() {
   const { l } = useLanguage();
   const messages = {
     platform: [
-      "Gli abbonamenti sono disponibili nell’app iOS. Puoi continuare con la lettura gratuita.",
-      "As assinaturas estão disponíveis no app iOS. Você pode continuar com a leitura gratuita.",
+      "Gli abbonamenti sono disponibili nell’app iOS o Android. Puoi continuare con la lettura gratuita.",
+      "As assinaturas estão disponíveis no app iOS ou Android. Você pode continuar com a leitura gratuita.",
     ],
     unavailable: [
       "I piani non sono disponibili in questo momento. Riprova più tardi: non è stato effettuato alcun acquisto.",
@@ -53,8 +55,8 @@ export function PremiumMessage() {
       "Não foi possível verificar a assinatura. Tente novamente ou use Restaurar compras.",
     ],
     "nothing-restored": [
-      "Nessun abbonamento Premium attivo trovato per questo account Apple.",
-      "Nenhuma assinatura Premium ativa encontrada para esta conta Apple.",
+      "Nessun abbonamento Premium attivo trovato per questo account dello store.",
+      "Nenhuma assinatura Premium ativa encontrada para esta conta da loja.",
     ],
     active: ["Fideora Premium è attivo.", "Fideora Premium está ativo."],
   };
@@ -148,8 +150,8 @@ export function SubscriptionPanel() {
             )}
       </p>
       {isPremium && <p className="caption">{l(
-        "L’abbonamento è associato al tuo account Apple. La sincronizzazione via email è facoltativa.",
-        "A assinatura está associada à sua conta Apple. A sincronização por e-mail é opcional.",
+        "L’abbonamento è associato al tuo account dello store. La sincronizzazione via email è facoltativa.",
+        "A assinatura está associada à sua conta da loja. A sincronização por e-mail é opcional.",
       )}</p>}
       {!isPremium && (
         <button
@@ -174,13 +176,13 @@ export function SubscriptionPanel() {
           </button>
         )}
         <a
-          href="https://apps.apple.com/account/subscriptions"
+          href={subscriptionManagementURL(Capacitor.getPlatform())}
           target="_blank"
           rel="noreferrer"
         >
           {l(
-            "Gestisci o annulla con Apple",
-            "Gerenciar ou cancelar com a Apple",
+            "Gestisci o annulla nello store",
+            "Gerenciar ou cancelar na loja",
           )}
         </a>
       </div>

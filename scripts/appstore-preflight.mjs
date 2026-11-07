@@ -37,7 +37,7 @@ check(
   "Supabase uses platform storage adapter",
 );
 check(
-  /getPlatform\(\)\s*===\s*["']ios["']/.test(read("src/lib/secureStorage.js")),
+  read("src/lib/secureStorage.js").includes("Capacitor.isNativePlatform()"),
   "Native tokens do not fall back to WebView storage",
 );
 const plist = read("ios/App/App/Info.plist");
@@ -85,8 +85,8 @@ check(
   "In-app account deletion connected",
 );
 check(
-  read("src/components/AccountPanel.jsx").includes("Apple"),
-  "Account deletion explains Apple subscriptions",
+  read("src/components/AccountPanel.jsx").includes("subscriptionManagementURL"),
+  "Account deletion explains separate store subscription management",
 );
 const scan = (dir) =>
   fs
