@@ -12,7 +12,7 @@ Prepared 6 November 2026 from the current native release branch `fideora-premium
 
 ## Current validation and limits
 
-43 automated tests, web production build, 24 existing native structural checks and Capacitor Android plugin sync passed locally. Android Java/Gradle compilation is a separate CI check. Purchase/restoration on a Google internal track, Keystore/device behavior and final Android screenshots remain unverified. No signed AAB has been generated.
+43 automated tests, web production build, 24 existing native structural checks and Capacitor Android plugin sync passed locally. Android Java/Gradle debug APK compilation and native lint also passed at `41e36aa6bd720fe8e1a3c4b70650cb02b21b9080` in [Android CI run 42326608856](https://github.com/talescor-spec/mappa-cattolico/actions/runs/42326608856). This is compilation verification, not store-release or device acceptance. Purchase/restoration on a Google internal track, Keystore/device behavior and final Android screenshots remain unverified. No signed AAB has been generated.
 
 ## External completion
 
