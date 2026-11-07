@@ -26,6 +26,10 @@
         [
           "Contatti e diritti",
           "Puoi chiedere assistenza, accesso, rettifica o cancellazione scrivendo a support@fideora.app. Per eliminare l’account puoi anche usare gli strumenti nel Profilo. Non inviare password o codici di accesso e non pubblicare dati di account o intenzioni private nelle Issues pubbliche. Ultimo aggiornamento: 21 ottobre 2026."
+        ],
+        [
+          "Android e Google Play",
+          "Nella versione Android, Google Play gestisce i pagamenti e RevenueCat verifica gli acquisti, ripristina l’accesso e gestisce Premium con un identificativo cliente anonimo o l’UUID dell’account. I dati di transazione e le interazioni tecniche del paywall non includono il testo delle note o delle intenzioni. Non raccogliamo dati delle carte. Gli identificativi di autenticazione Android sono conservati tramite Keystore e cifratura AES-GCM; questo non indica cifratura end-to-end di ogni nota. Per richiedere l’eliminazione senza reinstallare l’app: https://fideora.app/delete-account.html oppure support@fideora.app."
         ]
       ]
     },
@@ -34,11 +38,15 @@
       "sections": [
         [
           "Il servizio",
-          "Fideora è uno strumento indipendente di lettura biblica, studio personale e preghiera cattolica. Non è un servizio ufficiale della Chiesa e non sostituisce l’accompagnamento pastorale. La lettura devozionale quotidiana e le preghiere di base sono gratuite; gli strumenti completi richiedono Premium. L’account è facoltativo. I contenuti personali già creati restano accessibili ed esportabili anche senza un abbonamento attivo."
+          "Fideora è uno strumento indipendente di lettura biblica, studio personale e preghiera. Nelle nuove installazioni native, dopo il percorso iniziale è richiesto un abbonamento Premium o una prova idonea per accedere ai contenuti. Le installazioni precedenti possono conservare la propria esperienza gratuita. L’account è facoltativo; gli strumenti per account, dati ed esportazione restano accessibili dalla schermata di accesso."
         ],
         [
           "Abbonamenti Premium",
           "I piani mensile e annuale danno lo stesso livello di accesso. Prezzo totale, valuta, durata ed eventuale offerta sono mostrati da Apple prima dell’acquisto. L’abbonamento si rinnova automaticamente salvo annullamento nelle impostazioni Apple almeno 24 ore prima della scadenza. Puoi gestirlo o annullarlo dal Profilo e ripristinare un acquisto con lo stesso account Apple. Eliminare l’account Fideora non annulla l’abbonamento Apple. Si applica la licenza standard Apple: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/. Se è prevista una prova gratuita, si applica soltanto agli account idonei secondo Apple. Prima della conferma sono indicati durata della prova e importo totale dovuto al termine; salvo annullamento almeno 24 ore prima della fine della prova, segue l’addebito dell’abbonamento scelto."
+        ],
+        [
+          "Google Play su Android",
+          "Prezzo locale totale, periodo di fatturazione e condizioni di ogni prova idonea sono mostrati da Google Play prima della conferma. I piani mensile e annuale danno lo stesso Premium. L’abbonamento si rinnova automaticamente salvo annullamento in Google Play. Se una prova è idonea, alla scadenza viene addebitato il prezzo del piano scelto salvo annullamento prima del termine. Usa il Profilo per ripristinare gli acquisti e gestire l’abbonamento. Eliminare l’account o l’app non annulla l’abbonamento. Le condizioni Apple del paragrafo precedente si applicano solo agli acquisti iOS."
         ],
         [
           "Testi e fonti",
@@ -84,6 +92,10 @@
         [
           "Link ufficiali",
           "Usa il collegamento email qui sotto per contattare il supporto. Per account e dati personali, puoi anche usare gli strumenti di esportazione ed eliminazione nel Profilo. Le Issues del repository sono pubbliche e vanno usate solo per segnalazioni prive di dati personali."
+        ],
+        [
+          "Acquisti Android",
+          "Su Android usa il Profilo per ripristinare gli acquisti con lo stesso account Google Play e aprire la gestione dell’abbonamento Google. L’account email Fideora è facoltativo e non cancella la sottoscrizione della piattaforma. Per richieste relative a fatturazione/rimborsi consulta anche Google Play."
         ]
       ]
     }
@@ -115,6 +127,10 @@
         [
           "Contato e direitos",
           "Solicite suporte, acesso, correção ou exclusão pelo e-mail support@fideora.app. Para excluir a conta você também pode usar as ferramentas do Perfil. Não envie senhas ou códigos de acesso e não publique dados de conta ou intenções privadas nas Issues públicas. Atualização: 21 de outubro de 2026."
+        ],
+        [
+          "Android e Google Play",
+          "Na versão Android, o Google Play processa pagamentos e o RevenueCat verifica compras, restaura o acesso e gerencia o Premium com identificador anônimo de cliente ou UUID da conta. Dados de transação e interações técnicas do paywall não incluem o texto de notas ou intenções. Não coletamos dados do cartão. Credenciais de autenticação Android são guardadas com Keystore e criptografia AES-GCM; isso não significa criptografia ponta a ponta de toda nota. Para solicitar exclusão sem reinstalar: https://fideora.app/delete-account.html ou support@fideora.app."
         ]
       ]
     },
@@ -123,11 +139,15 @@
       "sections": [
         [
           "O serviço",
-          "Fideora é uma ferramenta independente de leitura bíblica, estudo pessoal e oração católica. Não é um serviço oficial da Igreja nem substitui acompanhamento pastoral. A leitura devocional diária e as orações básicas são gratuitas; as ferramentas completas exigem Premium. A conta é opcional. Conteúdos pessoais já criados continuam acessíveis e exportáveis mesmo sem assinatura ativa."
+          "Fideora é uma ferramenta independente de leitura bíblica, estudo pessoal e oração. Em novas instalações nativas, após a apresentação inicial é necessária uma assinatura Premium ou teste elegível para acessar os conteúdos. Instalações anteriores podem manter sua experiência gratuita. A conta é opcional; ferramentas de conta, dados e exportação continuam acessíveis na tela de acesso."
         ],
         [
           "Assinaturas Premium",
           "Os planos mensal e anual dão o mesmo nível de acesso. Preço total, moeda, duração e eventual oferta são mostrados pela Apple antes da compra. A assinatura renova automaticamente, salvo cancelamento nos Ajustes Apple pelo menos 24 horas antes do vencimento. Você pode gerenciar ou cancelar pelo Perfil e restaurar uma compra com a mesma conta Apple. Excluir a conta Fideora não cancela a assinatura Apple. Aplica-se a licença padrão Apple: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/. Se houver teste grátis, ele se aplica somente às contas elegíveis segundo a Apple. Antes da confirmação aparecem a duração do teste e o valor total cobrado ao final; salvo cancelamento pelo menos 24 horas antes do fim do teste, segue a cobrança da assinatura escolhida."
+        ],
+        [
+          "Google Play no Android",
+          "Preço local integral, período de cobrança e condições de cada teste elegível aparecem no Google Play antes da confirmação. Os planos mensal e anual dão o mesmo Premium. A assinatura renova automaticamente, salvo cancelamento no Google Play. Quando houver teste elegível, ao final será cobrado o preço do plano escolhido, salvo cancelamento antes do término. Use o Perfil para restaurar compras e gerenciar a assinatura. Excluir a conta ou o aplicativo não cancela a assinatura. As condições Apple do parágrafo anterior valem apenas para compras iOS."
         ],
         [
           "Textos e fontes",
@@ -173,6 +193,10 @@
         [
           "Links oficiais",
           "Use o link de e-mail abaixo para falar com o suporte. Para conta e dados pessoais, você também pode usar as ferramentas de exportação e exclusão do Perfil. As Issues do repositório são públicas e devem receber apenas relatos sem dados pessoais."
+        ],
+        [
+          "Compras Android",
+          "No Android, use o Perfil para restaurar compras com a mesma conta Google Play e abrir o gerenciamento da assinatura Google. A conta de e-mail Fideora é opcional e não cancela a assinatura da plataforma. Para cobrança/reembolso, consulte também o Google Play."
         ]
       ]
     }

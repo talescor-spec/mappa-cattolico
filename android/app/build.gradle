@@ -10,7 +10,7 @@ android {
         applicationId "com.fideora.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode (System.getenv('FIDEORA_ANDROID_VERSION_CODE') ?: '1').toInteger()
+        versionCode = (System.getenv('FIDEORA_ANDROID_VERSION_CODE') ?: '1').toInteger()
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
