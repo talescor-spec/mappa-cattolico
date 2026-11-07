@@ -16,7 +16,7 @@ Prepared 6 November 2026 from the current native release branch `fideora-premium
 
 ## External completion
 
-Updated 7 November 2026: organization Play Console account INFO CURSOS (`6780962018513156337`) has been created and paid by the owner. Google disables app creation pending registration/identity documents, trader declaration, website ownership and phone verification. Complete this account instead of enrolling again.
+Updated 7 November 2026: organization Play Console account INFO CURSOS (`6780962018513156337`) has been created and paid by the owner. The owner uploaded the organization document. Google reports identity verification in progress; the submission flow is closed and there is no new document action shown. Trader was saved and the organization website was verified in Search Console and Play Console after explicit owner consent. Phone verification is gated on document approval, and app creation remains disabled. Complete this account instead of enrolling again; do not request the completed Trader/site consents again.
 
 RevenueCat Google Play app `app3f1390da96` now exists in project `0df93c61` for `com.fideora.app`. Manual products `fideora_premium:monthly` (`prodcb674b3520`) and `fideora_premium:annual` (`prodbce309aa7e`) are attached to `premium` and mapped to `$rc_monthly` / `$rc_annual` in both `default` and `hard_paywall`. Its public Google SDK key was issued but is not yet installed in the remote build environment. These records do not create or validate subscriptions in Google Play. Configure the Google service account, notifications and real Google plans/prices/offers. Verify both remote paywalls on Android: Google price, eligibility, full recurring charge, legal links, purchase and restore controls.
 
