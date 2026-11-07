@@ -12,11 +12,13 @@ Prepared 6 November 2026 from the current native release branch `fideora-premium
 
 ## Current validation and limits
 
-43 automated tests, web production build, 24 existing native structural checks and Capacitor Android plugin sync passed locally. Android Java/Gradle debug APK compilation and native lint also passed at `41e36aa6bd720fe8e1a3c4b70650cb02b21b9080` in [Android CI run 42326608856](https://github.com/talescor-spec/mappa-cattolico/actions/runs/42326608856). This is compilation verification, not store-release or device acceptance. Purchase/restoration on a Google internal track, Keystore/device behavior and final Android screenshots remain unverified. No signed AAB has been generated.
+43 automated tests, web production build, 24 existing native structural checks and Capacitor Android plugin sync passed locally. Android Java/Gradle debug APK compilation and native lint also passed at `28e4e75db468456d0d01e8902be1db31611f3511` in [Android CI run 42330088221](https://github.com/talescor-spec/mappa-cattolico/actions/runs/42330088221). This is compilation verification, not store-release or device acceptance. Purchase/restoration on a Google internal track, Keystore/device behavior and final Android screenshots remain unverified. No signed AAB has been generated.
 
 ## External completion
 
-Play Console enrollment is unfinished in the current Google session. RevenueCat project `0df93c61` has only the App Store app, and this session cannot add app configurations. Add the Google app for `com.fideora.app`; configure its service account and notifications; add actual Google products to entitlement `premium`, both `default` and `hard_paywall` offerings and the monthly/annual packages. Verify both remote paywalls support Android and display Google's price, eligibility, full recurring charge, legal links, purchase and restore controls. Keep Apple mappings intact.
+Updated 7 November 2026: organization Play Console account INFO CURSOS (`6780962018513156337`) has been created and paid by the owner. Google disables app creation pending registration/identity documents, trader declaration, website ownership and phone verification. Complete this account instead of enrolling again.
+
+RevenueCat Google Play app `app3f1390da96` now exists in project `0df93c61` for `com.fideora.app`. Manual products `fideora_premium:monthly` (`prodcb674b3520`) and `fideora_premium:annual` (`prodbce309aa7e`) are attached to `premium` and mapped to `$rc_monthly` / `$rc_annual` in both `default` and `hard_paywall`. Its public Google SDK key was issued but is not yet installed in the remote build environment. These records do not create or validate subscriptions in Google Play. Configure the Google service account, notifications and real Google plans/prices/offers. Verify both remote paywalls on Android: Google price, eligibility, full recurring charge, legal links, purchase and restore controls.
 
 Use these release variables in a trusted build environment:
 
