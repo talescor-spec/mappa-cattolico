@@ -1,5 +1,5 @@
 import React from "react";
-export { useAuth, useLanguage, billing, ENTITLEMENT_ID, isIOSNative, App, state } from "./checkout-mocks.mjs";
+export { useAuth, useLanguage, billing, ENTITLEMENT_ID, isIOSNative, isNativeBilling, App, state } from "./checkout-mocks.mjs";
 export const LanguageProvider = ({ children }) => children;
 export const StudyProvider = ({ children }) => children;
 export const languages = { it: { label: "Italiano" }, pt: { label: "Português" } };

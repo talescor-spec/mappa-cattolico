@@ -1,0 +1,41 @@
+name: Android preparation
+on:
+  push:
+    branches: [codex/google-play-preparation-20261106]
+  pull_request:
+    paths: ["src/**", "android/**", "public/**", "scripts/**", "tests/**", "package*.json", ".github/workflows/android.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - run: npm ci
+      - run: npm test
+      - run: npm run cap:android
+      - name: Compile native Android, run unit tests and lint
+        working-directory: android
+        run: ./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fideora-android-qa
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/reports/
+          retention-days: 14
