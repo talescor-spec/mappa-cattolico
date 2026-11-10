@@ -8,8 +8,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = FideoraViewController()
+        let controller = FideoraViewController()
+        window?.rootViewController = controller
         window?.makeKeyAndVisible()
+        if let response = connectionOptions.notificationResponse {
+            controller.engagement.didReceive(response: response)
+        }
 
         SceneDelegateProxy.shared.scene(scene, willConnectTo: session, options: connectionOptions)
     }

@@ -7,6 +7,7 @@ import {
   LifeBuoy,
   BookOpen,
   FileText,
+  Star,
   ChevronRight,
 } from "lucide-react";
 import { useLanguage, languages } from "../contexts/LanguageContext";
@@ -16,6 +17,8 @@ import { safeGet, safeSet, sanitizeDisplayName } from "../utils/storage";
 import { Header, Row, Modal } from "./UI";
 import AccountPanel from "./AccountPanel";
 import { SubscriptionPanel } from "./Premium";
+import Reminders from "./Reminders";
+import { engagement, hasEngagement, recordReviewMetric } from "../services/engagement";
 export default function Profile({ onSources, onLegal, restricted = false }) {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
@@ -23,7 +26,18 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
   const [name, setName] = useState(() => safeGet("fideoraUserName")),
     [saved, setSaved] = useState(false),
     [exporting, setExporting] = useState(false),
-    [exportError, setExportError] = useState(false);
+    [exportError, setExportError] = useState(false),
+    [reviewLinkError, setReviewLinkError] = useState(false);
+  const openReview = async () => {
+    setReviewLinkError(false);
+    recordReviewMetric("review_link_clicked", language);
+    try {
+      const { opened } = await engagement.openReviewPage();
+      setReviewLinkError(!opened);
+    } catch {
+      setReviewLinkError(true);
+    }
+  };
   const exportData = async () => {
     setExporting(true);
     setExportError(false);
@@ -156,8 +170,16 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
         </div>
         <div>
           {!restricted && <SubscriptionPanel />}
+          {!restricted && hasEngagement() && <Reminders />}
           <AccountPanel />
           <section className="card rows legal-rows">
+            {hasEngagement() && (
+              <Row
+                icon={Star}
+                title={l("Valuta Fideora sull’App Store", "Avaliar Fideora na App Store")}
+                onClick={openReview}
+              />
+            )}
             <Row
               icon={Shield}
               title={l("Privacy", "Privacidade")}
@@ -179,6 +201,7 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
               onClick={onSources}
             />
           </section>
+          {reviewLinkError && <p role="alert">{l("Non è stato possibile aprire l’App Store. Riprova.", "Não foi possível abrir a App Store. Tente novamente.")}</p>}
           <p className="version">
             Fideora · 1.0.0
             <br />

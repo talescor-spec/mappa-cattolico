@@ -24,6 +24,10 @@
           "Gli acquisti Premium nell’app iOS sono gestiti da Apple e RevenueCat. RevenueCat tratta un identificativo anonimo dell’installazione o, dopo l’accesso, l’UUID dell’account, dati di acquisto e abbonamento, prezzo/valuta, stato e scadenza e interazioni tecniche con il paywall per fornire il servizio, ripristinare gli acquisti e misurare l’offerta. Non inviamo a RevenueCat il testo di note o intenzioni, il nome o l’email. Le risposte iniziali su obiettivo e tempo restano sul dispositivo. Non sono integrati pubblicità, pixel di marketing o tracciamento tra app. Non raccogliamo dati di carte di pagamento. Apple e RevenueCat possono conservare i dati delle transazioni secondo obblighi contabili e le rispettive politiche anche dopo l’eliminazione dell’account Fideora."
         ],
         [
+          "Promemoria e richieste di valutazione",
+          "I promemoria sono facoltativi e vengono programmati sul dispositivo. Per misurare le richieste di valutazione, Fideora registra su Supabase il raggiungimento della soglia d’uso, la richiesta al sistema e l’apertura del collegamento nello spazio Profilo. Questi eventi contengono solo il tipo di evento, la lingua, un identificativo casuale del singolo evento e l’orario di ricezione. Il progresso di lettura e preghiera usato per calcolare la soglia resta sul dispositivo."
+        ],
+        [
           "Contatti e diritti",
           "Puoi chiedere assistenza, accesso, rettifica o cancellazione scrivendo a support@fideora.app. Per eliminare l’account puoi anche usare gli strumenti nel Profilo. Non inviare password o codici di accesso e non pubblicare dati di account o intenzioni private nelle Issues pubbliche. Ultimo aggiornamento: 21 ottobre 2026."
         ]
@@ -111,6 +115,10 @@
         [
           "Compras e rastreamento",
           "As compras Premium no app iOS são gerenciadas pela Apple e RevenueCat. O RevenueCat trata um identificador anônimo da instalação ou, após login, o UUID da conta, dados de compra e assinatura, preço/moeda, status e vencimento e interações técnicas com o paywall para fornecer o serviço, restaurar compras e medir a oferta. Não enviamos ao RevenueCat o texto das notas ou intenções, nome ou email. As respostas iniciais sobre objetivo e tempo ficam no dispositivo. Não há anúncios, pixels de marketing ou rastreamento entre apps. Não coletamos dados de cartões. Apple e RevenueCat podem reter dados de transações por obrigações contábeis e suas políticas mesmo após a exclusão da conta Fideora."
+        ],
+        [
+          "Lembretes e pedidos de avaliação",
+          "Os lembretes são opcionais e programados no dispositivo. Para medir os pedidos de avaliação, o Fideora registra no Supabase quando o app atinge o marco de uso, solicita a avaliação ao sistema ou abre o link pelo Perfil. Esses eventos incluem apenas o tipo de evento, o idioma, um código aleatório por evento e o horário de recebimento. O progresso de leitura e oração usado para calcular o marco fica no dispositivo."
         ],
         [
           "Contato e direitos",
