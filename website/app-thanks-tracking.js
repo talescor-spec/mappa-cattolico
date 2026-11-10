@@ -100,7 +100,15 @@
       const clean = new URL(config.path, config.origin);
       if (funnel !== 'generic') clean.searchParams.set('funil', funnel);
       if (params.has('lang')) clean.searchParams.set('lang', locale);
-      if (isTest) clean.searchParams.set('fm_test', '1');
+      if (isTest) {
+        clean.searchParams.set('fm_test', '1');
+        const verifyId = params.get('hjVerifyInstall');
+        const verifyUuid = params.get('hjVerifyUUID');
+        if (verifyId === String(config.hotjarSite) && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(verifyUuid || '')) {
+          clean.searchParams.set('hjVerifyInstall', verifyId);
+          clean.searchParams.set('hjVerifyUUID', verifyUuid);
+        }
+      }
       try {
         history.replaceState(history.state, '', clean);
         return true;
@@ -147,7 +155,7 @@
     }
 
     const [privacy, title, intro, hotjarLabel, metaLabel, saveLabel, declineLabel] = texts[locale];
-    const key = 'fm-app-thanks-privacy-v1';
+    const key = isTest ? 'fm-app-thanks-test-privacy-v1' : 'fm-app-thanks-privacy-v2';
     let preferences = null;
     try { preferences = JSON.parse(localStorage.getItem(key)); } catch {}
 
