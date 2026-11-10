@@ -85,6 +85,17 @@
       .arrow { margin-left:0; width:16px; flex-basis:16px; }
     }
     @media(prefers-reduced-motion:reduce) { .download { transition:none; } }
+  
+    .fm-thanks-privacy { margin:16px auto 0; max-width:460px; font-size:12px; color:var(--muted); }
+    .fm-privacy-open { border:0; padding:4px 6px; color:var(--muted); background:none; font:inherit; text-decoration:underline; cursor:pointer; }
+    .fm-privacy-options { margin-top:8px; padding:13px 15px; text-align:left; border:1px solid #e4e7dc; background:#f6f7f1; border-radius:12px; line-height:1.5; }
+    .fm-privacy-options strong { color:var(--ink); }
+    .fm-privacy-options p { margin:5px 0 8px; }
+    .fm-privacy-options label { display:flex; align-items:center; gap:8px; margin:7px 0; }
+    .fm-privacy-options input { accent-color:var(--green); }
+    .fm-privacy-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:11px; }
+    .fm-privacy-actions button { border:1px solid #d5dbd0; border-radius:7px; padding:6px 10px; background:white; color:var(--ink); font:inherit; cursor:pointer; }
+    .fm-privacy-actions [data-save] { background:var(--green); color:white; border-color:transparent; }
   </style>
 </head>
 <body>
@@ -96,11 +107,11 @@
     <p class="thanks" data-i18n="purchaseThanks">Grazie per il tuo acquisto.</p>
     <h1 id="purchase-title"><span data-i18n="heroSalutation">Complimenti!</span><span data-i18n="heroLead">Hai fatto</span><em data-i18n="heroEmphasis">un’ottima scelta.</em></h1>
     <p class="purchase-intro" data-i18n="purchaseIntro">I tuoi materiali sono pronti. Ora fai il prossimo passo nel tuo cammino di fede.</p>
-    <p class="bridge" id="book-bridge">La tua lettura è solo l’inizio. Continua il tuo cammino di fede con Fideora.</p>
+    <p class="bridge" id="book-bridge" data-hj-suppress>La tua lettura è solo l’inizio. Continua il tuo cammino di fede con Fideora.</p>
     <ol class="steps" aria-label="Il tuo acquisto e il prossimo passo" data-i18n-aria="stepsLabel">
       <li class="step">
         <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/></svg>
-        <strong class="step-title" id="purchased-book-title">Il tuo libro</strong>
+        <strong class="step-title" id="purchased-book-title" data-hj-suppress>Il tuo libro</strong>
         <span class="step-status"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 8 3 3 7-7"/></svg><span data-i18n="stepBookStatus">Confermato</span></span>
       </li>
       <li class="step">
@@ -151,5 +162,6 @@
     </section>
     <p class="independence" data-i18n="independence">Il libro è già tuo. La prova è facoltativa e non si attiva con l’acquisto del libro.</p>
   </main>
+  <script src="/app-thanks-tracking.js" defer></script>
 </body>
 </html>

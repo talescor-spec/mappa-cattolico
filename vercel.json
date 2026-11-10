@@ -1,15 +1,40 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
-    { "source": "/it", "destination": "/", "permanent": true },
-    { "source": "/pt", "destination": "/pt/", "permanent": true }
+    {
+      "source": "/it",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pt",
+      "destination": "/pt/",
+      "permanent": true
+    }
   ],
   "headers": [
-    { "source": "/sw.js", "headers": [
-      { "key": "Cache-Control", "value": "no-store, max-age=0" },
-      { "key": "Service-Worker-Allowed", "value": "/" }
-    ] },
-    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
@@ -46,9 +71,17 @@
           "value": "0"
         }
       ]
+    },
+    {
+      "source": "/obrigado-fideora.html",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://static.hotjar.com https://script.hotjar.com https://t.contentsquare.net https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.hotjar.com https://*.hotjar.io https://www.facebook.com; connect-src 'self' https://kgyqpedwgilotlwyhmnb.supabase.co https://sysuottboucultzzaagv.supabase.co wss://sysuottboucultzzaagv.supabase.co https://*.hotjar.com https://*.hotjar.io wss://*.hotjar.com https://t.contentsquare.net https://www.facebook.com https://connect.facebook.net; media-src 'self'; manifest-src 'self'; worker-src 'self' blob:; frame-src 'self' https://vars.hotjar.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+        }
+      ]
     }
   ],
   "buildCommand": "node scripts/build-website.mjs",
   "outputDirectory": "web-dist"
 }
-
