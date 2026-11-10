@@ -11,6 +11,9 @@ on:
         "capacitor.config.json",
         ".github/workflows/ios-simulator.yml",
       ]
+  pull_request:
+    branches: [fideora-premium-v1]
+    paths: ["src/**", "public/**", "ios/**", "package*.json", "capacitor.config.json", ".github/workflows/ios-simulator.yml"]
   workflow_dispatch:
 permissions:
   contents: read

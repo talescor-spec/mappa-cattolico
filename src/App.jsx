@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Home,
   BookOpen,
@@ -36,8 +36,10 @@ import Onboarding from "./components/Onboarding";
 import HardPaywallGate from "./components/HardPaywallGate";
 import { isIOSNative } from "./services/purchases";
 import { ENTRY_ACCESS_KEY, initializeEntryAccess, entryScreen } from "./utils/entryAccess";
+import useReviewMoments from "./hooks/useReviewMoments";
+import { configureReminders, engagement, hasEngagement, REMINDERS_KEY } from "./services/engagement";
 import "./styles.css";
-function HomePage({ bible, onRead, onPray, onStudy }) {
+function HomePage({ bible, onRead, onPray, onStudy, onCompleted }) {
   const { isPremium } = usePremium();
   const { l, language, t, getFormattedDate } = useLanguage();
   const { entries, write, ready } = useStudy();
@@ -106,13 +108,14 @@ function HomePage({ bible, onRead, onPray, onStudy }) {
           <button
             className={`button ${done ? "secondary" : "primary"}`}
             disabled={!ready || done}
-            onClick={() =>
-              write(`reading:${today}`, "reading", {
+            onClick={() => {
+              const saved = write(`reading:${today}`, "reading", {
                 date: today,
                 book: daily.book,
                 chapter: daily.chapter,
-              })
-            }
+              });
+              if (saved) onCompleted();
+            }}
           >
             {done ? <Check size={16} /> : <Sun size={16} />}
             {done
@@ -198,7 +201,7 @@ function HomePage({ bible, onRead, onPray, onStudy }) {
 export function Fideora() {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
-  const { request, checking, isPremium } = usePremium();
+  const { request, checking, isPremium, busy, offer, message } = usePremium();
   const [entryMode] = useState(() => initializeEntryAccess({
     native: isIOSNative(), read: safeGet, write: safeSet,
   }));
@@ -210,7 +213,9 @@ export function Fideora() {
     [sources, setSources] = useState(false),
     [legal, setLegal] = useState(null),
     [online, setOnline] = useState(navigator.onLine),
-    [onboard, setOnboard] = useState(() => safeGet("fideoraOnboarded") !== "1");
+    [onboard, setOnboard] = useState(() => safeGet("fideoraOnboarded") !== "1"),
+    [reminderRoute, setReminderRoute] = useState(""),
+    [guidedPrayer, setGuidedPrayer] = useState(false);
   const { bible, error, retry } = useBible(language);
   useEffect(() => {
     const up = () => setOnline(true),
@@ -222,18 +227,57 @@ export function Fideora() {
       window.removeEventListener("offline", down);
     };
   }, []);
-  const navigate = (target) => {
+  const navigate = useCallback((target) => {
     setPage(target);
     window.scrollTo(0, 0);
-  };
-  const read = (p) => {
+  }, []);
+  const read = useCallback((p) => {
     if (p.language) changeLanguage(p.language);
     const value = { book: p.book, chapter: p.chapter, verse: p.verse };
     setLocation(value);
     safeSetJSON("fideoraLastReading", value);
     navigate("bible");
-  };
+  }, [changeLanguage, navigate]);
   const screen = entryScreen({ onboard, mode: entryMode, checking, isPremium });
+  const onGuidedPrayerOpened = useCallback(() => setGuidedPrayer(false), []);
+  const onCompleted = useReviewMoments({
+    ready: screen === "content" && !checking && !sources && !legal && !reminderRoute,
+    blocked: Boolean(busy || offer || message === "error" || storageError || error),
+    atHome: page === "today",
+    locale: language,
+  });
+  useEffect(() => {
+    if (!hasEngagement()) return;
+    const settings = safeGetJSON(REMINDERS_KEY);
+    if (settings.reading || settings.prayer)
+      void configureReminders(settings, language).catch(() => {});
+  }, [language]);
+  useEffect(() => {
+    if (!hasEngagement()) return;
+    let mounted = true;
+    const take = async () => {
+      if (!mounted) return;
+      const { route } = await engagement.takeReminderRoute();
+      if (mounted && (route === "reading" || route === "prayer")) setReminderRoute(route);
+    };
+    const subscription = engagement.addListener("reminderTapped", () => void take().catch(() => {}));
+    subscription.then(take).catch(() => {});
+    return () => {
+      mounted = false;
+      subscription.then(handle => handle.remove()).catch(() => {});
+    };
+  }, []);
+  useEffect(() => {
+    if (screen !== "content" || checking || busy || offer || !reminderRoute) return;
+    if (reminderRoute === "reading") {
+      const daily = dailyReading();
+      read({ ...daily, verse: daily.start });
+    } else {
+      setGuidedPrayer(true);
+      navigate("pray");
+    }
+    setReminderRoute("");
+  }, [screen, checking, busy, offer, reminderRoute, read, navigate]);
   if (screen === "onboarding") return (
     <Onboarding
       bible={bible}
@@ -355,6 +399,7 @@ export function Fideora() {
               onRead={read}
               onPray={() => navigate("pray")}
               onStudy={() => navigate("notebook")}
+              onCompleted={onCompleted}
             />
           )}
           {page === "bible" && (
@@ -371,7 +416,13 @@ export function Fideora() {
             />
           )}
           {page === "notebook" && <Notebook bible={bible} onRead={read} />}
-          {page === "pray" && <Prayer />}
+          {page === "pray" && (
+            <Prayer
+              onCompleted={onCompleted}
+              guidedPrayer={guidedPrayer}
+              onGuidedPrayerOpened={onGuidedPrayerOpened}
+            />
+          )}
           {page === "profile" && (
             <Profile onSources={() => setSources(true)} onLegal={setLegal} />
           )}

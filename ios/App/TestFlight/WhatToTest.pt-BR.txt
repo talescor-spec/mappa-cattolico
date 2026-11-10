@@ -1,10 +1,9 @@
-Fideora — hard paywall após onboarding.
+Fideora — avaliações, suporte e lembretes.
 
-- Em uma instalação nova, conclua o onboarding: a oferta deve abrir automaticamente, sem X e sem acesso gratuito ao conteúdo principal.
-- Confirme o mensal sem trial e a elegibilidade aos 7 dias de teste no anual. Preços e moeda vêm da loja Apple.
-- Compra e restauração: somente trial/assinatura válida libera Bíblia, oração, leitura diária e caderno.
-- Cancelar a confirmação, perder conexão ou reabrir o app não deve liberar conteúdo. Uma assinatura expirada volta à tela bloqueada; cancelar a renovação mantém acesso até o vencimento.
-- O link Conta do paywall volta à tela bloqueada. Conta e dados, exportação, exclusão, termos, privacidade e ajuda continuam disponíveis ali, sem liberar conteúdo.
-- Instalações que já haviam concluído onboarding antes desta atualização preservam os limites gratuitos anteriores. Reinstalar sem dados entra no novo fluxo.
+- No Perfil, toque em Enviar feedback ao suporte. Confira se abre um rascunho para support@fideora.app, sem precisar enviá-lo.
+- Toque em Avaliar Fideora na App Store. Confira se abre a tela de avaliação do app. O iOS desativa o convite automático em builds TestFlight.
+- Em Perfil → Lembretes, programe leitura e oração para os próximos minutos. Com o app fechado, toque em cada notificação e confira se abre a atividade correta.
+- Altere o horário e desligue os lembretes. Confira se o app lida com a permissão de notificações negada.
+- Em uma instalação nova, conclua o onboarding e confira a oferta, a compra de teste e a restauração. O conteúdo principal deve continuar protegido pelo acesso Premium.
 
-Testar em italiano e português. Conferir sincronização opcional, reabertura e leitura offline com assinatura válida. Excluir somente contas de teste; não publicar recibos ou dados pessoais em feedback público.
+Teste em italiano e português. Use contas de teste para fluxos de compra e exclusão. Evite publicar recibos ou dados pessoais no feedback.

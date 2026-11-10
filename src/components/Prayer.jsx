@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Heart,
   ChevronLeft,
@@ -29,7 +29,7 @@ import {
 import { Header, Modal, Empty, Row } from "./UI";
 import { usePremium } from "../contexts/PremiumContext";
 import { PremiumCard } from "./Premium";
-export default function Prayer() {
+export default function Prayer({ onCompleted, guidedPrayer, onGuidedPrayerOpened }) {
   const { t, l, language } = useLanguage();
   const { isPremium, can, request } = usePremium();
   const { entries, write, remove, ready } = useStudy();
@@ -51,13 +51,20 @@ export default function Prayer() {
   const legacyToday = new Date().toDateString();
   const step =
     progress[today]?.[mystery] ?? progress[legacyToday]?.[mystery] ?? 0;
+  useEffect(() => {
+    if (!guidedPrayer) return;
+    setView(isPremium ? "rosary" : "all");
+    setNovena(null);
+    setPrayer(null);
+    onGuidedPrayerOpened();
+  }, [guidedPrayer, isPremium, onGuidedPrayerOpened]);
   const setStep = (value) => {
     const next = normalizeRosaryProgress({
       ...progress,
       [today]: { ...progress[today], [mystery]: value },
     });
     setProgress(next);
-    safeSetJSON("rosaryProgress", next);
+    if (safeSetJSON("rosaryProgress", next) && step < 67 && value === 67) onCompleted?.();
   };
   const novenas = [1, 2, 3, 4, 5].map((n) => ({
     id: `novena${n}`,
@@ -411,8 +418,9 @@ export default function Prayer() {
                 [novena.id]: Math.min(9, (novenaProgress[novena.id] || 0) + 1),
               });
               setNovenaProgress(next);
-              safeSetJSON("novenaProgress", next);
-              write(`novena:${novena.id}`, "novena", { lastDay: today });
+              const saved = safeSetJSON("novenaProgress", next);
+              const recorded = write(`novena:${novena.id}`, "novena", { lastDay: today });
+              if (saved && recorded && next[novena.id] === 9) onCompleted?.();
             }}
           >
             <Check size={16} />
