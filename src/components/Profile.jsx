@@ -11,6 +11,7 @@ import {
   Star,
   ChevronRight,
 } from "lucide-react";
+import { version as appVersion } from "../../package.json";
 import { useLanguage, languages } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useStudy } from "../contexts/StudyContext";
@@ -212,7 +213,7 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
           </section>
           {reviewLinkError && <p role="alert">{l("Non è stato possibile aprire l’App Store. Riprova.", "Não foi possível abrir a App Store. Tente novamente.")}</p>}
           <p className="version">
-            Fideora · 1.0.0
+            Fideora · {appVersion}
             <br />
             {l("Coltiva ciò che conta.", "Cultive o que importa.")}
           </p>

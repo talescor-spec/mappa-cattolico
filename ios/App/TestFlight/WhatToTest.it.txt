@@ -1,10 +1,9 @@
-Fideora — hard paywall dopo l’onboarding.
+Fideora — valutazioni, assistenza e promemoria.
 
-- Su una nuova installazione, completa l’onboarding: l’offerta deve aprirsi automaticamente, senza X e senza accesso gratuito ai contenuti principali.
-- Verifica il mensile senza prova e l’idoneità ai 7 giorni di prova dell’annuale. Prezzi e valuta provengono dall’App Store.
-- Acquisto e ripristino: solo una prova o un abbonamento valido sblocca Bibbia, preghiera, lettura quotidiana e quaderno.
-- Annullare la conferma, perdere la connessione o riaprire l’app non deve sbloccare contenuti. Alla scadenza si torna alla schermata bloccata; disattivare il rinnovo conserva l’accesso fino alla scadenza.
-- Il link Account del paywall torna alla schermata bloccata. Account e dati, esportazione, eliminazione, termini, privacy e aiuto restano disponibili senza sbloccare i contenuti.
-- Le installazioni già configurate prima di questo aggiornamento mantengono i precedenti limiti gratuiti. Una reinstallazione senza dati entra nel nuovo flusso.
+- Nel Profilo, tocca Invia un feedback all’assistenza. Verifica che si apra una bozza per support@fideora.app, senza inviarla.
+- Tocca Valuta Fideora sull’App Store. Verifica che si apra la schermata di valutazione. iOS disattiva la richiesta automatica nelle build TestFlight.
+- In Profilo → Promemoria, programma lettura e preghiera per i prossimi minuti. Con l’app chiusa, tocca ogni notifica e verifica che si apra l’attività corretta.
+- Cambia l’orario e disattiva i promemoria. Verifica il comportamento se neghi il permesso per le notifiche.
+- Su una nuova installazione, completa l’onboarding e verifica l’offerta, l’acquisto di prova e il ripristino. I contenuti principali devono restare protetti dall’accesso Premium.
 
-Provare italiano e portoghese, sincronizzazione facoltativa, riapertura e lettura offline con abbonamento valido. Eliminare solo account di prova; non pubblicare ricevute o dati personali nei feedback pubblici.
+Prova in italiano e portoghese. Usa account di prova per acquisti ed eliminazione. Evita di pubblicare ricevute o dati personali nei feedback.
