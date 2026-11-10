@@ -32,16 +32,17 @@ export function Header({ eyebrow, title, subtitle, action }) {
     </div>
   );
 }
-export function Row({ icon: Icon, title, subtitle, onClick, end }) {
+export function Row({ icon: Icon, title, subtitle, onClick, end, href }) {
+  const Element = href ? "a" : "button";
   return (
-    <button className="list-row" onClick={onClick}>
+    <Element className="list-row" href={href} onClick={onClick}>
       <span className="row-icon">{Icon && <Icon size={20} />}</span>
       <span className="row-copy">
         <strong>{title}</strong>
         {subtitle && <small>{subtitle}</small>}
       </span>
       {end || <ChevronRight size={18} />}
-    </button>
+    </Element>
   );
 }
 export function Empty({ icon: Icon, title, text, action }) {

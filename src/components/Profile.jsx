@@ -7,6 +7,7 @@ import {
   LifeBuoy,
   BookOpen,
   FileText,
+  Mail,
   Star,
   ChevronRight,
 } from "lucide-react";
@@ -23,6 +24,8 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
   const { entries } = useStudy();
+  const supportEmail = "support@fideora.app";
+  const supportSubject = encodeURIComponent(l("Feedback su Fideora", "Feedback sobre o Fideora"));
   const [name, setName] = useState(() => safeGet("fideoraUserName")),
     [saved, setSaved] = useState(false),
     [exporting, setExporting] = useState(false),
@@ -180,6 +183,12 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
                 onClick={openReview}
               />
             )}
+            <Row
+              icon={Mail}
+              title={l("Invia un feedback all’assistenza", "Enviar feedback ao suporte")}
+              subtitle={supportEmail}
+              href={`mailto:${supportEmail}?subject=${supportSubject}`}
+            />
             <Row
               icon={Shield}
               title={l("Privacy", "Privacidade")}
