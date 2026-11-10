@@ -34,7 +34,7 @@ import { PremiumProvider, usePremium } from "./contexts/PremiumContext";
 import { PremiumCard, PremiumOffer } from "./components/Premium";
 import Onboarding from "./components/Onboarding";
 import HardPaywallGate from "./components/HardPaywallGate";
-import { isIOSNative } from "./services/purchases";
+import { isNativeBilling } from "./services/purchases";
 import { ENTRY_ACCESS_KEY, initializeEntryAccess, entryScreen } from "./utils/entryAccess";
 import useReviewMoments from "./hooks/useReviewMoments";
 import { configureReminders, engagement, hasEngagement, REMINDERS_KEY } from "./services/engagement";
@@ -203,7 +203,7 @@ export function Fideora() {
   const { user } = useAuth();
   const { request, checking, isPremium, busy, offer, message } = usePremium();
   const [entryMode] = useState(() => initializeEntryAccess({
-    native: isIOSNative(), read: safeGet, write: safeSet,
+    native: isNativeBilling(), read: safeGet, write: safeSet,
   }));
   const { storageError } = useStudy();
   const [page, setPage] = useState("today"),
