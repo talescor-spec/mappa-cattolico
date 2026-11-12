@@ -18,7 +18,8 @@
   "providerToken": "129505215",
   "collector": "https://kgyqpedwgilotlwyhmnb.supabase.co/functions/v1/dashboard-api-core?action=app-thanks-collect"
 };
-  if (location.origin !== config.origin || location.pathname !== config.path) return;
+  const allowedOrigins = new Set([config.origin, config.origin.replace('https://', 'https://www.')]);
+  if (!allowedOrigins.has(location.origin) || location.pathname !== config.path) return;
 
   const params = new URLSearchParams(location.search);
   const marketAliases = { es: 'esp', cz: 'rc', cs: 'rc', rc: 'rc' };
@@ -55,7 +56,19 @@
     const privateBrowsing = navigator.doNotTrack === '1' || navigator.globalPrivacyControl === true;
     const sensitiveUrl = [...params.keys()].some(key => /^(code|access_token|refresh_token|token)$/i.test(key)) ||
       /(?:access_token|refresh_token)=/i.test(location.hash);
-    const viewId = typeof crypto?.randomUUID === 'function' ? crypto.randomUUID() : '';
+    // Some iOS WebViews do not implement randomUUID; preserve cryptographic v4 IDs.
+    function secureViewId() {
+      const api = window.crypto;
+      if (api && typeof api.randomUUID === 'function') return api.randomUUID();
+      if (!api || typeof api.getRandomValues !== 'function') return '';
+      const bytes = new Uint8Array(16);
+      api.getRandomValues(bytes);
+      bytes[6] = (bytes[6] & 0x0f) | 0x40;
+      bytes[8] = (bytes[8] & 0x3f) | 0x80;
+      const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+      return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+    }
+    const viewId = secureViewId();
     const sent = new Set();
     const pixel = config.pixel;
     let metaActive = false;
@@ -97,7 +110,7 @@
     if (privateBrowsing || sensitiveUrl || (!hasHotjar && !hasMeta)) return;
 
     function prepareVendorUrl() {
-      const clean = new URL(config.path, config.origin);
+      const clean = new URL(config.path, location.origin);
       if (funnel !== 'generic') clean.searchParams.set('funil', funnel);
       if (params.has('lang')) clean.searchParams.set('lang', locale);
       if (isTest) {
