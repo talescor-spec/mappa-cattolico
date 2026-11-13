@@ -40,3 +40,5 @@ FIDEORA_REVIEW=1 npm run build, assim como builds Vercel de preview, inclui mapp
 
 ## RevenueCat da versão 1.0.3
 As ofertas mappa_v1 (legado, dispensável) e mappa_v1_hard (novas instalações) duplicam os dois produtos existentes, sem alterar a oferta padrão dos binários antigos. O cliente seleciona explicitamente a oferta da Mappa adequada ao fluxo; ausência é um erro recuperável, sem fallback. O trial continua condicionado ao produto e à elegibilidade Apple.
+
+Ofertas publicadas em 13/11/2026: mappa_v1_hard → wf85b40bd771434cd3 / ofrng8b9e11e6c5; mappa_v1 → wfc6e603209a9c4387 / ofrng046ea63764. Conferidas as cópias IT/PT, os dois pacotes e a regra introdutória com duração dinâmica. O salvamento da Mappa também foi testado sem crypto.randomUUID, para iOS 15.0–15.3. A compilação nativa do simulador passou no commit 45ff08a; a última alteração de compatibilidade mantém a API de armazenamento existente.

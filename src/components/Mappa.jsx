@@ -446,9 +446,14 @@ export default function MappaHome({
   const save = (value) => {
     const note = mappaNote(language, value);
     if (!note) return false;
-    const ok = write(`note:${crypto.randomUUID()}`, "note", note);
+    // Note IDs are local record keys, never authentication or billing authority.
+    // iOS 15.0–15.3 lacks crypto.randomUUID.
+    const id =
+      globalThis.crypto?.randomUUID?.() ??
+      `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    const ok = write(`note:${id}`, "note", note);
     setSaved(Boolean(ok));
-    setSaveError(ok === false);
+    setSaveError(!ok);
     return Boolean(ok);
   };
   const back = (

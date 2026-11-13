@@ -151,13 +151,24 @@ try {
       await mount();
       await click(tree, "Esplora Matteo");
       await act(async () =>
-        tree.root
-          .findByType("textarea")
-          .props.onChange({
-            target: { value: "  Un gesto di misericordia oggi.  " },
-          }),
+        tree.root.findByType("textarea").props.onChange({
+          target: { value: "  Un gesto di misericordia oggi.  " },
+        }),
       );
-      await click(tree, "Salva nel Quaderno");
+      const uuid = Object.getOwnPropertyDescriptor(
+        globalThis.crypto,
+        "randomUUID",
+      );
+      Object.defineProperty(globalThis.crypto, "randomUUID", {
+        value: undefined,
+        configurable: true,
+      });
+      try {
+        await click(tree, "Salva nel Quaderno");
+      } finally {
+        if (uuid) Object.defineProperty(globalThis.crypto, "randomUUID", uuid);
+        else delete globalThis.crypto.randomUUID;
+      }
       assert.ok(text(tree).includes("Riflessione salvata"));
       assert.equal(study.entries.length, 1);
       assert.equal(study.entries[0].kind, "note");
