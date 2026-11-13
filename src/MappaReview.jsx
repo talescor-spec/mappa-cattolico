@@ -4,13 +4,15 @@ import { createRoot } from "react-dom/client";
 import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 import { MatthewDetail, GospelComparison } from "./components/Mappa";
 import Onboarding from "./components/Onboarding";
+import { DevelopmentToolsPanel } from "./components/DevelopmentTools";
 import { Mark } from "./components/UI";
 import "./styles.css";
 import "./mappa.css";
 function Review() {
   const { language, changeLanguage, l } = useLanguage();
   const [page, setPage] = useState("matteo"),
-    [onboard, setOnboard] = useState(false);
+    [onboard, setOnboard] = useState(false),
+    [development, setDevelopment] = useState(false);
   const [saved, setSaved] = useState(false),
     [notes, setNotes] = useState([]);
   return (
@@ -38,6 +40,7 @@ function Review() {
             {l("Confronto", "Comparação")}
           </button>
           <button onClick={() => setOnboard(true)}>Onboarding</button>
+          <button onClick={() => setDevelopment(true)}>QA</button>
         </nav>
       </div>
       <main className="mappa-experience">
@@ -80,6 +83,12 @@ function Review() {
         )}
       </main>
       {onboard && <Onboarding hardPaywall onFinish={() => setOnboard(false)} />}
+      {development && (
+        <DevelopmentToolsPanel
+          environment={{ allowed: true, channel: "web-local" }}
+          onClose={() => setDevelopment(false)}
+        />
+      )}
     </div>
   );
 }

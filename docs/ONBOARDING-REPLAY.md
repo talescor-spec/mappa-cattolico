@@ -1,5 +1,7 @@
 # Rever a apresentação no Perfil
 
+> Registro histórico da build 10. A opção pública foi substituída pelo painel interno descrito em [INTERNAL-QA.md](INTERNAL-QA.md), conforme o escopo corrigido pelo usuário em 13/11/2026.
+
 ## Auditoria antes da alteração
 O app instalado guarda a conclusão do onboarding no dispositivo, independentemente de a conta estar conectada. Atualmente só a entrada inicial monta a apresentação. O usuário precisa de um acesso permanente pelo Perfil.
 

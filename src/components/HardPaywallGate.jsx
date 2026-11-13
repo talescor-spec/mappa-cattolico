@@ -12,6 +12,7 @@ import { usePremium } from "../contexts/PremiumContext";
 import { Mark, Modal } from "./UI";
 import { PremiumMessage } from "./Premium";
 import Profile from "./Profile";
+import DevelopmentTools from "./DevelopmentTools";
 
 export default function HardPaywallGate({ checking }) {
   const { user } = useAuth();
@@ -119,6 +120,7 @@ export default function HardPaywallGate({ checking }) {
             {l("Aiuto", "Ajuda")}
           </button>
         </footer>
+        <DevelopmentTools />
         <label className="sr-only" htmlFor="gate-language">
           {l("Lingua", "Idioma")}
         </label>

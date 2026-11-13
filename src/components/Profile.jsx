@@ -10,7 +10,6 @@ import {
   Mail,
   Star,
   ChevronRight,
-  RotateCcw,
 } from "lucide-react";
 import { version as appVersion } from "../../package.json";
 import { useLanguage, languages } from "../contexts/LanguageContext";
@@ -21,7 +20,7 @@ import { Header, Row, Modal } from "./UI";
 import AccountPanel from "./AccountPanel";
 import { SubscriptionPanel } from "./Premium";
 import Reminders from "./Reminders";
-import Onboarding from "./Onboarding";
+import DevelopmentTools from "./DevelopmentTools";
 import {
   engagement,
   hasEngagement,
@@ -36,7 +35,6 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
     l("Feedback su Fideora", "Feedback sobre o Fideora"),
   );
   const [name, setName] = useState(() => safeGet("fideoraUserName")),
-    [replay, setReplay] = useState(false),
     [saved, setSaved] = useState(false),
     [exporting, setExporting] = useState(false),
     [exportError, setExportError] = useState(false),
@@ -104,19 +102,7 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
           "Suas preferências. Sua experiência de fé.",
         )}
       />
-      {!restricted && (
-        <section className="card rows">
-          <Row
-            icon={RotateCcw}
-            title={l("Rivedi la presentazione", "Rever apresentação")}
-            subtitle={l(
-              "Riscopri la Mappa in quattro passaggi.",
-              "Redescubra o Mapa em quatro etapas.",
-            )}
-            onClick={() => setReplay(true)}
-          />
-        </section>
-      )}
+      {!restricted && <DevelopmentTools />}
       <div className="profile-layout">
         <div>
           <section className="card">
@@ -254,7 +240,6 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
           </p>
         </div>
       </div>
-      {replay && <Onboarding replay onFinish={() => setReplay(false)} />}
     </>
   );
 }

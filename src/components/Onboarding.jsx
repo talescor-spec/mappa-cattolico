@@ -7,6 +7,7 @@ import {
   safeSet,
   safeSetJSON,
   sanitizeDisplayName,
+  clampInt,
 } from "../utils/storage";
 import { Modal } from "./UI";
 import { MappaArtwork, MappaSample, GospelComparison } from "./Mappa";
@@ -15,6 +16,9 @@ export default function Onboarding({
   onFinish,
   hardPaywall = false,
   replay = false,
+  fresh = false,
+  initialStep = 0,
+  previewPaywall = false,
 }) {
   const appLanguage = useLanguage();
   const [previewLanguage, setPreviewLanguage] = useState(appLanguage.language);
@@ -24,10 +28,14 @@ export default function Onboarding({
     ? setPreviewLanguage
     : appLanguage.changeLanguage;
   const [routine] = useState(() =>
-    replay ? safeGetJSON("fideoraRoutine") : {},
+    replay && !fresh ? safeGetJSON("fideoraRoutine") : {},
   );
-  const [step, setStep] = useState(0);
-  const [name, setName] = useState(() => safeGet("fideoraUserName"));
+  const [step, setStep] = useState(() =>
+    replay ? clampInt(initialStep, 0, 3) : 0,
+  );
+  const [name, setName] = useState(() =>
+    replay && fresh ? "" : safeGet("fideoraUserName"),
+  );
   const [goal, setGoal] = useState(() =>
     ["study", "read", "pray"].includes(routine.goal) ? routine.goal : "study",
   );
@@ -42,7 +50,7 @@ export default function Onboarding({
   ];
   const finish = (premium) => {
     if (replay) {
-      onFinish(false);
+      onFinish(false, { completed: premium === true, language });
       return;
     }
     const displayName = sanitizeDisplayName(name);
@@ -61,7 +69,7 @@ export default function Onboarding({
     <Modal
       title={
         replay
-          ? l("Rivedi la presentazione", "Rever apresentação")
+          ? l("Onboarding · Anteprima QA", "Onboarding · Prévia QA")
           : l("La tua Mappa della Bibbia", "Seu Mapa da Bíblia")
       }
       onClose={hardPaywall && !replay ? undefined : () => finish(false)}
@@ -199,8 +207,8 @@ export default function Onboarding({
             <p className="mappa-editorial-note">
               {replay
                 ? l(
-                    "Al termine torni al Profilo. Nome, lingua e routine restano come li hai impostati.",
-                    "Ao concluir, você volta ao Perfil. Nome, idioma e rotina permanecem como estavam.",
+                    "Questa simulazione non salva nome, lingua o routine. Al termine torni agli strumenti di sviluppo.",
+                    "Esta simulação não salva nome, idioma ou rotina. Ao concluir, você volta às ferramentas de desenvolvimento.",
                   )
                 : l(
                     "Nel prossimo passaggio trovi i piani e le condizioni dell’eventuale prova gratuita, secondo la tua idoneità.",
@@ -218,8 +226,8 @@ export default function Onboarding({
               ? l("Scopri la Mappa", "Conhecer o Mapa")
               : step < 3
                 ? l("Continua", "Continuar")
-                : replay
-                  ? l("Torna al Profilo", "Voltar ao Perfil")
+                : replay && !previewPaywall
+                  ? l("Concludi il test", "Concluir teste")
                   : l("Scopri i piani Premium", "Ver planos Premium")}
             <ArrowRight size={17} />
           </button>
