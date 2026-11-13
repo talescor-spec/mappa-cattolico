@@ -4,7 +4,11 @@ import { usePremium } from "../contexts/PremiumContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { Modal } from "./UI";
 const labels = {
-  bible: ["Esplora le Scritture, al tuo ritmo.", "Explore as Escrituras, no seu ritmo."],
+  mappa: ["Comprendi il filo della Bibbia.", "Compreenda o fio da Bíblia."],
+  bible: [
+    "Esplora le Scritture, al tuo ritmo.",
+    "Explore as Escrituras, no seu ritmo.",
+  ],
   search: ["Ritrova la Parola che cerchi.", "Encontre a Palavra que procura."],
   annotations: [
     "Dai spazio alle tue riflessioni.",
@@ -32,8 +36,8 @@ const labels = {
     "Cultive uma oração constante.",
   ],
   welcome: [
-    "Il tuo cammino può cominciare qui.",
-    "Sua caminhada pode começar aqui.",
+    "La tua Mappa comincia dai Vangeli.",
+    "Seu Mapa começa pelos Evangelhos.",
   ],
 };
 export function PremiumMessage() {
@@ -75,8 +79,8 @@ export function PremiumCard({ feature = "bible", compact = false }) {
       <h3>{l(...(labels[feature] || labels.bible))}</h3>
       <p>
         {l(
-          "Lettura, studio e preghiera in un unico spazio. La lettura del giorno rimane gratuita.",
-          "Leitura, estudo e oração em um único lugar. A leitura do dia continua gratuita.",
+          "La Mappa di Matteo, il confronto dei Vangeli e il tuo Quaderno, insieme a lettura e preghiera.",
+          "O Mapa de Mateus, a comparação dos Evangelhos e seu Caderno, junto com leitura e oração.",
         )}
       </p>
       <button
@@ -94,12 +98,13 @@ export function PremiumCard({ feature = "bible", compact = false }) {
 export function PremiumOffer() {
   const { offer, close, subscribe, restore, busy, preparing } = usePremium();
   const { l } = useLanguage();
-  if (preparing) return (
-    <div className="checkout-status" role="status" aria-live="polite">
-      <RefreshCw size={16} aria-hidden="true" />
-      {l("Verifica in corso…", "Verificando…")}
-    </div>
-  );
+  if (preparing)
+    return (
+      <div className="checkout-status" role="status" aria-live="polite">
+        <RefreshCw size={16} aria-hidden="true" />
+        {l("Verifica in corso…", "Verificando…")}
+      </div>
+    );
   if (!offer) return null;
   return (
     <Modal title="Fideora Premium" onClose={close}>
@@ -147,10 +152,14 @@ export function SubscriptionPanel() {
               "A leitura diária é gratuita. Desbloqueie todas as ferramentas com Premium.",
             )}
       </p>
-      {isPremium && <p className="caption">{l(
-        "L’abbonamento è associato al tuo account Apple. La sincronizzazione via email è facoltativa.",
-        "A assinatura está associada à sua conta Apple. A sincronização por e-mail é opcional.",
-      )}</p>}
+      {isPremium && (
+        <p className="caption">
+          {l(
+            "L’abbonamento è associato al tuo account Apple. La sincronizzazione via email è facoltativa.",
+            "A assinatura está associada à sua conta Apple. A sincronização por e-mail é opcional.",
+          )}
+        </p>
+      )}
       {!isPremium && (
         <button
           className="button primary"

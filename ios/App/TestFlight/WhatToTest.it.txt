@@ -1,9 +1,11 @@
-Fideora — valutazioni, assistenza e promemoria.
+Fideora 1.0.3 — la tua Mappa della Bibbia.
 
-- Nel Profilo, tocca Invia un feedback all’assistenza. Verifica che si apra una bozza per support@fideora.app, senza inviarla.
-- Tocca Valuta Fideora sull’App Store. Verifica che si apra la schermata di valutazione. iOS disattiva la richiesta automatica nelle build TestFlight.
-- In Profilo → Promemoria, programma lettura e preghiera per i prossimi minuti. Con l’app chiusa, tocca ogni notifica e verifica che si apra l’attività corretta.
-- Cambia l’orario e disattiva i promemoria. Verifica il comportamento se neghi il permesso per le notifiche.
-- Su una nuova installazione, completa l’onboarding e verifica l’offerta, l’acquisto di prova e il ripristino. I contenuti principali devono restare protetti dall’accesso Premium.
+- Apri Mappa: esplora Matteo, struttura, temi e personaggi.
+- Confronta i quattro Vangeli e apri i riferimenti nel lettore.
+- Scrivi una riflessione in Matteo, salvala e ritrovala nel Quaderno dopo aver riaperto l’app.
+- Verifica il nuovo onboarding con dimostrazione interattiva, in italiano e portoghese.
+- Su una nuova installazione, controlla acquisto sandbox, annullamento, ripristino ed eleggibilità della prova: il contenuto resta bloccato senza Premium verificato.
+- Controlla leggibilità, navigazione e modalità offline. Prezzi e condizioni degli abbonamenti non cambiano.
+- Verifica anche promemoria, Profilo, assistenza e gestione dell’account.
 
-Prova in italiano e portoghese. Usa account di prova per acquisti ed eliminazione. Evita di pubblicare ricevute o dati personali nei feedback.
+Usa account di prova. Non pubblicare ricevute o dati personali nel feedback.
