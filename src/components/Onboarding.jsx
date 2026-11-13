@@ -3,6 +3,7 @@ import { BookOpen, Heart, PenLine, Check, ArrowRight } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
   safeGet,
+  safeGetJSON,
   safeSet,
   safeSetJSON,
   sanitizeDisplayName,
@@ -10,12 +11,29 @@ import {
 import { Modal } from "./UI";
 import { MappaArtwork, MappaSample, GospelComparison } from "./Mappa";
 
-export default function Onboarding({ onFinish, hardPaywall = false }) {
-  const { l, language, changeLanguage } = useLanguage();
+export default function Onboarding({
+  onFinish,
+  hardPaywall = false,
+  replay = false,
+}) {
+  const appLanguage = useLanguage();
+  const [previewLanguage, setPreviewLanguage] = useState(appLanguage.language);
+  const language = replay ? previewLanguage : appLanguage.language;
+  const l = replay ? (it, pt) => (language === "pt" ? pt : it) : appLanguage.l;
+  const changeLanguage = replay
+    ? setPreviewLanguage
+    : appLanguage.changeLanguage;
+  const [routine] = useState(() =>
+    replay ? safeGetJSON("fideoraRoutine") : {},
+  );
   const [step, setStep] = useState(0);
   const [name, setName] = useState(() => safeGet("fideoraUserName"));
-  const [goal, setGoal] = useState("study");
-  const [minutes, setMinutes] = useState(5);
+  const [goal, setGoal] = useState(() =>
+    ["study", "read", "pray"].includes(routine.goal) ? routine.goal : "study",
+  );
+  const [minutes, setMinutes] = useState(() =>
+    [5, 10, 15].includes(routine.minutes) ? routine.minutes : 5,
+  );
   const content = useRef(null);
   const goals = [
     ["study", PenLine, "Comprendere", "Compreender"],
@@ -23,6 +41,10 @@ export default function Onboarding({ onFinish, hardPaywall = false }) {
     ["pray", Heart, "Pregare", "Rezar"],
   ];
   const finish = (premium) => {
+    if (replay) {
+      onFinish(false);
+      return;
+    }
     const displayName = sanitizeDisplayName(name);
     if (displayName) safeSet("fideoraUserName", displayName);
     safeSetJSON("fideoraRoutine", { goal, minutes });
@@ -37,8 +59,12 @@ export default function Onboarding({ onFinish, hardPaywall = false }) {
   };
   return (
     <Modal
-      title={l("La tua Mappa della Bibbia", "Seu Mapa da Bíblia")}
-      onClose={hardPaywall ? undefined : () => finish(false)}
+      title={
+        replay
+          ? l("Rivedi la presentazione", "Rever apresentação")
+          : l("La tua Mappa della Bibbia", "Seu Mapa da Bíblia")
+      }
+      onClose={hardPaywall && !replay ? undefined : () => finish(false)}
     >
       <div className="onboarding mappa-onboarding" ref={content} tabIndex={-1}>
         <div className="onboarding-progress" aria-label={`${step + 1} / 4`}>
@@ -51,6 +77,14 @@ export default function Onboarding({ onFinish, hardPaywall = false }) {
         </p>
         {step === 0 && (
           <>
+            {replay && (
+              <p className="mappa-editorial-note">
+                {l(
+                  "Puoi rivedere tutti i passaggi. Le scelte fatte qui non modificano il tuo profilo.",
+                  "Você pode rever todas as etapas. As escolhas feitas aqui não alteram seu perfil.",
+                )}
+              </p>
+            )}
             <MappaArtwork compact />
             <span className="eyebrow">MAPPA DELLA BIBBIA · FIDEORA</span>
             <h3>
@@ -163,10 +197,15 @@ export default function Onboarding({ onFinish, hardPaywall = false }) {
               ))}
             </div>
             <p className="mappa-editorial-note">
-              {l(
-                "Nel prossimo passaggio trovi i piani e le condizioni dell’eventuale prova gratuita, secondo la tua idoneità.",
-                "Na próxima etapa você encontra os planos e as condições de um eventual teste grátis, conforme sua elegibilidade.",
-              )}
+              {replay
+                ? l(
+                    "Al termine torni al Profilo. Nome, lingua e routine restano come li hai impostati.",
+                    "Ao concluir, você volta ao Perfil. Nome, idioma e rotina permanecem como estavam.",
+                  )
+                : l(
+                    "Nel prossimo passaggio trovi i piani e le condizioni dell’eventuale prova gratuita, secondo la tua idoneità.",
+                    "Na próxima etapa você encontra os planos e as condições de um eventual teste grátis, conforme sua elegibilidade.",
+                  )}
             </p>
           </>
         )}
@@ -179,7 +218,9 @@ export default function Onboarding({ onFinish, hardPaywall = false }) {
               ? l("Scopri la Mappa", "Conhecer o Mapa")
               : step < 3
                 ? l("Continua", "Continuar")
-                : l("Scopri i piani Premium", "Ver planos Premium")}
+                : replay
+                  ? l("Torna al Profilo", "Voltar ao Perfil")
+                  : l("Scopri i piani Premium", "Ver planos Premium")}
             <ArrowRight size={17} />
           </button>
           {step > 0 && (

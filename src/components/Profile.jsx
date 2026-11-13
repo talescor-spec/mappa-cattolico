@@ -10,6 +10,7 @@ import {
   Mail,
   Star,
   ChevronRight,
+  RotateCcw,
 } from "lucide-react";
 import { version as appVersion } from "../../package.json";
 import { useLanguage, languages } from "../contexts/LanguageContext";
@@ -20,14 +21,22 @@ import { Header, Row, Modal } from "./UI";
 import AccountPanel from "./AccountPanel";
 import { SubscriptionPanel } from "./Premium";
 import Reminders from "./Reminders";
-import { engagement, hasEngagement, recordReviewMetric } from "../services/engagement";
+import Onboarding from "./Onboarding";
+import {
+  engagement,
+  hasEngagement,
+  recordReviewMetric,
+} from "../services/engagement";
 export default function Profile({ onSources, onLegal, restricted = false }) {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
   const { entries } = useStudy();
   const supportEmail = "support@fideora.app";
-  const supportSubject = encodeURIComponent(l("Feedback su Fideora", "Feedback sobre o Fideora"));
+  const supportSubject = encodeURIComponent(
+    l("Feedback su Fideora", "Feedback sobre o Fideora"),
+  );
   const [name, setName] = useState(() => safeGet("fideoraUserName")),
+    [replay, setReplay] = useState(false),
     [saved, setSaved] = useState(false),
     [exporting, setExporting] = useState(false),
     [exportError, setExportError] = useState(false),
@@ -95,6 +104,19 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
           "Suas preferências. Sua experiência de fé.",
         )}
       />
+      {!restricted && (
+        <section className="card rows">
+          <Row
+            icon={RotateCcw}
+            title={l("Rivedi la presentazione", "Rever apresentação")}
+            subtitle={l(
+              "Riscopri la Mappa in quattro passaggi.",
+              "Redescubra o Mapa em quatro etapas.",
+            )}
+            onClick={() => setReplay(true)}
+          />
+        </section>
+      )}
       <div className="profile-layout">
         <div>
           <section className="card">
@@ -180,13 +202,19 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
             {hasEngagement() && (
               <Row
                 icon={Star}
-                title={l("Valuta Fideora sull’App Store", "Avaliar Fideora na App Store")}
+                title={l(
+                  "Valuta Fideora sull’App Store",
+                  "Avaliar Fideora na App Store",
+                )}
                 onClick={openReview}
               />
             )}
             <Row
               icon={Mail}
-              title={l("Invia un feedback all’assistenza", "Enviar feedback ao suporte")}
+              title={l(
+                "Invia un feedback all’assistenza",
+                "Enviar feedback ao suporte",
+              )}
               subtitle={supportEmail}
               href={`mailto:${supportEmail}?subject=${supportSubject}`}
             />
@@ -211,7 +239,14 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
               onClick={onSources}
             />
           </section>
-          {reviewLinkError && <p role="alert">{l("Non è stato possibile aprire l’App Store. Riprova.", "Não foi possível abrir a App Store. Tente novamente.")}</p>}
+          {reviewLinkError && (
+            <p role="alert">
+              {l(
+                "Non è stato possibile aprire l’App Store. Riprova.",
+                "Não foi possível abrir a App Store. Tente novamente.",
+              )}
+            </p>
+          )}
           <p className="version">
             Fideora · {appVersion}
             <br />
@@ -219,6 +254,7 @@ export default function Profile({ onSources, onLegal, restricted = false }) {
           </p>
         </div>
       </div>
+      {replay && <Onboarding replay onFinish={() => setReplay(false)} />}
     </>
   );
 }

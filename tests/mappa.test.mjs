@@ -43,7 +43,7 @@ try {
       `export { default as MappaHome, MappaSample, GospelComparison, MatthewDetail } from ${JSON.stringify(path.join(root, "src/components/Mappa.jsx"))};`,
       `export { default as Onboarding } from ${JSON.stringify(path.join(root, "src/components/Onboarding.jsx"))};`,
       `export { StudyProvider, useStudy } from ${JSON.stringify(path.join(root, "src/contexts/StudyContext.jsx"))};`,
-      `export { state } from ${JSON.stringify(fixture)};`,
+      `export { state, Modal } from ${JSON.stringify(fixture)};`,
     ].join("\n"),
   );
   const result = await build({
@@ -84,6 +84,7 @@ try {
     StudyProvider,
     useStudy,
     state,
+    Modal,
   } = await import(pathToFileURL(bundle));
   const previousWindow = globalThis.window;
   const storage = new Map();
@@ -240,6 +241,74 @@ try {
       assert.equal(storage.get("fideoraUserName"), "Thales");
       assert.equal(JSON.parse(storage.get("fideoraRoutine")).goal, "study");
       await act(async () => tree.unmount());
+    });
+    await test("a signed-in subscriber can replay, finish, close and reopen onboarding without changing stored preferences or access", async () => {
+      state.auth = { user: { id: "subscriber" }, loading: false };
+      state.language = "it";
+      state.premium = true;
+      state.requests = [];
+      storage.set("fideoraUserName", "Maria");
+      storage.set("fideoraLanguage", "it");
+      storage.set(
+        "fideoraRoutine",
+        JSON.stringify({ goal: "pray", minutes: 15 }),
+      );
+      storage.set("fideoraOnboarded", "1");
+      storage.set("fideoraEntryAccessV1", "hard");
+      storage.set("fideoraStudy:subscriber", JSON.stringify({ note: "kept" }));
+      const before = [...storage.entries()];
+      const finished = [];
+      const mount = async () =>
+        act(async () => {
+          tree = create(
+            React.createElement(Onboarding, {
+              replay: true,
+              hardPaywall: true,
+              onFinish: (value) => finished.push(value),
+            }),
+          );
+        });
+      await mount();
+      assert.equal(
+        typeof tree.root.findByType(Modal).props.onClose,
+        "function",
+      );
+      await click(tree, "Português");
+      assert.equal(
+        state.language,
+        "it",
+        "preview language must not change the app language",
+      );
+      await click(tree, "Conhecer o Mapa");
+      await click(tree, "Continuar");
+      await click(tree, "Continuar");
+      assert.equal(tree.root.findByType("input").props.value, "Maria");
+      const pressed = tree.root
+        .findAllByType("button")
+        .filter((n) => n.props["aria-pressed"] === true)
+        .map(nodeText);
+      assert.ok(pressed.includes("Rezar"));
+      assert.ok(pressed.includes("15 min"));
+      await act(async () =>
+        tree.root
+          .findByType("input")
+          .props.onChange({ target: { value: "Temporary name" } }),
+      );
+      await click(tree, "Ler");
+      await click(tree, "10 min");
+      await click(tree, "Voltar ao Perfil");
+      assert.deepEqual(finished, [false]);
+      assert.deepEqual([...storage.entries()], before);
+      assert.deepEqual(state.requests, []);
+      assert.equal(state.auth.user.id, "subscriber");
+      await act(async () => tree.unmount());
+      await mount();
+      assert.ok(text(tree).includes("Dai un filo"));
+      await act(async () => tree.root.findByType(Modal).props.onClose());
+      assert.deepEqual(finished, [false, false]);
+      assert.deepEqual([...storage.entries()], before);
+      await act(async () => tree.unmount());
+      state.auth = { user: null, loading: false };
     });
   } finally {
     globalThis.window = previousWindow;

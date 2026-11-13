@@ -1,5 +1,6 @@
 Fideora 1.0.3 — seu Mapa da Bíblia.
 
+- No Perfil, abra Rever apresentação: conclua as quatro etapas, feche e reabra. Confira que conta, idioma, nome, rotina e assinatura permaneçam inalterados.
 - Abra Mapa: explore Mateus, estrutura, temas e personagens.
 - Compare os quatro Evangelhos e abra as referências no leitor.
 - Escreva uma reflexão em Mateus, salve e encontre no Caderno após reabrir o app.
