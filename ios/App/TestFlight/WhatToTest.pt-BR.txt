@@ -1,9 +1,11 @@
-Fideora — avaliações, suporte e lembretes.
+Fideora 1.0.3 — seu Mapa da Bíblia.
 
-- No Perfil, toque em Enviar feedback ao suporte. Confira se abre um rascunho para support@fideora.app, sem precisar enviá-lo.
-- Toque em Avaliar Fideora na App Store. Confira se abre a tela de avaliação do app. O iOS desativa o convite automático em builds TestFlight.
-- Em Perfil → Lembretes, programe leitura e oração para os próximos minutos. Com o app fechado, toque em cada notificação e confira se abre a atividade correta.
-- Altere o horário e desligue os lembretes. Confira se o app lida com a permissão de notificações negada.
-- Em uma instalação nova, conclua o onboarding e confira a oferta, a compra de teste e a restauração. O conteúdo principal deve continuar protegido pelo acesso Premium.
+- Abra Mapa: explore Mateus, estrutura, temas e personagens.
+- Compare os quatro Evangelhos e abra as referências no leitor.
+- Escreva uma reflexão em Mateus, salve e encontre no Caderno após reabrir o app.
+- Confira o novo onboarding com demonstração interativa, em italiano e português.
+- Em uma instalação nova, confira compra sandbox, cancelamento, restauração e elegibilidade do teste: conteúdo bloqueado sem Premium verificado.
+- Confira leitura, navegação e modo offline. Preços e condições das assinaturas não mudam.
+- Confira também lembretes, Perfil, suporte e gestão da conta.
 
-Teste em italiano e português. Use contas de teste para fluxos de compra e exclusão. Evite publicar recibos ou dados pessoais no feedback.
+Use contas de teste. Não publique recibos nem dados pessoais no feedback.

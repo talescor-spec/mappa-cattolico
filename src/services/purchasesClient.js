@@ -59,12 +59,12 @@ export function createPurchasesClient({
             result: "NOT_PRESENTED",
           };
         const offerings = await sdk.getOfferings();
-        // A separate remote design removes the editor's close component without
-        // changing the experience of existing app versions. Never silently fall
-        // back to the dismissible default if this offering is unavailable.
+        // Version-specific offerings keep Mappa copy out of older app versions.
+        // Both reuse the existing Apple products. Missing offerings fail closed,
+        // with retry/restore retained; never substitute a different paywall.
         const offering = hardPaywall
-          ? offerings?.all?.hard_paywall
-          : offerings?.current;
+          ? offerings?.all?.mappa_v1_hard
+          : offerings?.all?.mappa_v1;
         if (!offering?.availablePackages?.length)
           return { ...unavailable(), reason: "offering" };
         const { result } = await ui.presentPaywall({

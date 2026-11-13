@@ -1,0 +1,941 @@
+/* Fideora Mappa — a quiet editorial system, shared by both languages. */
+:root {
+  color: #252826;
+  background: #f7f5f0;
+  --green: #21483f;
+  --deep: #193b34;
+  --muted: #686d65;
+  --line: #dedfd6;
+  --cream: #f0eee6;
+  --radius: 12px;
+  --mappa-gold: #ae9870;
+}
+.app {
+  background: #f7f5f0;
+}
+.topbar {
+  background: #f7f5f0ed;
+}
+.sidebar {
+  background: #f0eee8;
+  border-color: var(--line);
+}
+.button {
+  border-radius: 7px;
+  min-height: 48px;
+  font-size: 14px;
+}
+.secondary {
+  background: #efeee7;
+  border-color: var(--line);
+  color: var(--green);
+}
+.avatar-button {
+  background: #e9ece5;
+  color: var(--green);
+}
+.bottom-nav {
+  background: #f7f5f0f5;
+  border-color: var(--line);
+}
+.modal {
+  background: #f7f5f0;
+  border-radius: 16px;
+}
+.modal-head h2 {
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: var(--green);
+}
+.premium-card {
+  background: #eeeee5;
+  border-color: #d9ded1;
+  box-shadow: none;
+}
+.mappa-experience {
+  max-width: 1020px;
+  margin: 0 auto;
+}
+.mappa-experience p,
+.mappa-onboarding p {
+  font-size: 16px;
+  line-height: 1.7;
+}
+.mappa-experience h1,
+.mappa-experience h2,
+.mappa-experience h3,
+.mappa-onboarding h2,
+.mappa-onboarding h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+.mappa-experience h1,
+.mappa-experience h3,
+.mappa-section-intro h2,
+.mappa-onboarding > h3 {
+  white-space: pre-line;
+}
+.mappa-experience .eyebrow,
+.mappa-onboarding .eyebrow {
+  color: #596b60;
+  letter-spacing: 1.65px;
+}
+.mappa-welcome {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+  align-items: center;
+}
+.mappa-welcome .eyebrow {
+  margin: 0;
+}
+.mappa-welcome > span:last-child {
+  font-size: 11px;
+  color: var(--muted);
+}
+.mappa-hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: center;
+  background: #efeee6;
+  border: 1px solid #e3e1d7;
+  border-radius: 12px;
+  padding: 46px 40px;
+  gap: 30px;
+}
+.mappa-hero h1 {
+  font-size: clamp(34px, 3.5vw, 48px);
+  line-height: 1.12;
+  margin: 17px 0 20px;
+  color: var(--green);
+  letter-spacing: -1.6px;
+}
+.mappa-hero p {
+  color: #62685e;
+  max-width: 410px;
+  margin-bottom: 28px;
+}
+.mappa-art {
+  position: relative;
+  color: #7d8b73;
+  width: 100%;
+  max-width: 340px;
+  margin: auto;
+}
+.mappa-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.mappa-art-index {
+  display: block;
+  text-align: center;
+  font: 11px var(--serif);
+  letter-spacing: 7px;
+  color: #8e805f;
+  margin-top: -8px;
+}
+.mappa-heading-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 38px 0 19px;
+}
+.mappa-heading-line h2 {
+  font-size: 26px;
+  margin: 0;
+}
+.mappa-heading-line > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.mappa-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.mappa-path {
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 29px 26px;
+  border: 1px solid var(--line);
+  background: #fcfbf7;
+  border-radius: 10px;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.mappa-path:hover {
+  border-color: #9ba99a;
+  background: #f7f8f1;
+}
+.mappa-path-number {
+  font: 22px var(--serif);
+  color: #a08e6c;
+  padding-top: 2px;
+}
+.mappa-path h3 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 13px 0 12px;
+  letter-spacing: -0.55px;
+}
+.mappa-path p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+.mappa-path-action {
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 550;
+}
+.mappa-daily {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-top: 36px;
+  padding: 27px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 30px;
+}
+.mappa-daily-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  grid-column: 1 / -1;
+  color: var(--green);
+  margin-bottom: 17px;
+}
+.mappa-daily-heading .eyebrow {
+  margin: 0;
+}
+.mappa-daily h2 {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+.mappa-daily p {
+  color: var(--muted);
+  margin-bottom: 0;
+  max-width: 640px;
+  font-size: 15px;
+}
+.mappa-daily-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  justify-content: center;
+}
+.mappa-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 0;
+  min-height: 44px;
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 550;
+  text-align: left;
+}
+.mappa-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.mappa-quiet-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin: 9px 0 23px;
+}
+.mappa-quiet-links button {
+  display: flex;
+  align-items: center;
+  min-height: 62px;
+  padding: 8px 0;
+  gap: 13px;
+  font-size: 14px;
+  color: #566350;
+}
+.mappa-quiet-links button svg:last-child {
+  margin-left: auto;
+}
+.mappa-experience .mappa-editorial-note,
+.mappa-onboarding .mappa-editorial-note {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.mappa-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin: -12px 0 22px;
+  color: var(--green);
+  padding: 4px 0;
+  font-size: 14px;
+}
+.mappa-book-detail,
+.mappa-comparison {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.mappa-section-intro {
+  margin-bottom: 30px;
+}
+.mappa-section-intro h1 {
+  font-size: clamp(35px, 4vw, 47px);
+  color: var(--green);
+  margin: 15px 0;
+}
+.mappa-section-intro h2 {
+  font-size: 38px;
+  line-height: 1.17;
+  color: var(--green);
+  margin: 15px 0;
+}
+.mappa-section-intro p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.mappa-sample {
+  background: #fdfcf8;
+  border: 1px solid var(--line);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: left;
+}
+.mappa-sample-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mappa-sample-heading .eyebrow {
+  margin: 0;
+  font-size: 9px !important;
+}
+.mappa-sample-heading > span:last-child {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.mappa-sample h3 {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: baseline;
+  font-size: 38px;
+  margin: 22px 0 15px;
+  color: var(--green);
+  letter-spacing: -0.7px;
+}
+.mappa-sample h3 > span {
+  font:
+    12px -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.mappa-sample > p {
+  color: #5d645b;
+}
+.mappa-theme {
+  border-top: 1px solid var(--line);
+}
+.mappa-theme > button {
+  padding: 17px 0;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  text-align: left;
+  font-size: 15px;
+  color: var(--green);
+}
+.mappa-theme > div {
+  padding: 0 21px 20px 0;
+}
+.mappa-theme > div p {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #656b61;
+}
+.mappa-theme small {
+  color: #7d7055;
+  font-size: 12px;
+}
+.mappa-section {
+  padding: 34px 0 0;
+}
+.mappa-section-label {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  margin-bottom: 22px;
+}
+.mappa-section-label > span {
+  color: #9a896a;
+  font: 17px var(--serif);
+}
+.mappa-section-label h2 {
+  font-size: 28px;
+  margin: 0;
+}
+.mappa-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.mappa-timeline li {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 22px;
+  position: relative;
+  padding: 0 0 27px;
+}
+.mappa-timeline li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 29px;
+  bottom: 7px;
+  left: 36px;
+  width: 1px;
+  background: #cfcbbd;
+}
+.mappa-timeline-range {
+  font-size: 10px;
+  color: #7d7055;
+  letter-spacing: 0.9px;
+  padding-top: 5px;
+}
+.mappa-timeline h3 {
+  font-size: 24px;
+  margin-bottom: 7px;
+}
+.mappa-timeline p {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0;
+}
+.mappa-person-list {
+  border-top: 1px solid var(--line);
+}
+.mappa-person-list > div {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 22px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.mappa-person-list h3 {
+  font-size: 22px;
+  margin: 0;
+}
+.mappa-person-list p {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0;
+}
+.mappa-passage-list {
+  border-top: 1px solid var(--line);
+}
+.mappa-passage-list button {
+  border-bottom: 1px solid var(--line);
+  padding: 19px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  color: var(--green);
+}
+.mappa-passage-list small {
+  display: block;
+  font-size: 12px;
+  color: #7d7055;
+  margin-bottom: 7px;
+}
+.mappa-passage-list strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+.mappa-connection {
+  background: #eeeee5;
+  border-left: 2px solid #ae9870;
+  padding: 29px;
+  margin-top: 36px;
+}
+.mappa-connection h2 {
+  margin: 14px 0 13px;
+  font-size: 30px;
+}
+.mappa-connection p {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.mappa-reflection-question {
+  font-family: var(--serif);
+  font-size: 23px !important;
+  line-height: 1.5 !important;
+  color: var(--green);
+}
+.mappa-reflection label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.mappa-reflection textarea {
+  width: 100%;
+  background: #fdfcf8;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+  margin-bottom: 14px;
+}
+.mappa-save-confirmation {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--green);
+  font-size: 13px !important;
+  margin: 16px 0 0;
+}
+.mappa-sources {
+  border-top: 1px solid var(--line);
+  margin-top: 36px;
+  padding-top: 13px;
+}
+.mappa-sources p {
+  color: var(--muted);
+  font-size: 13px;
+}
+.mappa-sources a {
+  display: block;
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 8px 0;
+}
+.mappa-upgrade {
+  padding: 30px 0 0;
+}
+.mappa-upgrade h2 {
+  font-size: 30px;
+}
+.mappa-upgrade p {
+  color: var(--muted);
+}
+.mappa-gospel-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line);
+  margin-top: 30px;
+}
+.mappa-gospel-tabs button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 15px;
+  padding: 15px 9px;
+  border-bottom: 2px solid transparent;
+  min-height: 70px;
+  color: #6c7368;
+}
+.mappa-gospel-tabs button > span {
+  font-size: 10px;
+  color: #897b60;
+}
+.mappa-gospel-tabs button.selected {
+  border-bottom-color: var(--green);
+  color: var(--green);
+  background: #edeee5;
+}
+.mappa-gospel-panel {
+  padding: 31px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  background: #fcfbf7;
+  border-radius: 0 0 10px 10px;
+}
+.mappa-kicker {
+  color: #7d7055;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+}
+.mappa-gospel-panel h3 {
+  font-size: 34px;
+  color: var(--green);
+  line-height: 1.2;
+  margin: 15px 0 20px;
+  letter-spacing: -0.5px;
+}
+.mappa-gospel-panel p {
+  color: var(--muted);
+  font-size: 16px;
+}
+.mappa-gospel-panel .mappa-link {
+  display: flex;
+}
+.mappa-reference {
+  font-size: 12px;
+  color: #7d7055;
+}
+.mappa-comparison > .mappa-editorial-note {
+  margin-top: 22px;
+}
+.mappa-onboarding {
+  text-align: left;
+  padding: 0;
+}
+.mappa-onboarding:focus {
+  outline: none;
+}
+.mappa-onboarding .mappa-step-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin: 0 0 24px;
+}
+.mappa-onboarding .mappa-art.compact {
+  max-width: 240px;
+  margin: -12px auto 26px;
+}
+.mappa-onboarding > h3 {
+  font-size: 35px;
+  color: var(--green);
+  line-height: 1.12;
+  letter-spacing: -1px;
+  margin: 16px 0 18px;
+}
+.mappa-onboarding > p {
+  color: var(--muted);
+}
+.mappa-onboarding .onboard-language {
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 25px 0 0;
+}
+.mappa-onboarding .onboard-language .button {
+  font-size: 13px;
+  min-height: 44px;
+}
+.mappa-onboarding .mappa-sample {
+  padding: 21px;
+  margin-top: 25px;
+}
+.mappa-onboarding .mappa-sample h3 {
+  font-size: 32px;
+}
+.mappa-onboarding .mappa-sample > p,
+.mappa-onboarding .mappa-theme p {
+  font-size: 14px;
+}
+.mappa-onboarding .mappa-theme > button {
+  font-size: 14px;
+}
+.mappa-onboarding .mappa-section-intro h2 {
+  font-size: 33px;
+}
+.mappa-onboarding .mappa-section-intro p {
+  font-size: 15px;
+}
+.mappa-onboarding .mappa-gospel-panel {
+  padding: 23px;
+}
+.mappa-onboarding .mappa-gospel-panel h3 {
+  font-size: 28px;
+}
+.mappa-onboarding .mappa-gospel-panel p {
+  font-size: 14px;
+}
+.mappa-onboarding .mappa-gospel-tabs button {
+  font-size: 13px;
+  padding: 12px 6px;
+}
+.mappa-onboarding-actions {
+  margin-top: 28px;
+  text-align: center;
+}
+.mappa-onboarding-actions .text-button {
+  display: block;
+  margin: 9px auto 0;
+}
+.mappa-onboarding label,
+.mappa-onboarding .mappa-field-label {
+  color: var(--muted);
+  font-size: 12px;
+  display: block;
+  margin: 25px 0 10px;
+}
+.mappa-onboarding .onboarding-name {
+  background: #fdfcf8;
+  border-color: var(--line);
+  font-size: 16px;
+  border-radius: 7px;
+  margin: 0;
+}
+.mappa-goals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mappa-goals .routine-option {
+  width: auto;
+  flex: 1;
+  padding: 13px 11px;
+  gap: 7px;
+  font-size: 12px;
+  border-radius: 7px;
+}
+.mappa-goals .routine-option svg:last-child:not(:first-child) {
+  display: none;
+}
+.mappa-onboarding .routine-time {
+  margin: 10px 0 20px;
+}
+.mappa-onboarding .routine-option {
+  border-radius: 7px;
+  border-color: var(--line);
+  background: #fdfcf8;
+}
+.mappa-onboarding .routine-option.selected {
+  background: #e9ede3;
+  border-color: #728571;
+  box-shadow: none;
+  color: var(--green);
+}
+.hard-paywall-card h1 {
+  color: var(--green);
+}
+.hard-paywall-card {
+  box-shadow: none;
+  border-radius: 12px;
+  background: #f7f5f0;
+}
+.hard-paywall-card > p:not(.eyebrow) {
+  font-size: 16px;
+  line-height: 1.7;
+}
+@media (max-width: 930px) and (min-width: 651px) {
+  .mappa-hero {
+    padding: 33px 27px;
+    gap: 0;
+  }
+  .mappa-hero h1 {
+    font-size: 36px;
+  }
+  .mappa-path {
+    padding: 23px 20px;
+    gap: 16px;
+  }
+  .mappa-path h3 {
+    font-size: 25px;
+  }
+}
+@media (max-width: 650px) {
+  :root {
+    --radius: 12px;
+  }
+  .mappa-welcome {
+    margin: 2px 0 24px;
+  }
+  .mappa-welcome .eyebrow {
+    font-size: 9px !important;
+    letter-spacing: 1.25px;
+  }
+  .mappa-welcome > span:last-child {
+    font-size: 10px;
+  }
+  .mappa-hero {
+    grid-template-columns: 1fr;
+    padding: 29px 24px 20px;
+    gap: 13px;
+  }
+  .mappa-hero h1 {
+    font-size: 38px;
+    margin: 17px 0 19px;
+    letter-spacing: -1.3px;
+  }
+  .mappa-hero p {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+  .mappa-hero .button {
+    width: 100%;
+  }
+  .mappa-hero .mappa-art {
+    max-width: 210px;
+    margin-top: 3px;
+  }
+  .mappa-heading-line {
+    margin-top: 30px;
+  }
+  .mappa-heading-line h2 {
+    font-size: 24px;
+  }
+  .mappa-heading-line > span {
+    font-size: 11px;
+  }
+  .mappa-paths {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+  .mappa-path {
+    padding: 25px 22px;
+    gap: 22px;
+  }
+  .mappa-path h3 {
+    font-size: 28px;
+  }
+  .mappa-daily {
+    grid-template-columns: 1fr;
+    margin-top: 29px;
+    padding: 24px 0;
+  }
+  .mappa-daily-actions {
+    margin-top: 16px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .mappa-quiet-links {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .mappa-quiet-links button {
+    border-bottom: 1px solid var(--line);
+  }
+  .mappa-section-intro h1 {
+    font-size: 37px;
+  }
+  .mappa-section-intro h2 {
+    font-size: 35px;
+  }
+  .mappa-sample {
+    padding: 24px 21px;
+  }
+  .mappa-sample h3 {
+    font-size: 36px;
+  }
+  .mappa-sample-heading .eyebrow {
+    font-size: 8px !important;
+    letter-spacing: 1px;
+  }
+  .mappa-timeline li {
+    grid-template-columns: 68px 1fr;
+    gap: 14px;
+  }
+  .mappa-timeline li:not(:last-child)::before {
+    left: 29px;
+  }
+  .mappa-person-list > div {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+  .mappa-section-label {
+    gap: 14px;
+  }
+  .mappa-section-label h2 {
+    font-size: 26px;
+  }
+  .mappa-connection {
+    padding: 25px 23px;
+  }
+  .mappa-reflection .button {
+    width: 100%;
+  }
+  .mappa-gospel-panel {
+    padding: 27px 22px;
+  }
+  .mappa-gospel-panel h3 {
+    font-size: 31px;
+  }
+  .mappa-gospel-tabs button {
+    font-size: 13px;
+    padding: 13px 6px;
+  }
+  .mappa-onboarding > h3 {
+    font-size: 33px;
+  }
+  .mappa-onboarding .mappa-art.compact {
+    max-width: 205px;
+    margin-bottom: 21px;
+  }
+  .mappa-onboarding .mappa-sample {
+    padding: 19px 16px;
+  }
+  .mappa-onboarding .mappa-gospel-panel {
+    padding: 22px 18px;
+  }
+  .mappa-goals .routine-option {
+    padding: 13px 8px;
+    gap: 6px;
+  }
+}
+@media (max-width: 360px) {
+  .mappa-hero {
+    padding: 25px 20px 20px;
+  }
+  .mappa-hero h1 {
+    font-size: 33px;
+  }
+  .mappa-path {
+    gap: 17px;
+    padding: 23px 18px;
+  }
+  .mappa-path h3 {
+    font-size: 26px;
+  }
+  .mappa-onboarding .mappa-gospel-tabs button {
+    font-size: 12px;
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+}
+
+.mappa-review-tools {
+  max-width: 850px;
+  margin: 22px auto 0;
+  padding: 0 30px;
+}
+.mappa-review-tools > span {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+.mappa-review-tools nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 10px;
+  align-items: center;
+}
+.mappa-review-tools nav a,
+.mappa-review-tools nav button {
+  min-height: 44px;
+  font-size: 13px;
+  color: var(--green);
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+}

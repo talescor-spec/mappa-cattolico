@@ -1,76 +1,126 @@
-import React, { useState } from "react";
-import { BookOpen, Heart, PenLine, Check, ChevronRight } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { BookOpen, Heart, PenLine, Check, ArrowRight } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
-import { safeGet, safeSet, safeSetJSON, sanitizeDisplayName } from "../utils/storage";
-import { Mark, Modal } from "./UI";
-export default function Onboarding({ bible, onFinish, hardPaywall = false }) {
+import {
+  safeGet,
+  safeSet,
+  safeSetJSON,
+  sanitizeDisplayName,
+} from "../utils/storage";
+import { Modal } from "./UI";
+import { MappaArtwork, MappaSample, GospelComparison } from "./Mappa";
+
+export default function Onboarding({ onFinish, hardPaywall = false }) {
   const { l, language, changeLanguage } = useLanguage();
-  const [step, setStep] = useState(0),
-    [name, setName] = useState(() => safeGet("fideoraUserName")),
-    [goal, setGoal] = useState("read"),
-    [minutes, setMinutes] = useState(5);
+  const [step, setStep] = useState(0);
+  const [name, setName] = useState(() => safeGet("fideoraUserName"));
+  const [goal, setGoal] = useState("study");
+  const [minutes, setMinutes] = useState(5);
+  const content = useRef(null);
   const goals = [
-    ["read", BookOpen, "Leggere con costanza", "Ler com constância"],
-    [
-      "study",
-      PenLine,
-      "Comprendere e approfondire",
-      "Compreender e aprofundar",
-    ],
-    [
-      "pray",
-      Heart,
-      "Ritrovare un momento di preghiera",
-      "Encontrar um momento de oração",
-    ],
+    ["study", PenLine, "Comprendere", "Compreender"],
+    ["read", BookOpen, "Leggere", "Ler"],
+    ["pray", Heart, "Pregare", "Rezar"],
   ];
-  const passage = bible?.books.find((b) => b.book === "John")?.chapters[0]
-    ?.verses[0]?.text;
   const finish = (premium) => {
     const displayName = sanitizeDisplayName(name);
     if (displayName) safeSet("fideoraUserName", displayName);
     safeSetJSON("fideoraRoutine", { goal, minutes });
     onFinish(premium);
   };
+  const move = (next) => {
+    setStep(next);
+    content.current
+      ?.closest("dialog")
+      ?.scrollTo({ top: 0, behavior: "instant" });
+    content.current?.focus({ preventScroll: true });
+  };
   return (
     <Modal
-      title={l(
-        "Il tuo cammino, un passo alla volta.",
-        "Sua caminhada, um passo por vez.",
-      )}
+      title={l("La tua Mappa della Bibbia", "Seu Mapa da Bíblia")}
       onClose={hardPaywall ? undefined : () => finish(false)}
     >
-      <div className="onboarding">
+      <div className="onboarding mappa-onboarding" ref={content} tabIndex={-1}>
         <div className="onboarding-progress" aria-label={`${step + 1} / 4`}>
           {[0, 1, 2, 3].map((n) => (
             <span key={n} className={n <= step ? "active" : ""} />
           ))}
         </div>
+        <p className="mappa-step-label" aria-live="polite">
+          {step + 1} / 4 · {l("IL TUO PRIMO PERCORSO", "SEU PRIMEIRO PERCURSO")}
+        </p>
         {step === 0 && (
           <>
-            <Mark />
-            <h3>{l("Come possiamo chiamarti?", "Como podemos chamar você?")}</h3>
+            <MappaArtwork compact />
+            <span className="eyebrow">MAPPA DELLA BIBBIA · FIDEORA</span>
+            <h3>
+              {l(
+                "Dai un filo\nalla tua lettura.",
+                "Encontre o fio\nda sua leitura.",
+              )}
+            </h3>
             <p>
               {l(
-                "Un piccolo spazio tutto tuo. Il nome è facoltativo e puoi cambiarlo nel Profilo.",
-                "Um pequeno espaço seu. O nome é opcional e pode ser alterado no Perfil.",
+                "Capisci il contesto, riconosci i temi e collega le storie. Il tuo primo percorso comincia da Matteo e dai quattro Vangeli.",
+                "Entenda o contexto, reconheça os temas e conecte as histórias. Seu primeiro percurso começa em Mateus e nos quatro Evangelhos.",
               )}
             </p>
             <div className="onboard-language">
               <button
                 className={`button ${language === "it" ? "primary" : "secondary"}`}
+                aria-pressed={language === "it"}
                 onClick={() => changeLanguage("it")}
               >
                 Italiano
               </button>
               <button
                 className={`button ${language === "pt" ? "primary" : "secondary"}`}
+                aria-pressed={language === "pt"}
                 onClick={() => changeLanguage("pt")}
               >
                 Português
               </button>
             </div>
-            <label htmlFor="onboarding-name">{l("Il tuo nome", "Seu nome")}</label>
+          </>
+        )}
+        {step === 1 && (
+          <>
+            <h3>
+              {l(
+                "Prima il contesto.\nPoi la lettura.",
+                "Primeiro o contexto.\nDepois a leitura.",
+              )}
+            </h3>
+            <p>
+              {l(
+                "Prova la Mappa: tocca un tema per capire il filo del Vangelo di Matteo.",
+                "Experimente o Mapa: toque em um tema para entender o fio do Evangelho de Mateus.",
+              )}
+            </p>
+            <MappaSample language={language} compact />
+          </>
+        )}
+        {step === 2 && <GospelComparison language={language} preview />}
+        {step === 3 && (
+          <>
+            <span className="eyebrow">
+              {l("IL TUO MOMENTO DI STUDIO", "SEU MOMENTO DE ESTUDO")}
+            </span>
+            <h3>
+              {l(
+                "Un passo alla volta.\nAl tuo ritmo.",
+                "Um passo por vez.\nNo seu ritmo.",
+              )}
+            </h3>
+            <p>
+              {l(
+                "Inizia da Matteo. Esplora i collegamenti e conserva ciò che scopri nel tuo Quaderno.",
+                "Comece por Mateus. Explore as conexões e guarde o que descobrir no seu Caderno.",
+              )}
+            </p>
+            <label htmlFor="onboarding-name">
+              {l("Il tuo nome (facoltativo)", "Seu nome (opcional)")}
+            </label>
             <input
               id="onboarding-name"
               className="onboarding-name"
@@ -78,15 +128,12 @@ export default function Onboarding({ bible, onFinish, hardPaywall = false }) {
               maxLength={60}
               value={name}
               placeholder={l("Come ti chiami?", "Como você se chama?")}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(event) => setName(event.target.value)}
             />
-          </>
-        )}
-        {step === 1 && (
-          <>
-            <h3>{l("Che cosa desideri coltivare?", "O que você deseja cultivar?")}</h3>
-            <p>{l("Scegli da dove iniziare.", "Escolha por onde começar.")}</p>
-            <div className="onboard-options">
+            <p className="mappa-field-label">
+              {l("Da dove vuoi cominciare?", "Por onde quer começar?")}
+            </p>
+            <div className="mappa-goals">
               {goals.map(([id, Icon, it, pt]) => (
                 <button
                   key={id}
@@ -94,27 +141,14 @@ export default function Onboarding({ bible, onFinish, hardPaywall = false }) {
                   aria-pressed={goal === id}
                   onClick={() => setGoal(id)}
                 >
-                  <Icon size={20} />
+                  <Icon size={17} />
                   <span>{l(it, pt)}</span>
-                  {goal === id && <Check size={17} />}
+                  {goal === id && <Check size={15} />}
                 </button>
               ))}
             </div>
-          </>
-        )}
-        {step === 2 && (
-          <>
-            <h3>
-              {l(
-                "Un piccolo spazio, ogni giorno.",
-                "Um pequeno espaço, todos os dias.",
-              )}
-            </h3>
-            <p>
-              {l(
-                "Quanto tempo vuoi dedicare al tuo momento di lettura e preghiera?",
-                "Quanto tempo você quer dedicar ao seu momento de leitura e oração?",
-              )}
+            <p className="mappa-field-label">
+              {l("Il tuo tempo, ogni giorno", "Seu tempo, todos os dias")}
             </p>
             <div className="routine-time">
               {[5, 10, 15].map((n) => (
@@ -128,94 +162,32 @@ export default function Onboarding({ bible, onFinish, hardPaywall = false }) {
                 </button>
               ))}
             </div>
-            <blockquote className="onboard-scripture">
-              {passage ||
-                l(
-                  "Leggi. Medita. Prega. Rimani in silenzio.",
-                  "Leia. Medite. Reze. Permaneça em silêncio.",
-                )}
-            </blockquote>
-            {passage && (
-              <small>
-                {l("Giovanni 1,1", "João 1,1")} ·{" "}
-                {language === "it" ? "Diodati 1649" : "Almeida 1819"}
-              </small>
-            )}
-          </>
-        )}
-        {step === 3 && (
-          <>
-            <span className="completion-mark">
-              <Check />
-            </span>
-            <h3>
+            <p className="mappa-editorial-note">
               {l(
-                "Il tuo prossimo passo è semplice.",
-                "Seu próximo passo é simples.",
-              )}
-            </h3>
-            <p>
-              {minutes}{" "}
-              {l(
-                "minuti che scegli di dedicare alla tua fede.",
-                "minutos que você escolhe dedicar à sua fé.",
-              )}
-            </p>
-            <ol className="routine-plan">
-              <li>
-                {l(
-                  hardPaywall ? "Inizia dalla lettura di oggi." : "Leggi il brano gratuito di oggi.",
-                  hardPaywall ? "Comece pela leitura de hoje." : "Leia a passagem gratuita de hoje.",
-                )}
-              </li>
-              <li>
-                {goal === "study"
-                  ? l(
-                      "Raccogli una domanda da approfondire.",
-                      "Guarde uma pergunta para aprofundar.",
-                    )
-                  : goal === "pray"
-                    ? l(
-                        "Porta una persona nella tua preghiera.",
-                        "Leve uma pessoa em sua oração.",
-                      )
-                    : l(
-                        "Scegli una frase da portare con te.",
-                        "Escolha uma frase para levar com você.",
-                      )}
-              </li>
-              <li>
-                {l(
-                  "Concludi con un momento di silenzio.",
-                  "Conclua com um momento de silêncio.",
-                )}
-              </li>
-            </ol>
-            <p>
-              {l(
-                "Con Premium puoi andare oltre: studio personale, letture libere e preghiera guidata.",
-                "Com Premium você pode ir além: estudo pessoal, leitura livre e oração guiada.",
+                "Nel prossimo passaggio trovi i piani e le condizioni dell’eventuale prova gratuita, secondo la tua idoneità.",
+                "Na próxima etapa você encontra os planos e as condições de um eventual teste grátis, conforme sua elegibilidade.",
               )}
             </p>
           </>
         )}
-        <button
-          className="button primary wide"
-          onClick={() => (step < 3 ? setStep(step + 1) : finish(true))}
-        >
-          {step < 3
-            ? l("Continua", "Continuar")
-            : l(
-                "Scopri i piani Premium",
-                "Ver planos Premium",
-              )}
-          <ChevronRight size={17} />
-        </button>
-        {step > 0 && (
-          <button className="text-button" onClick={() => setStep(step - 1)}>
-            {l("Indietro", "Voltar")}
+        <div className="mappa-onboarding-actions">
+          <button
+            className="button primary wide"
+            onClick={() => (step < 3 ? move(step + 1) : finish(true))}
+          >
+            {step === 0
+              ? l("Scopri la Mappa", "Conhecer o Mapa")
+              : step < 3
+                ? l("Continua", "Continuar")
+                : l("Scopri i piani Premium", "Ver planos Premium")}
+            <ArrowRight size={17} />
           </button>
-        )}
+          {step > 0 && (
+            <button className="text-button" onClick={() => move(step - 1)}>
+              {l("Indietro", "Voltar")}
+            </button>
+          )}
+        </div>
       </div>
     </Modal>
   );

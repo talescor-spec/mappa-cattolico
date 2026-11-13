@@ -46,10 +46,16 @@ function fake({ native = true, apiKey = "appl_test", retained = null } = {}) {
       return { customerInfo: infos };
     },
     getOfferings: async () => ({
-      all: { hard_paywall: {
-        identifier: "hard_paywall",
-        availablePackages: [{ identifier: "$rc_annual" }],
-      } },
+      all: {
+        mappa_v1_hard: {
+          identifier: "mappa_v1_hard",
+          availablePackages: [{ identifier: "$rc_annual" }],
+        },
+        mappa_v1: {
+          identifier: "mappa_v1",
+          availablePackages: [{ identifier: "$rc_annual" }],
+        },
+      },
       current: {
         identifier: "default",
         availablePackages: [{ identifier: "$rc_annual" }],
@@ -218,27 +224,61 @@ test("billing queue recovers after a failed identity change", async () => {
   assert.deepEqual(f.calls.at(-1), ["info", "B"]);
 });
 
+test("legacy checkout selects the Mappa offering, remains dismissible and cannot fall back to an old current offering", async () => {
+  const f = fake();
+  await f.client.present(null, "it");
+  const options = f.calls.find((c) => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "mappa_v1");
+  assert.equal(options.displayCloseButton, true);
+  f.sdk.getOfferings = async () => ({
+    current: { identifier: "default", availablePackages: [{}] },
+    all: {},
+  });
+  const count = f.calls.length;
+  assert.equal((await f.client.present(null, "it")).reason, "offering");
+  assert.equal(
+    f.calls.slice(count).some((c) => c[0] === "paywall"),
+    false,
+  );
+});
 test("hard checkout uses its isolated offering and disables the legacy native close control", async () => {
   const f = fake();
   await f.client.present(null, "it", { hardPaywall: true });
-  const options = f.calls.find(c => c[0] === "paywall")[1];
-  assert.equal(options.offering.identifier, "hard_paywall");
+  const options = f.calls.find((c) => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "mappa_v1_hard");
   assert.equal(options.displayCloseButton, false);
   assert.equal(options.presentationConfiguration.ios, "FULL_SCREEN");
 });
 test("missing hard offering cannot fall back to the dismissible default", async () => {
   const f = fake();
-  f.sdk.getOfferings = async () => ({ current: { availablePackages: [{}] }, all: {} });
-  assert.equal((await f.client.present(null, "pt", { hardPaywall: true })).reason, "offering");
-  assert.equal(f.calls.some(c => c[0] === "paywall"), false);
+  f.sdk.getOfferings = async () => ({
+    current: { availablePackages: [{}] },
+    all: {},
+  });
+  assert.equal(
+    (await f.client.present(null, "pt", { hardPaywall: true })).reason,
+    "offering",
+  );
+  assert.equal(
+    f.calls.some((c) => c[0] === "paywall"),
+    false,
+  );
 });
 test("hard checkout cancellation never fabricates access and active subscribers skip presentation", async () => {
   const f = fake();
-  assert.equal(hasEntitlement((await f.client.present(null, "it", { hardPaywall: true })).customerInfo), false);
+  assert.equal(
+    hasEntitlement(
+      (await f.client.present(null, "it", { hardPaywall: true })).customerInfo,
+    ),
+    false,
+  );
   f.setInfo(active);
-  const count = f.calls.filter(c => c[0] === "paywall").length;
-  assert.equal((await f.client.present(null, "it", { hardPaywall: true })).result, "NOT_PRESENTED");
-  assert.equal(f.calls.filter(c => c[0] === "paywall").length, count);
+  const count = f.calls.filter((c) => c[0] === "paywall").length;
+  assert.equal(
+    (await f.client.present(null, "it", { hardPaywall: true })).result,
+    "NOT_PRESENTED",
+  );
+  assert.equal(f.calls.filter((c) => c[0] === "paywall").length, count);
 });
 
 // The partial reader must remain bounded after a deep link or entitlement expiry.
