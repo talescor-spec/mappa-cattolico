@@ -17,7 +17,12 @@ const active = {
   },
 };
 const free = { entitlements: { active: {} } };
-function fake({ native = true, apiKey = "appl_test", retained = null } = {}) {
+function fake({
+  native = true,
+  apiKey = "appl_test",
+  retained = null,
+  canPreviewPaywall,
+} = {}) {
   const calls = [];
   let user = retained,
     infos = free,
@@ -88,7 +93,13 @@ function fake({ native = true, apiKey = "appl_test", retained = null } = {}) {
       result = r;
       purchaseInfo = info;
     },
-    client: createPurchasesClient({ sdk, ui, native, apiKey }),
+    client: createPurchasesClient({
+      sdk,
+      ui,
+      native,
+      apiKey,
+      canPreviewPaywall,
+    }),
   };
 }
 test("one free bundle out of ten, unknown features closed, own content remains accessible", () => {
@@ -295,4 +306,49 @@ test("free reader permits initial books and only the current daily excerpt elsew
   assert.equal(canUseFeature("search", false), false);
   assert.equal(canUseFeature("annotations", false), false);
   assert.equal(canUseFeature("lexicon", false), false);
+});
+
+test("production cannot force a paywall preview even for a subscriber, and verification errors fail closed", async () => {
+  for (const guard of [
+    undefined,
+    async () => false,
+    async () => {
+      throw new Error("verification failed");
+    },
+  ]) {
+    const f = fake({ canPreviewPaywall: guard });
+    f.setInfo(active);
+    assert.equal(
+      (await f.client.previewPaywall("A", "it")).reason,
+      "development",
+    );
+    assert.equal(
+      f.calls.length,
+      0,
+      "must not configure or present billing without native approval",
+    );
+  }
+});
+test("sandbox preview displays the real dismissible offering for a subscriber and rechecks permission on every attempt", async () => {
+  let allowed = true;
+  const f = fake({ canPreviewPaywall: async () => allowed });
+  f.setInfo(active);
+  f.setPurchase("CANCELLED", active);
+  const result = await f.client.previewPaywall(null, "pt");
+  assert.equal(result.available, true);
+  assert.equal(hasEntitlement(result.customerInfo), true);
+  const options = f.calls.find((c) => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "mappa_v1");
+  assert.equal(options.displayCloseButton, true);
+  allowed = false;
+  assert.equal(
+    (await f.client.previewPaywall(null, "it")).reason,
+    "development",
+  );
+  assert.equal(f.calls.filter((c) => c[0] === "paywall").length, 1);
+});
+test("web preview never calls native billing even if a development callback returns true", async () => {
+  const f = fake({ native: false, canPreviewPaywall: async () => true });
+  assert.equal((await f.client.previewPaywall(null, "it")).available, false);
+  assert.deepEqual(f.calls, []);
 });

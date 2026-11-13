@@ -296,7 +296,7 @@ try {
       );
       await click(tree, "Ler");
       await click(tree, "10 min");
-      await click(tree, "Voltar ao Perfil");
+      await click(tree, "Concluir teste");
       assert.deepEqual(finished, [false]);
       assert.deepEqual([...storage.entries()], before);
       assert.deepEqual(state.requests, []);

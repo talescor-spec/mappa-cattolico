@@ -1,6 +1,6 @@
 Fideora 1.0.3 — la tua Mappa della Bibbia.
 
-- Nel Profilo, apri Rivedi la presentazione: completa i quattro passaggi, chiudi e riapri. Conferma che account, lingua, nome, routine e abbonamento restino invariati.
+- Solo nel TestFlight/debug: apri Profilo → Strumenti di sviluppo. Simula il primo accesso, salta a una fase e visualizza il paywall sandbox anche con Premium attivo. Verifica che profilo e dati reali non cambino. Nella build App Store gli strumenti non devono apparire.
 - Apri Mappa: esplora Matteo, struttura, temi e personaggi.
 - Confronta i quattro Vangeli e apri i riferimenti nel lettore.
 - Scrivi una riflessione in Matteo, salvala e ritrovala nel Quaderno dopo aver riaperto l’app.

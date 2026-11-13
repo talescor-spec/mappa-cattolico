@@ -1,6 +1,6 @@
 Fideora 1.0.3 — seu Mapa da Bíblia.
 
-- No Perfil, abra Rever apresentação: conclua as quatro etapas, feche e reabra. Confira que conta, idioma, nome, rotina e assinatura permaneçam inalterados.
+- Somente no TestFlight/debug: abra Perfil → Ferramentas de desenvolvimento. Simule o primeiro acesso, abra uma etapa e visualize o paywall sandbox mesmo com Premium ativo. Confira que perfil e dados reais permaneçam intactos. Na App Store as ferramentas não devem aparecer.
 - Abra Mapa: explore Mateus, estrutura, temas e personagens.
 - Compare os quatro Evangelhos e abra as referências no leitor.
 - Escreva uma reflexão em Mateus, salve e encontre no Caderno após reabrir o app.

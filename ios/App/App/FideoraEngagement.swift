@@ -11,6 +11,7 @@ public final class FideoraEngagementPlugin: CAPPlugin, CAPBridgedPlugin, Notific
         CAPPluginMethod(name: "requestReview", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "openReviewPage", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "allowsReviewMetrics", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "developmentEnvironment", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "configureReminders", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "takeReminderRoute", returnType: CAPPluginReturnPromise)
     ]
@@ -61,6 +62,30 @@ public final class FideoraEngagementPlugin: CAPPlugin, CAPBridgedPlugin, Notific
             }
         } else {
             call.resolve(["allowed": Bundle.main.appStoreReceiptURL?.lastPathComponent == "receipt"])
+        }
+        #endif
+    }
+
+    @objc public func developmentEnvironment(_ call: CAPPluginCall) {
+        #if DEBUG
+        call.resolve(["allowed": true, "channel": "debug"])
+        #else
+        if #available(iOS 16.0, *) {
+            Task {
+                if let result = try? await AppTransaction.shared,
+                   case .verified(let transaction) = result,
+                   transaction.environment == .sandbox || transaction.environment == .xcode {
+                    call.resolve(["allowed": true, "channel": "sandbox"])
+                } else {
+                    call.resolve(["allowed": false, "channel": "unavailable"])
+                }
+            }
+        } else if let receipt = Bundle.main.appStoreReceiptURL,
+                  receipt.lastPathComponent == "sandboxReceipt",
+                  FileManager.default.fileExists(atPath: receipt.path) {
+            call.resolve(["allowed": true, "channel": "sandbox"])
+        } else {
+            call.resolve(["allowed": false, "channel": "unavailable"])
         }
         #endif
     }

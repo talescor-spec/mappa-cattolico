@@ -6,6 +6,7 @@ export function createPurchasesClient({
   native,
   apiKey,
   entitlement = "premium",
+  canPreviewPaywall = async () => false,
 }) {
   let configured = false,
     identity,
@@ -74,6 +75,28 @@ export function createPurchasesClient({
         });
         // UI result / local flags never grant access; only CustomerInfo does.
         return { available: true, customerInfo: await info(), result };
+      }),
+    previewPaywall: (user, lang) =>
+      serial(async () => {
+        if (!native || !apiKey) return unavailable();
+        let allowed = false;
+        try {
+          allowed = (await canPreviewPaywall()) === true;
+        } catch {
+          /* fail closed */
+        }
+        if (!allowed) return { ...unavailable(), reason: "development" };
+        if (!(await connect(user, lang))) return unavailable();
+        const offerings = await sdk.getOfferings();
+        const offering = offerings?.all?.mappa_v1;
+        if (!offering?.availablePackages?.length)
+          return { ...unavailable(), reason: "offering" };
+        const { result } = await ui.presentPaywall({
+          offering,
+          displayCloseButton: true,
+          presentationConfiguration: { ios: "FULL_SCREEN" },
+        });
+        return { available: true, result, customerInfo: await info() };
       }),
     restore: (user, lang) =>
       serial(async () => {
