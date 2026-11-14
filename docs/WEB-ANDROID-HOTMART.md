@@ -36,6 +36,12 @@ No changes to Supabase Auth redirect settings are needed: the pre-existing root 
 
 Official provider references: https://developers.hotmart.com/docs/pt-BR/2.0.0/webhook/purchase-webhook/ and https://developers.hotmart.com/docs/pt-BR/2.0.0/webhook/cancel-subscription-webhook/.
 
-## Publication checkpoint — 14 November 2026
+## Publication — 14 November 2026
 
-Backend migration and both Supabase functions were deployed with Hotmart disabled. Frontend publication was rejected by automatic approval review because explicit authorization to publish to `talescor-spec/mappa-cattolico` was required. No GitHub push, PR or production frontend deployment occurred. The prepared local branch is `feature/fideora-web-hotmart-20261114`. Browser visual QA remains incomplete because the connected browser could not reach the isolated local preview server. Local HTTP tests exercise the built app shell and the same API handlers.
+The owner explicitly authorized GitHub publication and production deployment. PR #15 was merged. Production code commit: `38471a3647393149cac3f0c1457f4b5b56a4031d`; deployment `dpl_44WogFfTkVs3wPSWw8ibweFf61so` is READY and serves https://fideora.app/app/.
+
+The GitHub Security & Build Check passed. The published four-step onboarding and email gate were inspected in the browser; the preview was also checked at 390 × 844. The installation instruction was checked and no browser console errors were observed. The live HTML, manifest and service worker return 200; public plans return 200 with an empty list. Anonymous status and Bible access return 401; /app/bible/it.json returns 404. No runtime error/fatal logs were found for this deployment during verification.
+
+Hotmart checkout, real email sign-in acceptance, physical Android installation and the real payment lifecycle remain pending. Neither a checkout nor a trial has been activated. No real or simulated payment was added as a customer sale.
+
+![Published Fideora web login](assets/fideora-web-login-20261114.png)
