@@ -30,7 +30,7 @@ export default function WebGate() {
   const [plans, setPlans] = useState(null), [configError, setConfigError] = useState(false);
   const [panel, setPanel] = useState(false), [email, setEmail] = useState(''), [code, setCode] = useState('');
   const [sent, setSent] = useState(false), [busy, setBusy] = useState(false), [message, setMessage] = useState('');
-  const [selected, setSelected] = useState('annual');
+  const [selected, setSelected] = useState(() => new URLSearchParams(window.location.search).get('plan') === 'monthly' ? 'monthly' : 'annual');
   const reviewLogin = new URLSearchParams(window.location.search).get('review') === 'hotmart';
   const [password, setPassword] = useState('');
   const loadPlans = () => { setConfigError(false); webRequest('plans', false).then(v => setPlans(v.plans || [])).catch(() => { setPlans([]); setConfigError(true); }); };
