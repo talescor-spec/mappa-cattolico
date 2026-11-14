@@ -26,6 +26,10 @@ function applyPlatform(choice) {
   });
 }
 applyPlatform(platform);
+// Keep the chosen language for the post-checkout return to this same-origin app.
+document.querySelectorAll('[data-platform-link]').forEach(link => link.addEventListener('click', () => {
+  if (link.dataset.destination === 'android') { try { localStorage.setItem('fideoraLanguage', locale); } catch {} }
+}));
 document.querySelectorAll('input[name="platform"]').forEach(input => input.addEventListener('change', () => {
   if (!input.checked) return;
   current.searchParams.set('platform', input.value);
