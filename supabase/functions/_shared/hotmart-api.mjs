@@ -13,7 +13,9 @@ export function trialEntitlement(items, email, plans, now = Date.now(), blockedC
     if (String(item.subscriber?.email || '').trim().toLowerCase() !== email.trim().toLowerCase()) continue;
     const plan = plans.find(p => p.active && p.trial_days > 0 && String(p.hotmart_product_id) === String(item.product?.id)
       && p.hotmart_product_ucode === item.product?.ucode && String(p.hotmart_plan_id) === String(item.plan?.id));
-    if (!plan || item.price?.currency_code !== plan.currency || !Number.isFinite(Number(item.price?.value)) || Math.abs(Number(item.price?.value) - Number(plan.amount)) > 0.005) continue;
+    // The provider can convert currencies or apply coupons. Authorization
+    // follows its exact product/plan identity, not a comparison with list price.
+    if (!plan) continue;
     const start = stamp(item.accession_date), next = stamp(item.date_next_charge);
     const until = Math.min(start + plan.trial_days * DAY, next);
     if (start <= now && until > now) expires = Math.max(expires, until);

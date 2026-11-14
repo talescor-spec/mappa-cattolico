@@ -13,10 +13,15 @@ test('unpaid boleto, inactive, cancelled, expired and future trials never unlock
   for(const status of ['STARTED','INACTIVE','DELAYED','OVERDUE','CANCELLED_BY_CUSTOMER'])assert.equal(trialEntitlement([{...sub(),status}],'buyer@example.com',[plan],now),null);
   for(const patch of [{trial:false},{trial:'true'},{date_next_charge:now},{accession_date:now+DAY},{accession_date:now-8*DAY},{accession_date:null}])assert.equal(trialEntitlement([{...sub(),...patch}],'buyer@example.com',[plan],now),null);
 });
-test('email, exact product, plan, amount, currency and terminal payment block trial impersonation',()=>{
-  for(const patch of [{subscriber:{email:'other@example.com'}},{product:{id:43,ucode:'product-1'}},{product:{id:42,ucode:'wrong'}},{plan:{id:8}},{price:{currency_code:'BRL',value:7.99}},{price:{currency_code:'EUR',value:1}},{price:{currency_code:'EUR'}}])assert.equal(trialEntitlement([{...sub(),...patch}],'buyer@example.com',[plan],now),null);
+test('email, exact product, plan and terminal payment block trial impersonation',()=>{
+  for(const patch of [{subscriber:{email:'other@example.com'}},{product:{id:43,ucode:'product-1'}},{product:{id:42,ucode:'wrong'}},{plan:{id:8}}])assert.equal(trialEntitlement([{...sub(),...patch}],'buyer@example.com',[plan],now),null);
   assert.equal(trialEntitlement([sub()],'buyer@example.com',[{...plan,active:false}],now),null);
   assert.equal(trialEntitlement([sub()],'buyer@example.com',[plan],now,new Set(['sub-1'])),null);
+});
+test('provider-confirmed trials remain valid after local currency conversion or a coupon',()=>{
+  for(const price of [{currency_code:'BRL',value:54.79},{currency_code:'EUR',value:3.99}]) {
+    assert.equal(trialEntitlement([{...sub(),price}],'buyer@example.com',[plan],now),new Date(now+2*DAY).toISOString());
+  }
 });
 test('API uses server credentials, filters by verified email/product and refreshes one expired token',async()=>{
   let oauth=0,gets=0;const seen=[];
