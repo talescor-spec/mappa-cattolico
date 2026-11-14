@@ -16,11 +16,12 @@ test('an explicit supported platform wins over detection; untrusted values canno
   assert.equal(detectPlatform({ userAgent: 'Android' }, 'ios'), 'ios');
   assert.equal(detectPlatform({}, 'https://wrong.example'), 'both');
 });
-test('web CTA keeps the correct language, selected plan and safe campaign fields, never auth data', () => {
+test('Android trial CTA goes directly to the selected Hotmart offer and keeps safe attribution, never auth data', () => {
   const url = new URL(platformURL({ platform: 'android', lang: 'pt', plan: 'monthly', position: 'plan_monthly', currentURL: 'https://fideora.app/pt/?utm_source=brevo&utm_content=email_1&ct=fd2_android_e1&platform=android&email=private&code=secret&fm_test=1#access_token=secret' }));
-  assert.equal(url.origin + url.pathname, 'https://fideora.app/app/');
-  assert.equal(url.searchParams.get('lang'), 'pt');
-  assert.equal(url.searchParams.get('plan'), 'monthly');
+  assert.equal(url.origin + url.pathname, 'https://pay.hotmart.com/X108495940M');
+  assert.equal(url.searchParams.get('off'), 'e792z6va');
+  assert.equal(url.searchParams.get('showOnlyTrial'), '1');
+  assert.equal(url.searchParams.has('lang'), false);
   assert.equal(url.searchParams.get('utm_source'), 'brevo');
   assert.equal(url.searchParams.get('utm_content'), 'email_1');
   assert.equal(url.searchParams.get('ct'), 'fd2_android_e1');
@@ -42,4 +43,20 @@ test('Apple CTA goes to the proper storefront with campaign attribution', () => 
 test('campaign allow-list rejects personal or active payloads and overly long values', () => {
   const params = campaignParams(new URLSearchParams({ utm_source: 'brevo', utm_content: '<script>', utm_term: 'a'.repeat(151), email: 'person@example.com', ct: 'bad', access_token: 'secret' }));
   assert.equal(params.toString(), 'utm_source=brevo');
+});
+
+test('hero defaults to the 7-day annual offer; invalid plan hints cannot change the checkout destination', () => {
+  for (const plan of [undefined, 'annual', 'https://wrong.example']) {
+    const url = new URL(platformURL({platform:'android', plan, currentURL:'https://fideora.app/'}));
+    assert.equal(url.hostname, 'pay.hotmart.com');
+    assert.equal(url.searchParams.get('off'), 'tyawr5cb');
+    assert.equal(url.searchParams.get('showOnlyTrial'), '1');
+  }
+});
+test('returning customer access remains a separate same-origin login link', () => {
+  const url = new URL(platformURL({platform:'android', intent:'access', lang:'pt', currentURL:'https://fideora.app/?code=secret#access_token=secret'}));
+  assert.equal(url.origin + url.pathname, 'https://fideora.app/app/');
+  assert.equal(url.searchParams.get('lang'), 'pt');
+  assert.equal(url.searchParams.has('code'), false);
+  assert.equal(url.hash, '');
 });

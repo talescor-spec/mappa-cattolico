@@ -310,6 +310,18 @@ try {
       await act(async () => tree.unmount());
       state.auth = { user: null, loading: false };
     });
+    await test("active Premium onboarding offers entry instead of another subscription", async () => {
+      state.language = "it";
+      let tree;
+      await act(async () => { tree = create(React.createElement(Onboarding, { hasPremium: true, onFinish() {} })); });
+      await click(tree, "Scopri la Mappa");
+      await click(tree, "Continua");
+      await click(tree, "Continua");
+      assert.ok(text(tree).includes("Il tuo accesso Premium è attivo"));
+      assert.ok(text(tree).includes("Inizia il tuo percorso"));
+      assert.equal(text(tree).includes("Scopri i piani Premium"), false);
+      await act(async () => tree.unmount());
+    });
   } finally {
     globalThis.window = previousWindow;
   }

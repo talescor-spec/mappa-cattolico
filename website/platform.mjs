@@ -18,12 +18,14 @@ export function campaignParams(source) {
   if (source.get('fm_test') === '1') params.set('fm_test', '1');
   return params;
 }
-export function platformURL({ platform, lang = 'it', currentURL, position = 'hero', plan }) {
+// Public offers verified against the active server plans; no customer data is embedded.
+export const checkoutOffers = { annual: 'tyawr5cb', monthly: 'e792z6va' };
+export function platformURL({ platform, lang = 'it', currentURL, position = 'hero', plan = 'annual', intent = 'trial' }) {
   const current = new URL(currentURL);
   const locale = lang === 'pt' ? 'pt' : 'it';
   const target = platform === 'ios'
     ? new URL(`https://apps.apple.com/${locale === 'pt' ? 'br' : 'it'}/app/fideora/id6825337165`)
-    : new URL('/app/', current.origin);
+    : intent === 'access' ? new URL('/app/', current.origin) : new URL('https://pay.hotmart.com/X108495940M');
   target.searchParams.set('utm_source', 'fideora_site');
   target.searchParams.set('utm_medium', 'website');
   target.searchParams.set('utm_campaign', 'fideora_mappa');
@@ -33,9 +35,12 @@ export function platformURL({ platform, lang = 'it', currentURL, position = 'her
     target.searchParams.set('pt', '129505215');
     target.searchParams.set('mt', '8');
     if (!target.searchParams.has('ct')) target.searchParams.set('ct', `fd2_site_${locale}`);
-  } else {
+  } else if (intent === 'access') {
     target.searchParams.set('lang', locale);
-    if (plan === 'annual' || plan === 'monthly') target.searchParams.set('plan', plan);
+  } else {
+    target.searchParams.set('off', checkoutOffers[plan] || checkoutOffers.annual);
+    // A trial CTA must not silently become an immediate paid subscription.
+    target.searchParams.set('showOnlyTrial', '1');
   }
   return target.href;
 }

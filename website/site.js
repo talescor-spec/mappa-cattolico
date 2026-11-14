@@ -33,7 +33,7 @@ document.querySelectorAll('input[name="platform"]').forEach(input => input.addEv
   applyPlatform(input.value);
 }));
 document.querySelectorAll('[data-access]').forEach(link => {
-  link.href = platformURL({ platform: 'android', lang: locale, currentURL: current.href, position: 'returning' });
+  link.href = platformURL({ platform: 'android', lang: locale, currentURL: current.href, position: 'returning', intent: 'access' });
 });
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 function selectTab(tab, focus = false) {

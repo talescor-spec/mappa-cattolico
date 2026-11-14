@@ -15,6 +15,7 @@ import { MappaArtwork, MappaSample, GospelComparison } from "./Mappa";
 export default function Onboarding({
   onFinish,
   hardPaywall = false,
+  hasPremium = false,
   replay = false,
   fresh = false,
   initialStep = 0,
@@ -210,7 +211,7 @@ export default function Onboarding({
                     "Questa simulazione non salva nome, lingua o routine. Al termine torni agli strumenti di sviluppo.",
                     "Esta simulação não salva nome, idioma ou rotina. Ao concluir, você volta às ferramentas de desenvolvimento.",
                   )
-                : l(
+                : hasPremium ? l("Il tuo accesso Premium è attivo. Inizia il tuo percorso.", "Seu acesso Premium está ativo. Comece seu percurso.") : l(
                     "Nel prossimo passaggio trovi i piani e le condizioni dell’eventuale prova gratuita, secondo la tua idoneità.",
                     "Na próxima etapa você encontra os planos e as condições de um eventual teste grátis, conforme sua elegibilidade.",
                   )}
@@ -228,7 +229,7 @@ export default function Onboarding({
                 ? l("Continua", "Continuar")
                 : replay && !previewPaywall
                   ? l("Concludi il test", "Concluir teste")
-                  : l("Scopri i piani Premium", "Ver planos Premium")}
+                  : hasPremium ? l("Inizia il tuo percorso", "Começar meu percurso") : l("Scopri i piani Premium", "Ver planos Premium")}
             <ArrowRight size={17} />
           </button>
           {step > 0 && (
