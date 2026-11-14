@@ -22,3 +22,7 @@ pnpm-debug.log*
 supabase/.temp/
 qa/artifacts/
 web-dist/
+/node_modules
+
+web-public/
+web-dist/

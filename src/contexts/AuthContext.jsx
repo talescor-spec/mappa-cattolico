@@ -17,7 +17,6 @@ import {
   normalizeRosaryProgress,
   normalizeNovenaProgress,
 } from "../utils/storage";
-import { syncPurchasesUser, clearPurchasesUser } from "../services/purchases";
 const AuthContext = createContext(null);
 const locale = (value) => (value === "pt" ? "pt" : "it");
 const personalKeys = [
@@ -158,7 +157,6 @@ export function AuthProvider({ children }) {
         setProfile(p.data);
         setCloudProgress(r.data);
         window.dispatchEvent(new Event("fideora:hydrated"));
-        await syncPurchasesUser(nextUser.id);
         if (alive && request === generation.current) setSyncStatus("synced");
       } catch {
         hydrating.current = false;
@@ -253,7 +251,6 @@ export function AuthProvider({ children }) {
     // Flush is handled by the study provider before this action is offered.
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    await clearPurchasesUser().catch(() => {});
     clearProgress();
     window.location.reload();
   };
@@ -262,7 +259,6 @@ export function AuthProvider({ children }) {
     const id = userRef.current.id;
     const { error } = await supabase.rpc("fideora_delete_own_account");
     if (error) throw error;
-    await clearPurchasesUser().catch(() => {});
     await supabase.auth.signOut({ scope: "local" }).catch(() => {});
     try {
       localStorage.removeItem(`fideoraStudy:${id}`);

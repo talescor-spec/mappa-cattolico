@@ -41,11 +41,11 @@ if(current.searchParams.get('lang')==='pt' && current.pathname==='/') {
   current.pathname='/pt/'; current.searchParams.delete('lang');
   window.location.replace(current.pathname+current.search+current.hash);
 }
-// An email return must not look like a logged-in web app or expose a session token.
+// Existing email redirect stays allow-listed at the apex. Forward only auth data
+// to the same-origin PWA, where Supabase consumes it and clears the URL.
 if(/access_token=|refresh_token=|error_description=/.test(current.hash) || current.searchParams.has('code')) {
-  const message=document.querySelector('.auth-message');
-  if(message) message.hidden=false;
-  history.replaceState(null,'',window.location.pathname);
+  const code=current.searchParams.get('code');
+  window.location.replace('/app/'+(code?'?code='+encodeURIComponent(code):current.hash));
 }
 // Update the old offline worker in place, without deleting any personal local data.
 if('serviceWorker' in navigator) {

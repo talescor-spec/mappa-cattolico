@@ -1,28 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Home,
+  Map,
+  Leaf,
+  ArrowUpRight,
   BookOpen,
   Heart,
   User,
-  ArrowUpRight,
   ChevronRight,
-  Check,
-  Sun,
   CloudOff,
-  Leaf,
   PenLine,
-  Library,
   WifiOff,
 } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 import { StudyProvider, useStudy } from "./contexts/StudyContext";
 import { useAuth } from "./contexts/AuthContext";
-import {
-  dailyReading,
-  bookNames,
-  localDateKey,
-  mysteryToday,
-} from "./data/content";
+import { bookNames, dailyReading } from "./data/content";
 import { safeGet, safeSet, safeGetJSON, safeSetJSON } from "./utils/storage";
 import useBible from "./hooks/useBible";
 import Bible from "./components/Bible";
@@ -30,166 +22,37 @@ import Notebook from "./components/Notebook";
 import Prayer from "./components/Prayer";
 import Profile from "./components/Profile";
 import { Header, Mark, Modal, Row } from "./components/UI";
+import { PremiumProvider, usePremium } from "./contexts/PremiumContext";
+import { PremiumOffer } from "./components/Premium";
+import Onboarding from "./components/Onboarding";
+import MappaHome from "./components/Mappa";
+import HardPaywallGate from "./components/HardPaywallGate";
+import { isIOSNative } from "./services/purchases";
+import {
+  ENTRY_ACCESS_KEY,
+  initializeEntryAccess,
+  entryScreen,
+} from "./utils/entryAccess";
+import useReviewMoments from "./hooks/useReviewMoments";
+import {
+  configureReminders,
+  engagement,
+  hasEngagement,
+  REMINDERS_KEY,
+} from "./services/engagement";
 import "./styles.css";
-function HomePage({ bible, onRead, onPray, onStudy }) {
-  const { l, language, t, getFormattedDate } = useLanguage();
-  const { entries, write, ready } = useStudy();
-  const index = language === "it" ? 0 : 1;
-  const daily = dailyReading();
-  const b = bible?.books.find((b) => b.book === daily.book);
-  const first = b?.chapters
-    .find((c) => c.chapter === daily.chapter)
-    ?.verses.find((v) => v.number === daily.start);
-  const name = safeGet("fideoraUserName");
-  const today = localDateKey();
-  const done = entries.some((e) => e.id === `reading:${today}`);
-  return (
-    <>
-      <Header
-        eyebrow={getFormattedDate()}
-        title={
-          name
-            ? l(`Un momento per te, ${name}.`, `Um momento para você, ${name}.`)
-            : l("Fai spazio alla tua fede.", "Abra espaço para sua fé.")
-        }
-        subtitle={l(
-          "Un incontro con la Parola. Un piccolo passo, ogni giorno.",
-          "Um encontro com a Palavra. Um pequeno passo, todos os dias.",
-        )}
-      />
-      <div className="home-grid">
-        <section className="daily-card">
-          <div className="section-line">
-            <span className="eyebrow">
-              {l("LA LETTURA DI OGGI", "A LEITURA DE HOJE")}
-            </span>
-            <BookOpen size={22} />
-          </div>
-          <p className="daily-reference">
-            {b ? bookNames[language][b.bookId - 1] : ""} {daily.chapter},
-            {daily.start}–{daily.end}
-          </p>
-          <h2>{daily.title[index]}</h2>
-          {first && <blockquote>{first.text}</blockquote>}
-          <div className="daily-bottom">
-            <button
-              className="button light"
-              onClick={() => onRead({ ...daily, verse: daily.start })}
-            >
-              {l("Apri la lettura", "Abrir a leitura")}
-              <ArrowUpRight size={16} />
-            </button>
-            <span>5 {l("minuti per te", "minutos para você")}</span>
-          </div>
-          <div className="daily-art" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
-        </section>
-        <section className="card reflection-card">
-          <span className="mini-icon">
-            <Leaf size={20} />
-          </span>
-          <p className="eyebrow">
-            {l("DA PORTARE CON TE", "PARA LEVAR COM VOCÊ")}
-          </p>
-          <h2>{l("Dalla Parola alla vita.", "Da Palavra à vida.")}</h2>
-          <p>{daily.reflection[index]}</p>
-          <button
-            className={`button ${done ? "secondary" : "primary"}`}
-            disabled={!ready || done}
-            onClick={() =>
-              write(`reading:${today}`, "reading", {
-                date: today,
-                book: daily.book,
-                chapter: daily.chapter,
-              })
-            }
-          >
-            {done ? <Check size={16} /> : <Sun size={16} />}
-            {done
-              ? l("Un passo compiuto", "Um passo concluído")
-              : l("Ho meditato oggi", "Meditei hoje")}
-          </button>
-        </section>
-      </div>
-      <p className="daily-disclaimer">
-        {l(
-          "Selezione devozionale Fideora · ciclo di 14 letture. Non corrisponde al lezionario della Messa.",
-          "Seleção devocional Fideora · ciclo de 14 leituras. Não corresponde ao lecionário da Missa.",
-        )}
-      </p>
-      <div className="section-line section-gap">
-        <h2>
-          {l("Scegli il tuo prossimo passo.", "Escolha seu próximo passo.")}
-        </h2>
-        <span className="caption">
-          {l("Senza fretta. Con presenza.", "Sem pressa. Com presença.")}
-        </span>
-      </div>
-      <div className="feature-grid">
-        <button
-          className="card feature-card"
-          onClick={() => onRead({ book: "Gen", chapter: 1 })}
-        >
-          <span className="mini-icon">
-            <BookOpen size={22} />
-          </span>
-          <h3>{l("Leggi e comprendi", "Leia e compreenda")}</h3>
-          <p>
-            {l(
-              "La Bibbia, le tue note, le parole delle origini.",
-              "A Bíblia, suas notas, as palavras das origens.",
-            )}
-          </p>
-          <span className="text-button">
-            {l("Esplora la Bibbia", "Explorar a Bíblia")}
-            <ArrowUpRight size={16} />
-          </span>
-        </button>
-        <button className="card feature-card" onClick={onPray}>
-          <span className="mini-icon amber">
-            <Heart size={22} />
-          </span>
-          <h3>{l("Fermati e prega", "Pare e reze")}</h3>
-          <p>
-            {t(mysteryToday())}.{" "}
-            {l("Un’intenzione da affidare.", "Uma intenção para entregar.")}
-          </p>
-          <span className="text-button">
-            {l("Trova il tuo silenzio", "Encontre seu silêncio")}
-            <ArrowUpRight size={16} />
-          </span>
-        </button>
-        <button className="card feature-card" onClick={onStudy}>
-          <span className="mini-icon lavender">
-            <PenLine size={22} />
-          </span>
-          <h3>{l("Custodisci un pensiero", "Guarde um pensamento")}</h3>
-          <p>
-            {l(
-              "Un quaderno per ciò che la Parola risveglia.",
-              "Um caderno para o que a Palavra desperta.",
-            )}
-          </p>
-          <span className="text-button">
-            {l("Apri il quaderno", "Abrir o caderno")}
-            <ArrowUpRight size={16} />
-          </span>
-        </button>
-      </div>
-      <footer className="home-footer">
-        <Mark />
-        <p>{l("La tua fede, ogni giorno.", "Sua fé, todos os dias.")}</p>
-        <span>FIDEORA</span>
-      </footer>
-    </>
-  );
-}
-function Fideora() {
+import "./mappa.css";
+export function Fideora() {
   const { language, changeLanguage, l } = useLanguage();
   const { user } = useAuth();
+  const { request, checking, isPremium, busy, offer, message, billingProvider } = usePremium();
+  const [entryMode] = useState(() =>
+    initializeEntryAccess({
+      native: isIOSNative(),
+      read: safeGet,
+      write: safeSet,
+    }),
+  );
   const { storageError } = useStudy();
   const [page, setPage] = useState("today"),
     [location, setLocation] = useState(() =>
@@ -198,7 +61,9 @@ function Fideora() {
     [sources, setSources] = useState(false),
     [legal, setLegal] = useState(null),
     [online, setOnline] = useState(navigator.onLine),
-    [onboard, setOnboard] = useState(() => safeGet("fideoraOnboarded") !== "1");
+    [onboard, setOnboard] = useState(() => safeGet("fideoraOnboarded") !== "1"),
+    [reminderRoute, setReminderRoute] = useState(""),
+    [guidedPrayer, setGuidedPrayer] = useState(false);
   const { bible, error, retry } = useBible(language);
   useEffect(() => {
     const up = () => setOnline(true),
@@ -210,19 +75,87 @@ function Fideora() {
       window.removeEventListener("offline", down);
     };
   }, []);
-  const navigate = (target) => {
+  const navigate = useCallback((target) => {
     setPage(target);
     window.scrollTo(0, 0);
-  };
-  const read = (p) => {
-    if (p.language) changeLanguage(p.language);
-    const value = { book: p.book, chapter: p.chapter, verse: p.verse };
-    setLocation(value);
-    safeSetJSON("fideoraLastReading", value);
-    navigate("bible");
-  };
+  }, []);
+  const read = useCallback(
+    (p) => {
+      if (p.language) changeLanguage(p.language);
+      const value = { book: p.book, chapter: p.chapter, verse: p.verse };
+      setLocation(value);
+      safeSetJSON("fideoraLastReading", value);
+      navigate("bible");
+    },
+    [changeLanguage, navigate],
+  );
+  const screen = entryScreen({ onboard, mode: entryMode, checking, isPremium });
+  const onGuidedPrayerOpened = useCallback(() => setGuidedPrayer(false), []);
+  const onCompleted = useReviewMoments({
+    ready:
+      screen === "content" && !checking && !sources && !legal && !reminderRoute,
+    blocked: Boolean(
+      busy || offer || message === "error" || storageError || error,
+    ),
+    atHome: page === "today",
+    locale: language,
+  });
+  useEffect(() => {
+    if (!hasEngagement()) return;
+    const settings = safeGetJSON(REMINDERS_KEY);
+    if (settings.reading || settings.prayer)
+      void configureReminders(settings, language).catch(() => {});
+  }, [language]);
+  useEffect(() => {
+    if (!hasEngagement()) return;
+    let mounted = true;
+    const take = async () => {
+      if (!mounted) return;
+      const { route } = await engagement.takeReminderRoute();
+      if (mounted && (route === "reading" || route === "prayer"))
+        setReminderRoute(route);
+    };
+    const subscription = engagement.addListener(
+      "reminderTapped",
+      () => void take().catch(() => {}),
+    );
+    subscription.then(take).catch(() => {});
+    return () => {
+      mounted = false;
+      subscription.then((handle) => handle.remove()).catch(() => {});
+    };
+  }, []);
+  useEffect(() => {
+    if (screen !== "content" || checking || busy || offer || !reminderRoute)
+      return;
+    if (reminderRoute === "reading") {
+      const daily = dailyReading();
+      read({ ...daily, verse: daily.start });
+    } else {
+      setGuidedPrayer(true);
+      navigate("pray");
+    }
+    setReminderRoute("");
+  }, [screen, checking, busy, offer, reminderRoute, read, navigate]);
+  if (screen === "onboarding")
+    return (
+      <Onboarding
+        bible={bible}
+        hardPaywall={entryMode === "hard"}
+        onFinish={(showPremium) => {
+          // Never persist completion without the hard cohort marker: a partial
+          // storage failure must not classify this new install as a legacy one.
+          if (entryMode !== "hard" || safeSet(ENTRY_ACCESS_KEY, "hard"))
+            safeSet("fideoraOnboarded", "1");
+          setOnboard(false);
+          if (entryMode !== "hard" && showPremium) request("welcome");
+        }}
+      />
+    );
+  if (screen !== "content")
+    return <HardPaywallGate checking={screen === "checking"} />;
   const tabs = [
-    ["today", Home, l("Oggi", "Hoje")],
+    ["today", Map, l("Mappa", "Mapa")],
     ["bible", BookOpen, l("Bibbia", "Bíblia")],
     ["notebook", PenLine, l("Quaderno", "Caderno")],
     ["pray", Heart, l("Prega", "Rezar")],
@@ -322,11 +255,12 @@ function Fideora() {
         )}
         <main id="main-content" key={`${user?.id || "guest"}:${page}`}>
           {page === "today" && (
-            <HomePage
+            <MappaHome
               bible={bible}
               onRead={read}
               onPray={() => navigate("pray")}
               onStudy={() => navigate("notebook")}
+              onCompleted={onCompleted}
             />
           )}
           {page === "bible" && (
@@ -343,9 +277,15 @@ function Fideora() {
             />
           )}
           {page === "notebook" && <Notebook bible={bible} onRead={read} />}
-          {page === "pray" && <Prayer />}
+          {page === "pray" && (
+            <Prayer
+              onCompleted={onCompleted}
+              guidedPrayer={guidedPrayer}
+              onGuidedPrayerOpened={onGuidedPrayerOpened}
+            />
+          )}
           {page === "profile" && (
-            <Profile onSources={() => setSources(true)} onLegal={setLegal} />
+            <Profile onSources={() => setSources(true)} onLegal={kind => billingProvider === 'hotmart' ? window.location.assign(`/${kind}.html?lang=${language}`) : setLegal(kind)} />
           )}
         </main>
         <nav
@@ -365,50 +305,7 @@ function Fideora() {
           ))}
         </nav>
       </div>
-      {onboard && (
-        <Modal
-          title={l("Benvenuto in Fideora.", "Bem-vindo ao Fideora.")}
-          onClose={() => {
-            safeSet("fideoraOnboarded", "1");
-            setOnboard(false);
-          }}
-        >
-          <div className="onboarding">
-            <Mark />
-            <h3>{l("La tua fede, ogni giorno.", "Sua fé, todos os dias.")}</h3>
-            <p>
-              {l(
-                "Leggi la Parola, trova un momento di preghiera e custodisci ciò che ti accompagna. Puoi iniziare senza un account.",
-                "Leia a Palavra, encontre um momento de oração e guarde o que acompanha você. Você pode começar sem uma conta.",
-              )}
-            </p>
-            <div className="onboard-language">
-              <button
-                className={`button ${language === "it" ? "primary" : "secondary"}`}
-                onClick={() => changeLanguage("it")}
-              >
-                Italiano
-              </button>
-              <button
-                className={`button ${language === "pt" ? "primary" : "secondary"}`}
-                onClick={() => changeLanguage("pt")}
-              >
-                Português
-              </button>
-            </div>
-            <button
-              className="button primary wide"
-              onClick={() => {
-                safeSet("fideoraOnboarded", "1");
-                setOnboard(false);
-              }}
-            >
-              {l("Inizia il tuo cammino", "Começar minha caminhada")}
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </Modal>
-      )}
+      <PremiumOffer />
       {sources && (
         <Modal
           title={l("Edizioni e fonti", "Edições e fontes")}
@@ -419,8 +316,8 @@ function Fideora() {
             <h3>{l("Testi biblici", "Textos bíblicos")}</h3>
             <p>
               {l(
-                "Italiano: Bibbia Diodati (1649). Português: Almeida (edizione 1819). Entrambe sono edizioni storiche in pubblico dominio, con 66 libri ciascuna.",
-                "Italiano: Bíblia Diodati (1649). Português: Almeida (edição de 1819). Ambas são edições históricas em domínio público, com 66 livros cada.",
+                "Italiano: Bibbia Diodati (1649). Português: Almeida (edizione 1819). Entrambe sono edizioni storiche in pubblico dominio.",
+                "Italiano: Bíblia Diodati (1649). Português: Almeida (edição de 1819). Ambas são edições históricas em domínio público.",
               )}
             </p>
             <p>
@@ -525,9 +422,11 @@ export default function App() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <StudyProvider>
-          <Fideora />
-        </StudyProvider>
+        <PremiumProvider>
+          <StudyProvider>
+            <Fideora />
+          </StudyProvider>
+        </PremiumProvider>
       </LanguageProvider>
     </ErrorBoundary>
   );

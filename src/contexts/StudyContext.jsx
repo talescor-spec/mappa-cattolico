@@ -56,6 +56,7 @@ export function StudyProvider({ children }) {
       setStorageError(!ok);
       ref.current = { owner: ref.current.owner, data };
       setSnapshot(ref.current);
+      return ok;
     },
     [loading],
   );

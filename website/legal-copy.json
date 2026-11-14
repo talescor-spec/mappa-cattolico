@@ -34,6 +34,10 @@
         [
           "Misurazione del sito e delle comunicazioni",
           "Sul sito misuriamo visite, visualizzazioni della dimostrazione e clic verso App Store, con un identificativo temporaneo di sessione, lingua, tipo di dispositivo e codice della campagna. Non salviamo email, note, intenzioni o indirizzi IP in questi eventi, e non usiamo cookie pubblicitari. Rispettiamo i segnali Do Not Track e Global Privacy Control. Per le email inviate registriamo consegna, apertura e clic tramite Brevo; aperture e clic possono comprendere attività automatica. Gli eventi di prova e abbonamento ricevuti da RevenueCat sono registrati con un identificativo pseudonimizzato per misurare il servizio; i test sono separati dai risultati reali. Questi dati sono conservati nell’infrastruttura Supabase usata per le metriche del progetto."
+        ],
+        [
+          "Accesso web e Hotmart",
+          "Nella versione web /app/ è necessario un account email verificato. Per riconoscere l’abbonamento conserviamo email dell’acquisto, identificativi Hotmart di transazione e abbonamento, piano, stato e scadenza. Hotmart tratta il pagamento; Fideora non riceve i dati completi della carta. Le notifiche di pagamento sono verificate dal server. Le registrazioni di fatturazione possono restare dopo l’eliminazione dell’account per assistenza, riconciliazione e obblighi applicabili."
         ]
       ]
     },
@@ -42,7 +46,7 @@
       "sections": [
         [
           "Il servizio",
-          "Fideora è uno strumento indipendente di lettura biblica, studio personale e preghiera cattolica. Non è un servizio ufficiale della Chiesa e non sostituisce l’accompagnamento pastorale. La lettura devozionale quotidiana e le preghiere di base sono gratuite; gli strumenti completi richiedono Premium. L’account è facoltativo. I contenuti personali già creati restano accessibili ed esportabili anche senza un abbonamento attivo."
+          "Fideora è uno strumento indipendente di lettura biblica, studio personale e preghiera. Non è un servizio ufficiale della Chiesa. Le nuove installazioni native e l’accesso web completo richiedono un abbonamento attivo o una prova idonea. Nella versione web serve un account email verificato. I dati personali già creati restano esportabili anche senza abbonamento attivo."
         ],
         [
           "Abbonamenti Premium",
@@ -58,11 +62,15 @@
         ],
         [
           "Disponibilità",
-          "Il contenuto biblico incluso nell’app iOS è disponibile senza rete. Account, acquisti e sincronizzazione richiedono una connessione. Il sito fideora.app presenta il servizio e rimanda all’App Store: non offre l’app completa nel browser. Mantieni un’esportazione dei dati importanti."
+          "Il testo biblico incluso nell’app iOS può essere letto senza rete. La versione web è disponibile su https://fideora.app/app/ ed è installabile dalla schermata iniziale del browser compatibile. Nella versione web la verifica dell’abbonamento e il caricamento dei testi richiedono una connessione. Esporta i dati importanti dal Profilo."
         ],
         [
           "Account",
           "Puoi disconnetterti o eliminare l’account dal Profilo. L’eliminazione di un account non annulla eventuali abbonamenti Apple già attivi, che si gestiscono nelle impostazioni Apple. Questi termini non limitano i diritti inderogabili riconosciuti dalla legge applicabile."
+        ],
+        [
+          "Abbonamenti web",
+          "Quando disponibili, i piani web sono pagati e gestiti da Hotmart. Il checkout indica prezzo, valuta, durata, eventuale prova e rinnovo prima della conferma. Usa nel Fideora la stessa email verificata dell’acquisto. Il pagamento approvato attiva l’accesso fino alla scadenza del periodo; annullare il rinnovo conserva il periodo pagato. Un rimborso o chargeback revoca il relativo pagamento. Gestisci annullamenti e rimborsi da https://consumer.hotmart.com/. Eliminare l’account Fideora non annulla l’abbonamento Hotmart. La fatturazione web è distinta da quella Apple; non acquistare due abbonamenti per lo stesso utilizzo."
         ]
       ]
     },
@@ -83,7 +91,7 @@
         ],
         [
           "Offline e recupero",
-          "Su iOS il testo biblico è incluso nel pacchetto. Se una sincronizzazione fallisce, controlla la rete e usa Sincronizza ora. Non eliminare l’app prima di esportare i dati che vuoi conservare. Il sito web presenta il servizio; per leggere e studiare usa l’app ufficiale per iPhone e iPad."
+          "Su iOS il testo biblico è incluso nell’app. Sul web è necessaria una connessione per verificare l’accesso e caricare i testi. Accedi su /app/ con la stessa email della Hotmart e usa “Ho già acquistato · Verifica accesso”. Se il pagamento è recente, attendi qualche istante. Non eliminare i dati del browser prima di esportare gli appunti."
         ],
         [
           "Segnala un problema",
@@ -131,6 +139,10 @@
         [
           "Medição do site e das comunicações",
           "No site medimos visitas, visualizações da demonstração e cliques para a App Store, com um identificador temporário de sessão, idioma, tipo de aparelho e código da campanha. Não salvamos email, notas, intenções ou endereços IP nesses eventos e não usamos cookies de publicidade. Respeitamos os sinais Do Not Track e Global Privacy Control. Nos emails enviados registramos entrega, abertura e cliques pela Brevo; aberturas e cliques podem incluir atividade automática. Os eventos de teste e assinatura recebidos do RevenueCat são registrados com identificador pseudonimizado para medir o serviço; testes ficam separados dos resultados reais. Esses dados são armazenados na infraestrutura Supabase usada para as métricas do projeto."
+        ],
+        [
+          "Acesso web e Hotmart",
+          "Na versão web /app/ é necessária uma conta com e-mail verificado. Para reconhecer a assinatura guardamos e-mail da compra, identificadores Hotmart da transação e assinatura, plano, estado e validade. A Hotmart processa o pagamento; o Fideora não recebe os dados completos do cartão. As notificações de pagamento são verificadas no servidor. Registros de cobrança podem permanecer após a exclusão da conta para suporte, conciliação e obrigações aplicáveis."
         ]
       ]
     },
@@ -139,7 +151,7 @@
       "sections": [
         [
           "O serviço",
-          "Fideora é uma ferramenta independente de leitura bíblica, estudo pessoal e oração católica. Não é um serviço oficial da Igreja nem substitui acompanhamento pastoral. A leitura devocional diária e as orações básicas são gratuitas; as ferramentas completas exigem Premium. A conta é opcional. Conteúdos pessoais já criados continuam acessíveis e exportáveis mesmo sem assinatura ativa."
+          "Fideora é uma ferramenta independente de leitura bíblica, estudo pessoal e oração. Não é um serviço oficial da Igreja. Novas instalações nativas e o acesso web completo exigem assinatura ativa ou teste elegível. A versão web exige conta com e-mail verificado. Dados pessoais já criados continuam exportáveis mesmo sem assinatura ativa."
         ],
         [
           "Assinaturas Premium",
@@ -155,11 +167,15 @@
         ],
         [
           "Disponibilidade",
-          "O conteúdo bíblico incluído no app iOS funciona sem conexão. Conta, compras e sincronização precisam de internet. O site fideora.app apresenta o serviço e direciona à App Store: não oferece o app completo no navegador. Mantenha uma exportação dos dados importantes."
+          "O texto bíblico incluído no app iOS pode ser lido sem conexão. A versão web fica em https://fideora.app/app/ e pode ser adicionada à tela inicial pelo navegador compatível. Na versão web, a verificação da assinatura e o carregamento dos textos exigem conexão. Exporte dados importantes pelo Perfil."
         ],
         [
           "Conta",
           "Você pode sair ou excluir a conta no Perfil. A exclusão não cancela eventuais assinaturas Apple já ativas, que são gerenciadas nos Ajustes da Apple. Estes termos não limitam direitos obrigatórios previstos na legislação aplicável."
+        ],
+        [
+          "Assinaturas web",
+          "Quando disponíveis, os planos web são pagos e gerenciados na Hotmart. O checkout apresenta preço, moeda, duração, eventual teste e renovação antes da confirmação. Use no Fideora o mesmo e-mail verificado da compra. O pagamento aprovado ativa o acesso até o fim do período; cancelar a renovação preserva o período pago. Reembolso ou chargeback revoga o pagamento correspondente. Gerencie cancelamentos e reembolsos em https://consumer.hotmart.com/. Excluir a conta Fideora não cancela a assinatura Hotmart. A cobrança web é distinta da Apple; evite contratar duas assinaturas para o mesmo uso."
         ]
       ]
     },
@@ -180,7 +196,7 @@
         ],
         [
           "Offline e recuperação",
-          "No iOS, o texto bíblico está incluído no pacote. Se uma sincronização falhar, verifique a conexão e use Sincronizar agora. Não exclua o app antes de exportar os dados que deseja manter. O site apresenta o serviço; para ler e estudar, use o app oficial para iPhone e iPad."
+          "No iOS o texto bíblico está incluído no app. Na web é necessária conexão para verificar o acesso e carregar os textos. Entre em /app/ com o mesmo e-mail da Hotmart e use “Já comprei · Verificar acesso”. Se o pagamento é recente, aguarde alguns instantes. Não apague os dados do navegador antes de exportar suas anotações."
         ],
         [
           "Relate um problema",
