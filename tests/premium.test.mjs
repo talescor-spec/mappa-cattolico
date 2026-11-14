@@ -1,0 +1,354 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  FEATURE_BUNDLES,
+  hasEntitlement,
+  canUseFeature,
+  dailyVerses,
+  canReadBook,
+  readingAccess,
+} from "../src/utils/access.js";
+import { createPurchasesClient } from "../src/services/purchasesClient.js";
+const active = {
+  entitlements: {
+    active: {
+      premium: { isActive: true, expirationDate: "2099-01-01T00:00:00Z" },
+    },
+  },
+};
+const free = { entitlements: { active: {} } };
+function fake({
+  native = true,
+  apiKey = "appl_test",
+  retained = null,
+  canPreviewPaywall,
+} = {}) {
+  const calls = [];
+  let user = retained,
+    infos = free,
+    result = "CANCELLED",
+    purchaseInfo = free;
+  const sdk = {
+    configure: async (options) => {
+      calls.push(["configure", options.appUserID]);
+      if (options.appUserID) user = options.appUserID;
+    },
+    isAnonymous: async () => ({ isAnonymous: !user }),
+    logIn: async ({ appUserID }) => {
+      calls.push(["login", appUserID]);
+      user = appUserID;
+      infos = free;
+    },
+    logOut: async () => {
+      calls.push(["logout"]);
+      user = null;
+      infos = free;
+    },
+    overridePreferredUILocale: async ({ locale }) =>
+      calls.push(["locale", locale]),
+    getCustomerInfo: async () => {
+      calls.push(["info", user]);
+      return { customerInfo: infos };
+    },
+    getOfferings: async () => ({
+      all: {
+        mappa_v1_hard: {
+          identifier: "mappa_v1_hard",
+          availablePackages: [{ identifier: "$rc_annual" }],
+        },
+        mappa_v1: {
+          identifier: "mappa_v1",
+          availablePackages: [{ identifier: "$rc_annual" }],
+        },
+      },
+      current: {
+        identifier: "default",
+        availablePackages: [{ identifier: "$rc_annual" }],
+      },
+    }),
+    restorePurchases: async () => ({ customerInfo: infos }),
+    addCustomerInfoUpdateListener: async (listener) => {
+      calls.push(["listen", listener]);
+      return "listener-1";
+    },
+    removeCustomerInfoUpdateListener: async (options) =>
+      calls.push(["remove", options.listenerToRemove]),
+  };
+  const ui = {
+    presentPaywall: async (options) => {
+      calls.push(["paywall", options]);
+      infos = purchaseInfo;
+      return { result };
+    },
+    presentCustomerCenter: async () => calls.push(["manage"]),
+  };
+  return {
+    calls,
+    sdk,
+    ui,
+    setInfo: (info) => {
+      infos = info;
+    },
+    setPurchase: (r, info) => {
+      result = r;
+      purchaseInfo = info;
+    },
+    client: createPurchasesClient({
+      sdk,
+      ui,
+      native,
+      apiKey,
+      canPreviewPaywall,
+    }),
+  };
+}
+test("one free bundle out of ten, unknown features closed, own content remains accessible", () => {
+  assert.equal(FEATURE_BUNDLES.length, 10);
+  assert.equal(FEATURE_BUNDLES.filter((f) => !f.premium).length, 1);
+  for (const f of FEATURE_BUNDLES)
+    assert.equal(canUseFeature(f.id, false), !f.premium);
+  assert.equal(canUseFeature("unknown", true), false);
+  assert.equal(canUseFeature("notebook", false, { existing: true }), true);
+});
+test("only a valid active entitlement grants access; expired/offline cache and malformed dates deny", () => {
+  assert.equal(hasEntitlement(active), true);
+  assert.equal(hasEntitlement(free), false);
+  assert.equal(hasEntitlement({ premium: true }), false);
+  assert.equal(
+    hasEntitlement({ entitlements: { active: { premium: {} } } }),
+    false,
+  );
+  for (const expirationDate of ["2020-01-01", "garbage"])
+    assert.equal(
+      hasEntitlement({
+        entitlements: { active: { premium: { expirationDate } } },
+      }),
+      false,
+    );
+  assert.equal(
+    hasEntitlement({
+      entitlements: { active: { premium: { isActive: false } } },
+    }),
+    false,
+  );
+});
+test("daily preview is limited to exact book, chapter and verse range", () => {
+  const verses = Array.from({ length: 10 }, (_, i) => ({ number: i + 1 }));
+  const daily = { book: "John", chapter: 1, start: 3, end: 5 };
+  assert.deepEqual(
+    dailyVerses("John", 1, verses, daily).map((v) => v.number),
+    [3, 4, 5],
+  );
+  assert.deepEqual(dailyVerses("Gen", 1, verses, daily), []);
+  assert.deepEqual(dailyVerses("John", 2, verses, daily), []);
+});
+test("no native billing calls or fabricated premium when unsupported or missing configuration", async () => {
+  for (const options of [{ native: false }, { apiKey: "" }]) {
+    const f = fake(options);
+    assert.equal((await f.client.present(null, "it")).available, false);
+    assert.equal((await f.client.restore(null, "it")).available, false);
+    assert.equal(f.calls.length, 0);
+  }
+});
+test("concurrent initializations configure once and serialize accounts A/B/logout", async () => {
+  const f = fake();
+  await Promise.all([
+    f.client.refresh("A", "it"),
+    f.client.refresh("B", "pt"),
+    f.client.refresh(null, "it"),
+  ]);
+  assert.equal(f.calls.filter((c) => c[0] === "configure").length, 1);
+  assert.deepEqual(
+    f.calls.filter((c) => ["login", "logout"].includes(c[0])),
+    [["login", "B"], ["logout"]],
+  );
+  assert.deepEqual(
+    f.calls.filter((c) => c[0] === "info").map((c) => c[1]),
+    ["A", "B", null],
+  );
+});
+test("a retained custom identity is logged out before guest subscription checks", async () => {
+  const f = fake({ retained: "old-account" });
+  await f.client.refresh(null, "it");
+  assert.ok(
+    f.calls.findIndex((c) => c[0] === "logout") <
+      f.calls.findIndex((c) => c[0] === "info"),
+  );
+});
+test("cancel/success UI results cannot grant premium without entitlement; successful purchase rechecks SDK", async () => {
+  const f = fake();
+  f.setPurchase("PURCHASED", free);
+  assert.equal(
+    hasEntitlement((await f.client.present("A", "it")).customerInfo),
+    false,
+  );
+  f.setPurchase("CANCELLED", free);
+  assert.equal(
+    hasEntitlement((await f.client.present("A", "it")).customerInfo),
+    false,
+  );
+  f.setPurchase("PURCHASED", active);
+  assert.equal(
+    hasEntitlement((await f.client.present("A", "it")).customerInfo),
+    true,
+  );
+  const count = f.calls.filter((c) => c[0] === "paywall").length;
+  await f.client.present("A", "it");
+  assert.equal(f.calls.filter((c) => c[0] === "paywall").length, count);
+});
+test("restore unwraps customerInfo, listener removes exact id, customer center refreshes", async () => {
+  const f = fake();
+  await f.client.refresh("A", "it");
+  f.setInfo(active);
+  assert.equal(
+    hasEntitlement((await f.client.restore("A", "it")).customerInfo),
+    true,
+  );
+  const dispose = await f.client.subscribe(() => {});
+  await dispose();
+  assert.deepEqual(f.calls.at(-1), ["remove", "listener-1"]);
+  assert.equal(
+    hasEntitlement((await f.client.manage("A", "it")).customerInfo),
+    true,
+  );
+});
+test("no offering prevents paywall presentation and reports a recoverable state", async () => {
+  const f = fake();
+  f.sdk.getOfferings = async () => ({ current: null });
+  const result = await f.client.present(null, "it");
+  assert.equal(result.reason, "offering");
+  assert.equal(
+    f.calls.some((c) => c[0] === "paywall"),
+    false,
+  );
+});
+test("billing queue recovers after a failed identity change", async () => {
+  const f = fake();
+  await f.client.refresh("A", "it");
+  const login = f.sdk.logIn;
+  f.sdk.logIn = async () => {
+    throw new Error("network");
+  };
+  await assert.rejects(f.client.refresh("B", "it"));
+  f.sdk.logIn = login;
+  await f.client.refresh("B", "it");
+  assert.deepEqual(f.calls.at(-1), ["info", "B"]);
+});
+
+test("legacy checkout selects the Mappa offering, remains dismissible and cannot fall back to an old current offering", async () => {
+  const f = fake();
+  await f.client.present(null, "it");
+  const options = f.calls.find((c) => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "mappa_v1");
+  assert.equal(options.displayCloseButton, true);
+  f.sdk.getOfferings = async () => ({
+    current: { identifier: "default", availablePackages: [{}] },
+    all: {},
+  });
+  const count = f.calls.length;
+  assert.equal((await f.client.present(null, "it")).reason, "offering");
+  assert.equal(
+    f.calls.slice(count).some((c) => c[0] === "paywall"),
+    false,
+  );
+});
+test("hard checkout uses its isolated offering and disables the legacy native close control", async () => {
+  const f = fake();
+  await f.client.present(null, "it", { hardPaywall: true });
+  const options = f.calls.find((c) => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "mappa_v1_hard");
+  assert.equal(options.displayCloseButton, false);
+  assert.equal(options.presentationConfiguration.ios, "FULL_SCREEN");
+});
+test("missing hard offering cannot fall back to the dismissible default", async () => {
+  const f = fake();
+  f.sdk.getOfferings = async () => ({
+    current: { availablePackages: [{}] },
+    all: {},
+  });
+  assert.equal(
+    (await f.client.present(null, "pt", { hardPaywall: true })).reason,
+    "offering",
+  );
+  assert.equal(
+    f.calls.some((c) => c[0] === "paywall"),
+    false,
+  );
+});
+test("hard checkout cancellation never fabricates access and active subscribers skip presentation", async () => {
+  const f = fake();
+  assert.equal(
+    hasEntitlement(
+      (await f.client.present(null, "it", { hardPaywall: true })).customerInfo,
+    ),
+    false,
+  );
+  f.setInfo(active);
+  const count = f.calls.filter((c) => c[0] === "paywall").length;
+  assert.equal(
+    (await f.client.present(null, "it", { hardPaywall: true })).result,
+    "NOT_PRESENTED",
+  );
+  assert.equal(f.calls.filter((c) => c[0] === "paywall").length, count);
+});
+
+// The partial reader must remain bounded after a deep link or entitlement expiry.
+test("free reader permits initial books and only the current daily excerpt elsewhere", () => {
+  const daily = { book: "Luke", chapter: 24, start: 13, end: 35 };
+  assert.equal(canReadBook("Gen", false), true);
+  assert.equal(canReadBook("Exod", false), true);
+  assert.equal(canReadBook("Lev", false), false);
+  assert.equal(readingAccess("Luke", 24, false, daily), "daily");
+  assert.equal(readingAccess("Luke", 23, false, daily), "locked");
+  assert.equal(readingAccess("Rev", 1, false, daily), "locked");
+  assert.equal(readingAccess("Lev", 1, true, daily), "full");
+  assert.equal(readingAccess("Lev", 1, false, daily), "locked");
+  assert.equal(canUseFeature("search", false), false);
+  assert.equal(canUseFeature("annotations", false), false);
+  assert.equal(canUseFeature("lexicon", false), false);
+});
+
+test("production cannot force a paywall preview even for a subscriber, and verification errors fail closed", async () => {
+  for (const guard of [
+    undefined,
+    async () => false,
+    async () => {
+      throw new Error("verification failed");
+    },
+  ]) {
+    const f = fake({ canPreviewPaywall: guard });
+    f.setInfo(active);
+    assert.equal(
+      (await f.client.previewPaywall("A", "it")).reason,
+      "development",
+    );
+    assert.equal(
+      f.calls.length,
+      0,
+      "must not configure or present billing without native approval",
+    );
+  }
+});
+test("sandbox preview displays the real dismissible offering for a subscriber and rechecks permission on every attempt", async () => {
+  let allowed = true;
+  const f = fake({ canPreviewPaywall: async () => allowed });
+  f.setInfo(active);
+  f.setPurchase("CANCELLED", active);
+  const result = await f.client.previewPaywall(null, "pt");
+  assert.equal(result.available, true);
+  assert.equal(hasEntitlement(result.customerInfo), true);
+  const options = f.calls.find((c) => c[0] === "paywall")[1];
+  assert.equal(options.offering.identifier, "mappa_v1");
+  assert.equal(options.displayCloseButton, true);
+  allowed = false;
+  assert.equal(
+    (await f.client.previewPaywall(null, "it")).reason,
+    "development",
+  );
+  assert.equal(f.calls.filter((c) => c[0] === "paywall").length, 1);
+});
+test("web preview never calls native billing even if a development callback returns true", async () => {
+  const f = fake({ native: false, canPreviewPaywall: async () => true });
+  assert.equal((await f.client.previewPaywall(null, "it")).available, false);
+  assert.deepEqual(f.calls, []);
+});

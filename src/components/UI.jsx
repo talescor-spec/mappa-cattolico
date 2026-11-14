@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useId, useRef } from "react";
 import { X, ChevronRight } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 export function Mark() {
@@ -32,16 +32,17 @@ export function Header({ eyebrow, title, subtitle, action }) {
     </div>
   );
 }
-export function Row({ icon: Icon, title, subtitle, onClick, end }) {
+export function Row({ icon: Icon, title, subtitle, onClick, end, href }) {
+  const Element = href ? "a" : "button";
   return (
-    <button className="list-row" onClick={onClick}>
+    <Element className="list-row" href={href} onClick={onClick}>
       <span className="row-icon">{Icon && <Icon size={20} />}</span>
       <span className="row-copy">
         <strong>{title}</strong>
         {subtitle && <small>{subtitle}</small>}
       </span>
       {end || <ChevronRight size={18} />}
-    </button>
+    </Element>
   );
 }
 export function Empty({ icon: Icon, title, text, action }) {
@@ -56,10 +57,13 @@ export function Empty({ icon: Icon, title, text, action }) {
 }
 export function Modal({ title, children, onClose, wide = false }) {
   const ref = useRef(null);
+  const heading = useRef(null);
+  const titleId = useId();
   const { l } = useLanguage();
   useEffect(() => {
     const previous = document.activeElement;
     ref.current.showModal();
+    heading.current?.focus();
     return () => {
       ref.current?.close();
       previous?.focus?.();
@@ -68,25 +72,26 @@ export function Modal({ title, children, onClose, wide = false }) {
   return (
     <dialog
       ref={ref}
+      aria-labelledby={titleId}
       className={`modal ${wide ? "wide" : ""}`}
       onCancel={(e) => {
         e.preventDefault();
-        onClose();
+        onClose?.();
       }}
       onClick={(e) => {
-        if (e.target === ref.current) onClose();
+        if (e.target === ref.current) onClose?.();
       }}
     >
       <div className="modal-inner">
         <header className="modal-head">
-          <h2>{title}</h2>
-          <button
-            className="icon-button"
+          <h2 id={titleId} ref={heading} tabIndex={-1}>{title}</h2>
+          {onClose && <button
+            className="icon-button modal-close"
             aria-label={l("Chiudi", "Fechar")}
             onClick={onClose}
           >
-            <X size={20} />
-          </button>
+            <X size={16} />
+          </button>}
         </header>
         {children}
       </div>

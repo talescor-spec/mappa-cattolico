@@ -1306,6 +1306,24 @@ main {
   width: 100%;
   background: #fff;
 }
+.reminder-options {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.reminder-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.reminder-options input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--green);
+}
 .export-button {
   width: 100%;
 }
@@ -2186,4 +2204,286 @@ main {
 .modal-head > .icon-button {
   min-width: 44px;
   min-height: 44px;
+}
+.modal-head h2:focus {
+  outline: none;
+}
+.modal-head > .modal-close {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+.modal-close svg { width: 16px; height: 16px; }
+.onboarding-name { margin-bottom: 24px; }
+
+/* Premium follows the same calm editorial language as the reading experience. */
+.premium-card {
+  border: 1px solid #d8dfd0;
+  background: linear-gradient(120deg, #eef1e5, #faf9f2);
+  padding: 30px;
+  border-radius: 22px;
+  margin: 28px 0;
+}
+.premium-card h3 {
+  font:
+    400 30px/1.2 Georgia,
+    serif;
+  margin: 15px 0 10px;
+  color: #213d32;
+}
+.premium-card p {
+  max-width: 600px;
+  color: #617068;
+  line-height: 1.65;
+  margin: 0 0 20px;
+}
+.premium-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #6a6d40;
+}
+.premium-card.compact {
+  padding: 24px 28px;
+}
+.premium-card.compact h3 {
+  font-size: 26px;
+}
+.premium-offer {
+  text-align: center;
+  max-width: 470px;
+  margin: auto;
+}
+.premium-offer h3 {
+  font:
+    400 34px/1.15 Georgia,
+    serif;
+  letter-spacing: -0.025em;
+  margin: 14px 0 24px;
+  color: #203e32;
+}
+.premium-emblem {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  margin: 2px auto 24px;
+  border-radius: 22px;
+  background: #e9eddf;
+  color: #536347;
+}
+.premium-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  text-align: left;
+  display: grid;
+  gap: 19px;
+}
+.premium-benefits li {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+.premium-benefits svg {
+  flex: none;
+  margin-top: 3px;
+  color: #57784d;
+}
+.premium-benefits strong,
+.premium-benefits span {
+  display: block;
+}
+.premium-benefits strong {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.premium-benefits span {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #788076;
+}
+.premium-offer .caption {
+  margin: 14px 0 20px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.premium-legal {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 12px;
+  margin: 22px 0 12px;
+  color: #7c8377;
+}
+.free-choice {
+  font-size: 13px;
+  margin: 12px auto;
+  color: #677468;
+  justify-content: center;
+}
+.billing-message {
+  font-size: 13px;
+  line-height: 1.6;
+  background: #edf1e7;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 15px 0;
+  text-align: left;
+}
+.hard-paywall-gate {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(28px, env(safe-area-inset-top)) 22px max(28px, env(safe-area-inset-bottom));
+  background: #f7f5ef;
+}
+.hard-paywall-card { width: min(100%, 460px); text-align: center; }
+.hard-paywall-card > svg { color: #263f32; margin: 0 auto 22px; }
+.hard-paywall-card h1 { font-size: clamp(30px, 7vw, 42px); line-height: 1.12; margin: 16px 0; }
+.hard-paywall-card > p { line-height: 1.6; }
+.hard-paywall-card > .text-button { margin: 18px auto; }
+.hard-paywall-card > select { width: auto; margin: 18px auto 0; }
+.hard-paywall-benefits { list-style: none; padding: 0; margin: 28px 0; text-align: left; }
+.hard-paywall-benefits li { display: flex; align-items: center; gap: 12px; padding: 11px 0; }
+.hard-paywall-benefits svg { flex-shrink: 0; color: #263f32; }
+.hard-paywall-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 18px; margin-top: 24px; }
+.hard-paywall-links .text-button { font-size: 12px; }
+.checkout-status {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  bottom: calc(90px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 32px);
+  padding: 14px 20px;
+  border: 1px solid #d9dfd3;
+  border-radius: 16px;
+  background: #faf7f0;
+  color: #173f35;
+  box-shadow: 0 8px 28px #173f351a;
+  font-size: 14px;
+  pointer-events: none;
+}
+.checkout-recovery .billing-message { margin-top: 0; }
+.checkout-recovery > .text-button { margin-top: 18px; }
+.subscription-panel {
+  margin-bottom: 20px;
+}
+.subscription-panel h2 {
+  font-size: 29px;
+  margin: 18px 0 12px;
+}
+.billing-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-direction: column;
+  font-size: 13px;
+  margin-top: 20px;
+}
+.billing-actions a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.onboarding-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 4px auto 26px;
+}
+.onboarding-progress span {
+  width: 42px;
+  height: 3px;
+  background: #e7eadd;
+  border-radius: 5px;
+}
+.onboarding-progress span.active {
+  background: #47634c;
+}
+.onboard-options {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0;
+}
+.routine-option {
+  border: 1px solid #dce1d6;
+  border-radius: 13px;
+  background: #fafaf5;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 17px 18px;
+  text-align: left;
+  color: #4c5e4e;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+}
+.routine-option span {
+  flex: 1;
+}
+.routine-option.selected {
+  border-color: #55714c;
+  box-shadow: 0 0 0 1px #55714c;
+  background: #eef2e7;
+}
+.routine-time {
+  display: flex;
+  gap: 10px;
+  margin: 26px 0;
+}
+.routine-time .routine-option {
+  justify-content: center;
+  text-align: center;
+}
+.onboard-scripture {
+  font:
+    400 24px/1.5 Georgia,
+    serif;
+  margin: 30px 0 14px;
+  color: #3d5848;
+}
+.routine-plan {
+  text-align: left;
+  line-height: 1.65;
+  padding-left: 24px;
+  margin: 24px 0;
+}
+.routine-plan li {
+  padding: 8px 0 8px 4px;
+}
+@media (max-width: 600px) {
+  .premium-card,
+  .premium-card.compact {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+  .premium-card h3 {
+    font-size: 27px;
+  }
+  .premium-offer h3 {
+    font-size: 29px;
+  }
+  .routine-time {
+    gap: 7px;
+  }
+  .routine-time .routine-option {
+    padding: 16px 10px;
+  }
+  .premium-offer .premium-benefits {
+    gap: 16px;
+  }
 }

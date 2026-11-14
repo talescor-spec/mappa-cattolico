@@ -15,10 +15,13 @@ import {
 } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useStudy } from "../contexts/StudyContext";
-import { bookNames, lexicon } from "../data/content";
+import { bookNames, lexicon, dailyReading } from "../data/content";
 import { searchBible } from "../utils/study";
 import { safeGetJSON, safeSetJSON } from "../utils/storage";
 import { Header, Modal } from "./UI";
+import { usePremium } from "../contexts/PremiumContext";
+import { PremiumCard } from "./Premium";
+import { dailyVerses, canReadBook, readingAccess } from "../utils/access";
 export default function Bible({
   bible,
   error,
@@ -28,6 +31,7 @@ export default function Bible({
   onSources,
 }) {
   const { language, l } = useLanguage();
+  const { isPremium, can, request } = usePremium();
   const { entries, write, ready } = useStudy();
   const [query, setQuery] = useState(""),
     [search, setSearch] = useState(""),
@@ -43,13 +47,21 @@ export default function Bible({
     const timer = setTimeout(() => setSearch(query), 250);
     return () => clearTimeout(timer);
   }, [query]);
-  const book =
-    bible?.books.find((b) => b.book === location.book) || bible?.books[0];
+  const daily = dailyReading();
+  const requestedBook = bible?.books.find((b) => b.book === location.book) || bible?.books[0];
+  const book = readingAccess(requestedBook?.book, location.chapter, isPremium, daily) === "locked"
+    ? bible?.books[0]
+    : requestedBook;
   const chapter =
     book?.chapters.find((c) => c.chapter === location.chapter) ||
     book?.chapters[0];
   const title = (b) => bookNames[language][b.bookId - 1];
-  const results = useMemo(() => searchBible(bible, search), [bible, search]);
+  const isDailyPreview = !canReadBook(book?.book, isPremium);
+  const readerVerses = isDailyPreview
+    ? dailyVerses(book?.book, chapter?.chapter, chapter?.verses || [], daily)
+    : chapter?.verses || [];
+  const results = useMemo(() => isPremium ? searchBible(bible, search) : [], [bible, search, isPremium]);
+  useEffect(() => { setSelected(null); setLex(null); }, [book?.book, chapter?.chapter, isPremium]);
   const highlights = useMemo(
     () =>
       Object.fromEntries(
@@ -61,27 +73,39 @@ export default function Bible({
     `verse:${language}:${book.book}:${chapter.chapter}:${v.number}`;
   const select = (verse) => {
     const entry = highlights[verseId(verse)];
+    if (!can("annotations", { existing: !!entry })) {
+      request("annotations");
+      return;
+    }
     setSelected(verse);
     setNote(entry?.payload.note || "");
     setColor(entry?.payload.color || "");
     setSaved(false);
   };
   const changeBook = (id) => {
+    if (id === "__daily__") {
+      onLocation({ book: daily.book, chapter: daily.chapter, verse: daily.start });
+      setQuery("");
+      return;
+    }
+    if (!canReadBook(id, isPremium)) { request("bible"); return; }
     onLocation({ book: id, chapter: 1 });
     setQuery("");
     setSelected(null);
   };
   const move = (delta) => {
+    if (isDailyPreview) { request("bible"); return; }
     let index = bible.books.indexOf(book),
       next = chapter.chapter + delta;
     if (next < 1 && index > 0) {
       index--;
       next = bible.books[index].chapters.length;
     }
-    if (next > book.chapters.length && index < bible.books.length - 1) {
+    else if (next > book.chapters.length && index < bible.books.length - 1) {
       index++;
       next = 1;
     }
+    if (!canReadBook(bible.books[index].book, isPremium)) { request("bible"); return; }
     onLocation({ book: bible.books[index].book, chapter: next });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -149,8 +173,12 @@ export default function Bible({
             "Cerca una parola nella Bibbia…",
             "Busque uma palavra na Bíblia…",
           )}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={isPremium ? query : ""}
+          onChange={(e) => {
+            if (!can("search")) { request("search"); return; }
+            setQuery(e.target.value);
+          }}
+          onClick={() => { if (!can("search")) request("search"); }}
         />
         {query && (
           <button className="text-button" onClick={() => setQuery("")}>
@@ -158,7 +186,7 @@ export default function Bible({
           </button>
         )}
       </div>
-      {query.trim().length > 0 ? (
+      {isPremium && query.trim().length > 0 ? (
         <section className="card search-results">
           <p className="eyebrow">
             {query.trim().length < 3
@@ -203,14 +231,24 @@ export default function Bible({
               </label>
               <select
                 id="book-select"
-                value={book.book}
+                value={isDailyPreview ? "__daily__" : book.book}
                 onChange={(e) => changeBook(e.target.value)}
               >
-                {bible.books.map((b) => (
-                  <option value={b.book} key={b.book}>
-                    {title(b)}
-                  </option>
-                ))}
+                {!isPremium && <option value="__daily__">{l("Lettura di oggi", "Leitura de hoje")}</option>}
+                {isPremium ? bible.books.map((b) => (
+                  <option value={b.book} key={b.book}>{title(b)}</option>
+                )) : <>
+                  <optgroup label={l("Lettura gratuita", "Leitura gratuita")}>
+                    {bible.books.filter((b) => canReadBook(b.book, false)).map((b) => (
+                      <option value={b.book} key={b.book}>{title(b)}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Fideora Premium">
+                    {bible.books.filter((b) => !canReadBook(b.book, false)).map((b) => (
+                      <option value={b.book} key={b.book}>🔒 {title(b)} · Premium</option>
+                    ))}
+                  </optgroup>
+                </>}
               </select>
               <label className="sr-only" htmlFor="chapter-select">
                 {l("Capitolo", "Capítulo")}
@@ -218,6 +256,7 @@ export default function Bible({
               <select
                 id="chapter-select"
                 value={chapter.chapter}
+                disabled={isDailyPreview}
                 onChange={(e) =>
                   onLocation({
                     book: book.book,
@@ -225,7 +264,7 @@ export default function Bible({
                   })
                 }
               >
-                {book.chapters.map((c) => (
+                {(isDailyPreview ? [chapter] : book.chapters).map((c) => (
                   <option key={c.chapter} value={c.chapter}>
                     {l("Capitolo", "Capítulo")} {c.chapter}
                   </option>
@@ -258,7 +297,7 @@ export default function Bible({
                 {language === "it" ? "DIODATI · 1649" : "ALMEIDA · 1819"}
               </p>
               <h2>
-                {title(book)} {chapter.chapter}
+                {title(book)} {chapter.chapter}{isDailyPreview ? `,${daily.start}–${daily.end}` : ""}
               </h2>
               <p className="reader-hint">
                 <Highlighter size={14} />
@@ -268,7 +307,7 @@ export default function Bible({
                 )}
               </p>
               <div className="scripture" style={{ fontSize: `${font}px` }}>
-                {chapter.verses.map((v) => {
+                {readerVerses.map((v) => {
                   const entry = highlights[verseId(v)];
                   return (
                     <button
@@ -328,7 +367,10 @@ export default function Bible({
                 <div className="lexicon-list">
                   {(relevant.length ? relevant : lexicon.slice(0, 4)).map(
                     (w) => (
-                      <button key={w.id} onClick={() => setLex(w)}>
+                      <button key={w.id} onClick={() => {
+                        if (!can("lexicon")) { request("lexicon"); return; }
+                        setLex(w);
+                      }}>
                         <span className="original-word" dir="auto">
                           {w.word}
                         </span>
@@ -359,6 +401,7 @@ export default function Bible({
               </section>
             </aside>
           </div>
+          {!isPremium && <PremiumCard feature="bible" compact />}
         </>
       )}
       {selected && (

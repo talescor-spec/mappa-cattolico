@@ -15,8 +15,11 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useStudy } from "../contexts/StudyContext";
 import { bookNames, guides, lexicon } from "../data/content";
 import { Header, Modal, Empty } from "./UI";
+import { usePremium } from "../contexts/PremiumContext";
+import { PremiumCard } from "./Premium";
 export default function Notebook({ bible, onRead }) {
   const { language, l } = useLanguage();
+  const { isPremium, can, request } = usePremium();
   const { entries, write, remove, ready } = useStudy();
   const index = language === "it" ? 0 : 1;
   const [tab, setTab] = useState("notes"),
@@ -27,7 +30,8 @@ export default function Notebook({ bible, onRead }) {
     [deleting, setDeleting] = useState(null),
     [guide, setGuide] = useState(null),
     [word, setWord] = useState(null),
-    [saved, setSaved] = useState(false);
+    [saved, setSaved] = useState(false),
+    [verseEdit, setVerseEdit] = useState(null);
   const notes = entries
     .filter(
       (e) =>
@@ -47,14 +51,33 @@ export default function Notebook({ bible, onRead }) {
       (e.payload.bookmarked || e.payload.note || e.payload.color),
   );
   const open = (entry) => {
+    if (!can("notebook", { existing: !!entry })) {
+      request("notebook");
+      return;
+    }
     setEditing(
-      entry || { id: `note:${crypto.randomUUID()}`, kind: "note", payload: {} },
+      entry || {
+        id: `note:${crypto.randomUUID()}`,
+        kind: "note",
+        payload: {},
+        startedWithPremium: true,
+      },
     );
     setTitle(entry?.payload.title || "");
     setBody(entry?.payload.body || "");
     setSaved(false);
   };
   const persist = () => {
+    if (
+      !can("notebook", {
+        existing:
+          editing.startedWithPremium ||
+          entries.some((e) => e.id === editing.id),
+      })
+    ) {
+      request("notebook");
+      return;
+    }
     write(editing.id, "note", {
       ...editing.payload,
       title: title.trim() || l("Senza titolo", "Sem título"),
@@ -86,6 +109,7 @@ export default function Notebook({ bible, onRead }) {
           </button>
         }
       />
+      {!isPremium && <PremiumCard feature="notebook" compact />}
       <div className="segmented">
         {[
           ["notes", l("Studi", "Estudos")],
@@ -201,7 +225,9 @@ export default function Notebook({ bible, onRead }) {
                 </div>
                 <button
                   className="saved-ref"
-                  onClick={() => onRead(entry.payload)}
+                  onClick={() =>
+                    isPremium ? onRead(entry.payload) : setVerseEdit(entry)
+                  }
                 >
                   {formatRef(entry.payload)} <ArrowUpRight size={16} />
                 </button>
@@ -265,7 +291,9 @@ export default function Notebook({ bible, onRead }) {
               <button
                 key={i}
                 className="card guide-card"
-                onClick={() => setGuide(g)}
+                onClick={() =>
+                  can("guides") ? setGuide(g) : request("guides")
+                }
               >
                 <span className="guide-number">0{i + 1}</span>
                 <BookOpen size={24} />
@@ -289,7 +317,9 @@ export default function Notebook({ bible, onRead }) {
               <button
                 key={w.id}
                 className="card word-card"
-                onClick={() => setWord(w)}
+                onClick={() =>
+                  can("lexicon") ? setWord(w) : request("lexicon")
+                }
               >
                 <span className="original-word" dir="auto">
                   {w.word}
@@ -302,6 +332,45 @@ export default function Notebook({ bible, onRead }) {
             ))}
           </div>
         </>
+      )}
+      {verseEdit && (
+        <Modal
+          title={formatRef(verseEdit.payload)}
+          onClose={() => setVerseEdit(null)}
+        >
+          <p>
+            {
+              bible?.books
+                .find((b) => b.book === verseEdit.payload.book)
+                ?.chapters.find((c) => c.chapter === verseEdit.payload.chapter)
+                ?.verses.find((v) => v.number === verseEdit.payload.verse)?.text
+            }
+          </p>
+          <label htmlFor="existing-verse-note">
+            {l("La tua nota", "Sua anotação")}
+          </label>
+          <textarea
+            id="existing-verse-note"
+            rows={6}
+            maxLength={10000}
+            value={verseEdit.payload.note || ""}
+            onChange={(e) =>
+              setVerseEdit({
+                ...verseEdit,
+                payload: { ...verseEdit.payload, note: e.target.value },
+              })
+            }
+          />
+          <button
+            className="button primary"
+            onClick={() => {
+              write(verseEdit.id, "verse", verseEdit.payload);
+              setVerseEdit(null);
+            }}
+          >
+            {l("Salva nota", "Salvar anotação")}
+          </button>
+        </Modal>
       )}
       {editing && (
         <Modal

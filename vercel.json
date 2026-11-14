@@ -10,6 +10,11 @@
       "source": "/pt",
       "destination": "/pt/",
       "permanent": true
+    },
+    {
+      "source": "/app",
+      "destination": "/app/",
+      "permanent": false
     }
   ],
   "headers": [
@@ -80,8 +85,49 @@
           "value": "default-src 'self'; script-src 'self' https://static.hotjar.com https://script.hotjar.com https://t.contentsquare.net https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.hotjar.com https://*.hotjar.io https://www.facebook.com; connect-src 'self' https://kgyqpedwgilotlwyhmnb.supabase.co https://sysuottboucultzzaagv.supabase.co wss://sysuottboucultzzaagv.supabase.co https://*.hotjar.com https://*.hotjar.io wss://*.hotjar.com https://t.contentsquare.net https://www.facebook.com https://connect.facebook.net; media-src 'self'; manifest-src 'self'; worker-src 'self' blob:; frame-src 'self' https://vars.hotjar.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         }
       ]
+    },
+    {
+      "source": "/app/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/app/"
+        }
+      ]
+    },
+    {
+      "source": "/app/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
-  "buildCommand": "node scripts/build-website.mjs",
-  "outputDirectory": "web-dist"
+  "buildCommand": "npm run build:website",
+  "outputDirectory": "web-dist",
+  "functions": {
+    "api/web-bible.js": {
+      "includeFiles": "public/bible/*.json",
+      "maxDuration": 20
+    },
+    "api/web-access.js": {
+      "maxDuration": 20
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/app/",
+      "destination": "/app/index.html"
+    }
+  ]
 }
