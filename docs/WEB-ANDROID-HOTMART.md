@@ -4,7 +4,7 @@ Public entry: `https://fideora.app/app/`. This builds the current native UI into
 
 ## Current activation state
 
-Web UI, verified-email access, installable PWA shell, server access checks, protected Bible endpoint and Hotmart webhook are implemented. The Hotmart product and both offers have been created and verified through the provider API. Monthly (€7.99, 3-day trial) and annual (€59, 7-day trial) database configurations remain **inactive** while product review and live checkout acceptance are pending. No payment has been made or simulated as a real sale.
+Web UI, verified-email access, installable PWA shell, server access checks, protected Bible endpoint and Hotmart webhook are implemented. The Hotmart product and both offers have been created and verified through the provider API. Hotmart has approved the product and enabled sales. Monthly (€7.99, 3-day trial) and annual (€59, 7-day trial) configurations are **active for controlled acceptance testing**. A real buyer trial/payment has not yet been completed. No payment has been made or simulated as a real sale.
 
 ## Activation checklist
 
@@ -49,12 +49,21 @@ Hotmart checkout, real email sign-in acceptance, physical Android installation a
 
 ## Hotmart integration — 14 November 2026
 
-The product is registered as a draft, ID 8973641, ucode 994770f4-47f0-4af5-8f78-3eab834029da. Monthly plan ID 1433191 / offer e792z6va and annual plan ID 1433192 / offer tyawr5cb have been verified against the official Products API. Prices are in EUR and VAT is included. The official app icon and Italian description are saved; the support email and approved-purchase return URL are configured.
+The product is registered as a draft, ID 8973641, ucode 994770f4-47f0-4af5-8f78-3eab834029da. Monthly plan ID 1433191 / offer e792z6va and annual plan ID 1433192 / offer tyawr5cb have been verified against the official Products API. Prices are in EUR and VAT is included. The Italian description is saved; the image upload remains pending; the support email and approved-purchase return URL are configured.
 
 The account Hottok and exclusive API credentials are stored only as server secrets. The product-filtered v2 webhook is active; all eight Hotmart sample events received HTTP 200. Samples use an unrelated test product and did not grant customer access. The temporary metadata setup probe was disabled immediately after verifying the API.
 
-Trial access uses the live Get Subscriptions API with the authenticated, verified account email and configured product. It requires ACTIVE, trial=true, the exact product ucode/ID and plan ID, matching amount/currency, and an expiry bounded by accession date + configured trial days and next charge. STARTED (unpaid), canceled, delayed, expired, wrong-email/product/plan and refunded/chargeback subscriptions cannot grant trial access. Tokens remain in server memory; trial status is cached for 15 seconds at most.
+Trial access uses the live Get Subscriptions API with the authenticated, verified account email and configured product. It requires ACTIVE, trial=true, the exact product ucode/ID and plan ID, and an expiry bounded by accession date + configured trial days and next charge. STARTED (unpaid), canceled, delayed, expired, wrong-email/product/plan and refunded/chargeback subscriptions cannot grant trial access. Tokens remain in server memory; trial status is cached for 15 seconds at most.
 
 Hotmart external-delivery review can use a dedicated ordinary student account through `/app/?review=hotmart`. That URL only exposes the password form: Supabase authentication and the same server entitlement boundary remain required. A separately revocable UUID-bound grant expires after 30 days. It cannot read other users' personal data and is not recorded as a payment or trial. Reviewer credentials are never committed.
 
 Pending: complete external delivery validation, submit the product with the owner's at-action-time legal acceptance, verify a real checkout trial/payment and native Android installation, then activate the matching plans.
+
+
+## Checkout approval and country validation — 14 November 2026
+
+The owner approved the final product submission and legal acceptance. Hotmart completed processing and shows sales active. The Italian checkout was inspected for both offers: monthly €7.99 with 3 free days, annual €59 with 7 free days, VAT included. The free-trial option is selected by default. The provider localizes each fresh checkout by buyer country; an Italian buyer sees EUR. Incorrect locale/currency query parameters were removed from the server configuration.
+
+Trial authorization accepts provider-confirmed currency conversions and coupons. Product/plan identity, verified email, ACTIVE trial state, expiry limits and terminal-payment checks remain mandatory. Test count is now 67. Both public plans now return their configured checkout URL and trial duration. A real customer trial/payment acceptance test remains required. Product image upload remains pending: the Chrome file-URL permission is enabled, but the Hotmart image control reports a JavaScript TypeError while processing automated file selections. No uploaded icon has been confirmed.
+
+The authenticated reviewer UI was tested in production. With its temporary grant expired, the server queried Hotmart, denied Premium and displayed both real trial offers without verification errors. The original review expiry was then restored. No test payment was recorded.
