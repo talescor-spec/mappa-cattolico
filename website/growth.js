@@ -16,14 +16,14 @@
   const body=JSON.stringify({event_name,content:safe(content),session_id:session,campaign,platform,locale,page_path:location.pathname,is_test:current.searchParams.get('fm_test')==='1'});
   fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body,keepalive:true,credentials:'omit',referrerPolicy:'no-referrer'}).catch(()=>{});
  }
- document.querySelectorAll('[data-store]').forEach(link=>{
-  const target=new URL(link.href);target.searchParams.set('pt','129505215');target.searchParams.set('mt','8');
-  target.searchParams.set('ct',/^fd2_[a-z0-9_]{1,25}$/.test(campaign)?campaign:'fd2_site_'+locale);
-  link.href=target.href;link.addEventListener('click',()=>track('store_click',link.dataset.store||'cta'));
+ // Only Apple-bound visits are store clicks. Android access is not an install.
+ document.querySelectorAll('[data-store], [data-platform-link]').forEach(link=>{
+  link.addEventListener('click',()=>{
+   const target=new URL(link.href);
+   if(target.hostname==='apps.apple.com') track('store_click',link.dataset.store||link.dataset.platformLink||'cta');
+  });
  });
  const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){track('demo_view',e.target.id||'demo');observer.unobserve(e.target);}},{threshold:.4}):null;
- document.querySelectorAll('#app,.growth-demo').forEach(el=>observer?.observe(el));
+ document.querySelectorAll('#mappa,#app,.growth-demo').forEach(el=>observer?.observe(el));
  track('page_view',safe(current.searchParams.get('utm_content')));
- const deviceMessage=document.getElementById('device-message');
- if(platform==='android'&&deviceMessage){deviceMessage.hidden=false;deviceMessage.textContent=locale==='pt'?'O Fideora está disponível para iPhone e iPad. Abra este link em um desses aparelhos para instalar.':'Fideora è disponibile per iPhone e iPad. Apri questo link su uno di questi dispositivi per installarlo.';}
 })();

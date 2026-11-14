@@ -10,6 +10,8 @@ import WebPremiumProvider from './PremiumProvider';
 import WebGate, { InstallApp } from './WebGate';
 import { safeGet, safeSet } from '../utils/storage';
 import './web.css';
+const requestedLanguage = new URLSearchParams(window.location.search).get('lang');
+if (requestedLanguage === 'it' || requestedLanguage === 'pt') safeSet('fideoraLanguage', requestedLanguage);
 function WebAccess() {
   const { isPremium, checking } = usePremium();
   const [onboard, setOnboard] = useState(safeGet('fideoraWebOnboarded') !== '1');

@@ -1,4 +1,40 @@
-// This website has no account, checkout, marketing pixel or app entitlement state.
+import { detectPlatform, campaignParams, platformURL } from './platform.mjs';
+const current = new URL(window.location.href);
+const locale = document.documentElement.lang.startsWith('pt') ? 'pt' : 'it';
+// The existing apex email redirect forwards only auth data to the same-origin PWA.
+if (/access_token=|refresh_token=|error_description=/.test(current.hash) || current.searchParams.has('code')) {
+  const code = current.searchParams.get('code');
+  window.location.replace('/app/' + (code ? '?code=' + encodeURIComponent(code) : current.hash));
+} else if (current.searchParams.get('lang') === 'pt' && current.pathname === '/') {
+  current.pathname = '/pt/'; current.searchParams.delete('lang');
+  window.location.replace(current.pathname + current.search + current.hash);
+}
+let platform = detectPlatform(navigator, current.searchParams.get('platform'));
+function applyPlatform(choice) {
+  platform = choice;
+  document.querySelectorAll('[data-for-platform]').forEach(el => { el.hidden = el.dataset.forPlatform !== platform; });
+  document.querySelectorAll('[data-platform-link]').forEach(link => {
+    link.hidden = platform !== 'both' && link.dataset.destination !== platform;
+    link.href = platformURL({ platform: link.dataset.destination, lang: locale, currentURL: current.href, position: link.dataset.platformLink, plan: link.dataset.plan });
+  });
+  document.querySelectorAll('input[name="platform"]').forEach(input => { input.checked = input.value === platform; });
+  document.querySelectorAll('.languages a').forEach(link => {
+    const target = new URL(link.href);
+    target.search = campaignParams(current.searchParams).toString();
+    if (platform !== 'both') target.searchParams.set('platform', platform);
+    link.href = target.href;
+  });
+}
+applyPlatform(platform);
+document.querySelectorAll('input[name="platform"]').forEach(input => input.addEventListener('change', () => {
+  if (!input.checked) return;
+  current.searchParams.set('platform', input.value);
+  history.replaceState(null, '', current.pathname + current.search + current.hash);
+  applyPlatform(input.value);
+}));
+document.querySelectorAll('[data-access]').forEach(link => {
+  link.href = platformURL({ platform: 'android', lang: locale, currentURL: current.href, position: 'returning' });
+});
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 function selectTab(tab, focus = false) {
   tabs.forEach(item => {
@@ -13,45 +49,18 @@ tabs.forEach((tab, i) => {
   tab.addEventListener('click', () => selectTab(tab));
   tab.addEventListener('keydown', event => {
     let next;
-    if(event.key==='ArrowRight') next=(i+1)%tabs.length;
-    if(event.key==='ArrowLeft') next=(i+tabs.length-1)%tabs.length;
-    if(event.key==='Home') next=0;
-    if(event.key==='End') next=tabs.length-1;
-    if(next!==undefined) { event.preventDefault(); selectTab(tabs[next], true); }
+    if (event.key === 'ArrowRight') next = (i + 1) % tabs.length;
+    if (event.key === 'ArrowLeft') next = (i + tabs.length - 1) % tabs.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = tabs.length - 1;
+    if (next !== undefined) { event.preventDefault(); selectTab(tabs[next], true); }
   });
 });
-// Keep campaign identifiers through the store visit. This is not install attribution.
-const current = new URL(window.location.href);
-const campaignKeys = ['utm_source','utm_medium','utm_campaign','utm_term'];
-document.querySelectorAll('[data-store]').forEach(link => {
-  const target = new URL(link.href);
-  for(const key of campaignKeys) {
-    const value=current.searchParams.get(key);
-    if(value && value.length<=150 && /^[\p{L}\p{N}_. -]+$/u.test(value)) target.searchParams.set(key,value);
-  }
-  link.href=target.href;
-});
-// Preserve campaign query strings when switching language; never forward auth data.
-document.querySelectorAll('.languages a').forEach(link => {
-  const target = new URL(link.href);
-  for(const key of campaignKeys) if(current.searchParams.has(key)) target.searchParams.set(key,current.searchParams.get(key).slice(0,150));
-  link.href=target.href;
-});
-if(current.searchParams.get('lang')==='pt' && current.pathname==='/') {
-  current.pathname='/pt/'; current.searchParams.delete('lang');
-  window.location.replace(current.pathname+current.search+current.hash);
-}
-// Existing email redirect stays allow-listed at the apex. Forward only auth data
-// to the same-origin PWA, where Supabase consumes it and clears the URL.
-if(/access_token=|refresh_token=|error_description=/.test(current.hash) || current.searchParams.has('code')) {
-  const code=current.searchParams.get('code');
-  window.location.replace('/app/'+(code?'?code='+encodeURIComponent(code):current.hash));
-}
-// Update the old offline worker in place, without deleting any personal local data.
-if('serviceWorker' in navigator) {
+// Update the old root offline worker without clearing personal data or the /app worker.
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(async registrations => {
-    for(const registration of registrations) {
-      if(new URL(registration.active?.scriptURL || registration.waiting?.scriptURL || location.origin).pathname==='/sw.js') await registration.update();
+    for (const registration of registrations) {
+      if (new URL(registration.active?.scriptURL || registration.waiting?.scriptURL || location.origin).pathname === '/sw.js') await registration.update();
     }
-  }).catch(()=>{});
+  }).catch(() => {});
 }
