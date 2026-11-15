@@ -11,3 +11,4 @@
 @media(max-width:360px){.app-hero{height:515px}.hero-device-front{width:210px;left:2px}.hero-device-back{width:177px;right:0;top:80px}.showcase-tabs button{font-size:9px}.showcase-device{width:250px}.showcase-copy h3{font-size:31px}}
 @media(prefers-reduced-motion:reduce){.app-hero .hero-device,.showcase-panel,.reveal-enter{animation:none!important}.screen-zoom .zoom-hint{transition:none}}
 @media(max-width:700px){.showcase-panel{gap:18px}.showcase-copy{display:contents}.showcase-copy .eyebrow{grid-row:1;margin:0}.showcase-copy h3{grid-row:2;margin:0}.showcase-copy>p:not(.eyebrow){grid-row:3;margin:0}.showcase-art{grid-row:4;margin:12px 0}.showcase-copy ul{grid-row:5;margin:5px 0 8px}.showcase-copy .actions{grid-row:6;margin:0}}
+@media(max-width:700px){.hero{overflow:hidden}}
