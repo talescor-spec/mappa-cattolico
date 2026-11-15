@@ -39,27 +39,55 @@ document.querySelectorAll('input[name="platform"]').forEach(input => input.addEv
 document.querySelectorAll('[data-access]').forEach(link => {
   link.href = platformURL({ platform: 'android', lang: locale, currentURL: current.href, position: 'returning', intent: 'access' });
 });
-const tabs = [...document.querySelectorAll('[role="tab"]')];
-function selectTab(tab, focus = false) {
-  tabs.forEach(item => {
-    const active = item === tab;
-    item.setAttribute('aria-selected', String(active));
-    item.tabIndex = active ? 0 : -1;
-    document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
-  });
-  if (focus) tab.focus();
-}
-tabs.forEach((tab, i) => {
-  tab.addEventListener('click', () => selectTab(tab));
-  tab.addEventListener('keydown', event => {
-    let next;
-    if (event.key === 'ArrowRight') next = (i + 1) % tabs.length;
-    if (event.key === 'ArrowLeft') next = (i + tabs.length - 1) % tabs.length;
-    if (event.key === 'Home') next = 0;
-    if (event.key === 'End') next = tabs.length - 1;
-    if (next !== undefined) { event.preventDefault(); selectTab(tabs[next], true); }
+// Each product tour has its own accessible keyboard navigation.
+document.querySelectorAll('[role="tablist"]').forEach(group => {
+  const tabs = [...group.querySelectorAll('[role="tab"]')];
+  function selectTab(tab, focus = false) {
+    tabs.forEach(item => {
+      const active = item === tab;
+      item.setAttribute('aria-selected', String(active));
+      item.tabIndex = active ? 0 : -1;
+      const panel = document.getElementById(item.getAttribute('aria-controls'));
+      if (panel) panel.hidden = !active;
+    });
+    if (focus) tab.focus();
+  }
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectTab(tab));
+    tab.addEventListener('keydown', event => {
+      let next;
+      if (event.key === 'ArrowRight') next = (i + 1) % tabs.length;
+      if (event.key === 'ArrowLeft') next = (i + tabs.length - 1) % tabs.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = tabs.length - 1;
+      if (next !== undefined) { event.preventDefault(); selectTab(tabs[next], true); }
+    });
   });
 });
+const screenDialog = document.querySelector('.screen-dialog');
+if (screenDialog?.showModal) document.querySelectorAll('[data-zoom]').forEach(link => {
+  link.addEventListener('click', event => {
+    const img = link.querySelector('img');
+    if (!img || !/^\/assets\/app-[a-z]+\.jpg$/.test(new URL(link.href).pathname)) return;
+    event.preventDefault();
+    const full = screenDialog.querySelector('img');
+    full.src = link.href; full.alt = img.alt;
+    screenDialog.querySelector('p').textContent = img.alt;
+    screenDialog.showModal();
+  });
+});
+if ('IntersectionObserver' in window) {
+  const reveal = new IntersectionObserver(entries => {
+    for (const entry of entries) if (entry.isIntersecting) {
+      entry.target.classList.add('reveal-enter'); reveal.unobserve(entry.target);
+    }
+  }, { threshold: .1 });
+  document.querySelectorAll('[data-reveal]').forEach(el => reveal.observe(el));
+  const motion = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.target.classList.toggle('is-visible', entry.isIntersecting));
+  }, { threshold: .05 });
+  document.querySelectorAll('[data-motion]').forEach(el => motion.observe(el));
+}
 // Update the old root offline worker without clearing personal data or the /app worker.
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(async registrations => {
