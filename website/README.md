@@ -21,3 +21,8 @@ Validation: `npm test`, `npm run build:website`, `npm run appstore:preflight`, p
 The hero features two real screens. The four-step tour pairs each screenshot with a concrete benefit, supports keyboard selection and offers native-dialog enlargement. Decorative floating/reveal animations respect `prefers-reduced-motion`, and the floating screens pause outside the viewport. Images have fixed dimensions; tour images lazy-load. Existing platform selection, trial copy, direct Hotmart checkout and App Store routes are preserved.
 
 Hotmart's historical external delivery URL includes `?review=hotmart`. It now defaults to normal buyer email-code authentication, matching `/app/`. The dedicated password login for reviewers is an explicit optional button on that URL; the URL never grants Premium or changes server authorization.
+
+
+## MAPPA quiz v1
+
+`/mappa/` contains the Italian three-question quiz prototype. `?review=1` enables a Portuguese translation, device preview and local test-event export. No email is collected and quiz events are currently local only; they are not centrally ingested by Funnel Metrics. Keep associated social automations paused until this version is approved. iOS uses the verified App Store listing; Android/desktop use the existing Hotmart trial offers. Product screenshots are the existing public Fideora assets.

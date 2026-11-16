@@ -7,6 +7,7 @@ const out = 'web-dist';
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
 fs.cpSync('website/assets', `${out}/assets`, { recursive: true });
+fs.cpSync('website/mappa', `${out}/mappa`, { recursive: true });
 for (const file of ['site.css', 'site.js', 'platform.mjs', 'growth.js', 'sw.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['obrigado-fideora.html', 'fideora-obrigado.js', 'app-thanks-tracking.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['icon.svg', 'icon-192.png']) fs.copyFileSync(`public/${file}`, `${out}/${file}`);
