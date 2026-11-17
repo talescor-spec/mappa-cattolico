@@ -7,8 +7,8 @@ export function sessionContext(storage,params,referrer='',createID=()=>crypto.ra
  let saved;try{saved=JSON.parse(storage?.getItem(socialSessionKey)||'null');}catch{}
  if(!saved?.id||!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(saved.id)||!Number.isFinite(saved.createdAt)||Date.now()-saved.createdAt>30*60000)saved={id:createID(),createdAt:Date.now(),attribution:{}};
  if(!saved.attribution||typeof saved.attribution!=='object'||Array.isArray(saved.attribution))saved.attribution={};
- const allowed=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','src','sck','ct','fbclid','gclid','ttclid','fm_delivery'];
- for(const key of allowed){const v=params.get(key);if(v&&v.length<=200&&!/[<>\x00-\x1f\x7f]/.test(v))saved.attribution[key]=v;}
+ const allowed=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','src','sck','ct','fbclid','gclid','ttclid','fm_delivery','xcod'];
+ for(const key of allowed){const v=params.get(key);if(v&&v.length<=(key==='xcod'?1024:200)&&!/[<@>\x00-\x1f\x7f]|%40/i.test(v))saved.attribution[key]=v;}
  if(!saved.attribution.utm_source){try{const host=new URL(referrer).hostname;for(const network of ['tiktok','instagram','facebook','youtube'])if(host.includes(network+'.'))saved.attribution.utm_source=network;}catch{}}
  saved.attribution.utm_source ||= 'direct';saved.attribution.utm_medium ||= saved.attribution.utm_source==='direct'?'direct':'organic';saved.attribution.utm_campaign ||= socialCampaign;
  try{storage?.setItem(socialSessionKey,JSON.stringify(saved));}catch{}

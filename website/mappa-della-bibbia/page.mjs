@@ -3,6 +3,7 @@ import { appOffer } from './social-core.mjs';
 import { offer, purchaseURL, applePurchaseReady } from './offer.mjs';
 import { prefillContact, rememberContact, cleanAttribution, normalizeContact, contactKey, checkoutContactURL } from './order-core.mjs';
 import { initMetaPixel } from './meta-pixel.mjs';
+import { initUtmifyUTMs } from './utmify.mjs';
 const previewDialog = document.querySelector('.preview-dialog');
 const orderDialog = document.querySelector('.order-dialog');
 const zoomButton = previewDialog.querySelector('.preview-zoom');
@@ -44,6 +45,7 @@ const contact = prefillContact(location.search, storage);
 nameInput.value = contact.name; emailInput.value = contact.email;
 // Read editable prefills before stripping personal URL parameters for the vendor.
 const metaPixel = initMetaPixel();
+initUtmifyUTMs();
 const resetContact = document.querySelector('#order-reset');
 resetContact.hidden = !(contact.name || contact.email);
 resetContact.addEventListener('click', () => {

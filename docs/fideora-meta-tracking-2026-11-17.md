@@ -29,9 +29,25 @@ Em 17/11, foi encontrada uma integração Mundpay → UTMify ativa, mas o novo l
 
 Na Hotmart, o webhook **Utmify** já estava ativo para **Todos os produtos**, incluindo o Fideora. Nenhum webhook duplicado foi criado.
 
-O painel UTMify exigiu login e depois confirmação 2FA; a verificação do recebimento e da atribuição fica pendente até o usuário concluir a confirmação. Não foi enviada compra fictícia para a integração de produção. Uma transação real não é necessária para testar o carregamento do pixel ou a montagem de URLs; uma compra aprovada confirma o fluxo financeiro completo.
+O usuário concluiu o login e a confirmação 2FA. No painel **Principal** (`663adeb55ab49b5ea5738ead`), foram confirmados o webhook Hotmart ativo, a credencial **Mundpay Thales** ativa e o cadastro **Pixel RLG** (`6aa571799e8af496b986a464`) associado ao pixel Meta `2184650478741381`. O RLG estava configurado para Purchase apenas em vendas aprovadas e valor da venda, com Lead, AddToCart e InitiateCheckout desabilitados. Nenhuma dessas regras globais foi alterada.
 
-Preservar as UTMs existentes e validar separadamente a integração nativa de cada checkout. O script de UTMs da UTMify e seu pixel de otimização ainda não foram instalados nesta página; a navegação atual monta os links diretamente em JavaScript. Validar também `xcod` no fluxo Hotmart, pois os UTMs estruturados não são enviados no webhook Hotmart. O pixel da Meta não comprova recebimento de pedidos pela UTMify. Não declarar esta etapa completa antes da verificação do painel e dos parâmetros.
+O script oficial `https://cdn.utmify.com.br/scripts/utms/latest.js` foi integrado às páginas de venda e retorno, depois da remoção de parâmetros pessoais da URL, respeitando as mesmas recusas e sinais de privacidade do pixel Meta. A CSP permite o CDN somente no caminho da nova coleção. `fm_test=1` desativa os fornecedores de marketing.
+
+A página serve Mundpay, Hotmart e Apple: o script usa `data-utmify-prevent-xcod-sck` e `data-utmify-prevent-subids`. O redirecionamento JavaScript mantém as UTMs explicitamente. No fluxo Hotmart, `checkoutContactURL` gera `xcod` com os cinco campos e o separador `hQwK21wXxR`, conforme o gerador oficial do painel UTMify, ou preserva um código recebido válido. Esse código não é encaminhado à Apple nem altera o `sck` da Mundpay. O preço, a oferta e os dados de prefill permanecem preservados. Valores pessoais não são aceitos como parâmetros de atribuição.
+
+Esta implementação usa **UTMify para atribuição + Meta e integrações dos checkouts para eventos**. O carregador separado de otimização `scripts/pixel/pixel.js` da UTMify não foi instalado na nova página: ele inicializaria outra cadeia de eventos para o mesmo pixel. Não declarar desduplicação entre CAPI de fornecedores distintos sem verificar seus `event_id`; o cadastro ativo na UTMify não comprova a entrega de uma compra específica.
+
+Foram aprovados 22 testes focados de rastreamento, captura e redirecionamento e o build do site. Não foi enviada compra fictícia nem gerado pagamento para poluir a integração de produção. A tela de Testes da UTMify orienta percorrer o funil e gerar pagamento para a confirmação completa. Uma compra aprovada ainda será necessária para confirmar o fluxo financeiro e a atribuição reais.
+
+### Parâmetros para os próximos anúncios Meta / darkposts
+
+No campo **Parâmetros de URL** do anúncio, usar o padrão fornecido pela UTMify. A página também gera o `xcod` da Hotmart a partir dessas UTMs quando o parâmetro não vier no clique:
+
+```text
+utm_source=FB&utm_campaign={{campaign.name}}|{{campaign.id}}&utm_medium={{adset.name}}|{{adset.id}}&utm_content={{ad.name}}|{{ad.id}}&utm_term={{placement}}&xcod=FBhQwK21wXxR{{campaign.name}}|{{campaign.id}}hQwK21wXxR{{adset.name}}|{{adset.id}}hQwK21wXxR{{ad.name}}|{{ad.id}}hQwK21wXxR{{placement}}
+```
+
+Não foram criadas nem alteradas campanhas de anúncios nesta tarefa. O tráfego orgânico continua usando sua origem real, sem ser classificado como Meta pago.
 
 ## Apple: implementação necessária
 

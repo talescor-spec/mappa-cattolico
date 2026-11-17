@@ -1,10 +1,11 @@
 import { campaignToken } from './social-core.mjs';
+import { hotmartAttributionCode } from './utmify.mjs';
 export const contactKey = 'fideoraStudyContact:v1';
 export const contactMaxAge = 30 * 86400000;
 export const captureFunnel = 'mdb-studio-it';
 const nameKeys = ['name', 'nome', 'full_name', 'fullname', 'buyer_name', 'first_name', 'firstname', 'NOME', 'FIRSTNAME'];
 const emailKeys = ['email', 'Email', 'EMAIL', 'buyer_email', 'contact_email'];
-const attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck', 'ct', 'fbclid', 'gclid', 'ttclid','fm_delivery'];
+const attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck', 'ct', 'fbclid', 'gclid', 'ttclid','fm_delivery','xcod'];
 export function cleanName(value) {
   const name = typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '';
   return name.length >= 2 && name.length <= 120 && !/[<>\x00-\x1f\x7f]/.test(name) ? name : '';
@@ -39,7 +40,7 @@ export function cleanAttribution(source) {
   const result = {};
   for (const key of attributionKeys) {
     const value = read(key);
-    if (typeof value === 'string' && value.length <= 200 && !/[<>\x00-\x1f\x7f]/.test(value)) result[key] = value;
+    if (typeof value === 'string' && value.length <= (key === 'xcod' ? 1024 : 200) && !/[@<>\x00-\x1f\x7f]|%40/i.test(value)) result[key] = value;
   }
   return result;
 }
@@ -62,12 +63,15 @@ export function checkoutContactURL(target, kind, contact, attribution = {}) {
   const url = new URL(target);
   const host = kind === 'book' ? 'checkout.mundpay.com' : kind === 'apple' ? 'apps.apple.com' : kind === 'android' ? 'pay.hotmart.com' : '';
   if (url.protocol !== 'https:' || !host || url.hostname !== host) throw new Error('invalid_checkout');
-  for (const [key, value] of Object.entries(cleanAttribution(attribution))) url.searchParams.set(key, value);
+  const tracking = cleanAttribution(attribution);
+  for (const [key, value] of Object.entries(tracking)) if (key !== 'xcod' || kind === 'android') url.searchParams.set(key, value);
   if (kind === 'apple') {
     url.searchParams.set('pt','129505215'); url.searchParams.set('mt','8');
     url.searchParams.set('ct',campaignToken(url.searchParams.get('utm_source'),url.searchParams.get('utm_medium')));
   }
   if (kind === 'android') {
+    const xcod = hotmartAttributionCode(tracking);
+    if (xcod) url.searchParams.set('xcod', xcod);
     const details = normalizeContact(contact); url.searchParams.set('name', details.name); url.searchParams.set('email',details.email);
   }
   if (kind === 'book') {
