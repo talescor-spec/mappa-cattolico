@@ -579,3 +579,53 @@ body.dialog-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
  .offer-card .button[data-buy]::after{animation:none;transform:none;opacity:.55}
 }
+
+
+/* Compact mobile checkout. The visualViewport variables follow the keyboard on iOS. */
+@media (max-width: 740px) {
+  .order-dialog {
+    position: fixed;
+    top: calc(var(--order-visible-top, 0px) + 8px);
+    right: 10px;
+    bottom: auto;
+    left: 10px;
+    margin: 0 auto;
+    width: auto;
+    max-width: 540px;
+    max-height: calc(var(--order-visible-height, 100dvh) - 16px);
+    padding: 14px 17px 18px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-top: 10px;
+  }
+  .order-toolbar { margin-bottom: 11px; gap: 12px; }
+  .order-toolbar .wordmark { font-size: 17px; letter-spacing: .18em; }
+  .order-toolbar .dialog-close { width: 32px; height: 32px; }
+  .order-steps { gap: 9px; margin-bottom: 13px; }
+  .order-steps li { padding-bottom: 9px; font-size: 10px; }
+  .order-steps li > span:first-child { width: 20px; height: 20px; }
+  .order-dialog .eyebrow { margin-bottom: 5px; }
+  .order-dialog h2 { font-size: clamp(27px, 7.2vw, 33px); line-height: 1.08; }
+  .order-intro { margin-top: 7px; font-size: 11px; line-height: 1.45; }
+  .order-summary { gap: 10px; padding: 9px 0; margin: 11px 0 5px; }
+  .order-summary > img { width: 30px; height: 45px; }
+  .order-summary strong { font-size: 12px; }
+  .order-summary > b { font-size: 21px; }
+  #study-order-form label { margin: 9px 0 4px; font-size: 12px; }
+  #study-order-form input { min-height: 45px; padding: 10px 12px; font-size: 16px; }
+  #study-order-form .button { min-height: 48px; margin-top: 13px; font-size: 13px; }
+  .order-privacy { margin-top: 10px; line-height: 1.5; }
+
+  /* While typing, prioritize the two fields over decorative checkout copy. */
+  .order-dialog.field-focused .order-toolbar { margin-bottom: 7px; }
+  .order-dialog.field-focused .order-steps { margin-bottom: 8px; }
+  .order-dialog.field-focused #order-details-step > .eyebrow,
+  .order-dialog.field-focused #order-details-step > .order-intro { display: none; }
+  .order-dialog.field-focused #order-details-step h2 { font-size: 22px; line-height: 1.1; }
+  .order-dialog.field-focused .order-summary { padding: 6px 0; margin: 7px 0 5px; }
+  .order-dialog.field-focused .order-summary > img,
+  .order-dialog.field-focused .order-summary span { display: none; }
+  .order-dialog.field-focused #study-order-form label { margin-top: 6px; }
+}
