@@ -1,6 +1,6 @@
 import { capturePayload } from '../website/mappa-della-bibbia/order-core.mjs';
 
-const endpoint = 'https://kgyqpedwgilotlwyhmnb.supabase.co/functions/v1/dashboard-daily-leads?action=capture';
+const endpoint = 'https://kgyqpedwgilotlwyhmnb.supabase.co/functions/v1/dashboard-daily-leads?social=1&action=capture';
 const requests = new Map();
 export function createHandler({ fetchImpl = fetch, now = Date.now, limits = requests } = {}) {
   return async function handler(req, res) {
@@ -34,11 +34,12 @@ export function createHandler({ fetchImpl = fetch, now = Date.now, limits = requ
     try {
       const response = await fetchImpl(endpoint, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload), signal: AbortSignal.timeout(18000),
+        body: JSON.stringify({ ...payload, offer: value.offer, attribution: value.attribution, is_test: value.is_test === true, company: value.company || '' }), signal: AbortSignal.timeout(18000),
       });
       const data = await response.json();
-      if (!response.ok || data.ok !== true || data.funnel !== 'mdb-studio-it' || Number(data.listId) !== 214) throw new Error('capture_failed');
-      return res.status(200).json({ ok: true, offer: payload.selected_offer });
+      const target = { book: ['mdb-studio-libro-it',217], apple: ['fideora-social-ios-it',218], android: ['fideora-social-android-it',219] }[value.offer];
+      if (!target || !response.ok || data.ok !== true || data.offer !== value.offer || data.funnel !== target[0] || Number(data.listId) !== target[1]) throw new Error('capture_failed');
+      return res.status(200).json({ ok: true, offer: payload.selected_offer, journeyId: data.journeyId });
     } catch {
       // Contact information and provider errors are never written to logs or returned.
       return res.status(503).json({ ok: false, error: 'capture_unavailable' });

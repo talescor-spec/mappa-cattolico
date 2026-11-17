@@ -1,9 +1,10 @@
+import { campaignToken } from './social-core.mjs';
 export const contactKey = 'fideoraStudyContact:v1';
 export const contactMaxAge = 30 * 86400000;
 export const captureFunnel = 'mdb-studio-it';
 const nameKeys = ['name', 'nome', 'full_name', 'fullname', 'buyer_name', 'first_name', 'firstname', 'NOME', 'FIRSTNAME'];
 const emailKeys = ['email', 'Email', 'EMAIL', 'buyer_email', 'contact_email'];
-const attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck', 'ct', 'fbclid', 'gclid'];
+const attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck', 'ct', 'fbclid', 'gclid', 'ttclid','fm_delivery'];
 export function cleanName(value) {
   const name = typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '';
   return name.length >= 2 && name.length <= 120 && !/[<>\x00-\x1f\x7f]/.test(name) ? name : '';
@@ -44,13 +45,14 @@ export function cleanAttribution(source) {
 }
 export function capturePayload(value = {}) {
   const contact = normalizeContact(value);
-  if (!['book', 'apple'].includes(value.offer)) throw new Error('invalid_offer');
+  if (!['book', 'apple', 'android'].includes(value.offer)) throw new Error('invalid_offer');
   const attribution = cleanAttribution(value.attribution);
   const page = new URL('https://fideora.app/mappa-della-bibbia/');
   for (const [key, val] of Object.entries(attribution)) page.searchParams.set(key, val);
   return {
     ...contact, ...attribution, funnel: captureFunnel, page_url: page.href,
-    selected_offer: value.offer, offer_reference: value.offer === 'book' ? 'mdb_studio_library_39_eur' : 'com.fideora.premium.monthly',
+    session_id: value.session_id, platform: value.platform, followup_requested: value.followup_requested === true,
+    selected_offer: value.offer, offer_reference: value.offer === 'book' ? 'mdb_studio_library_39_eur' : value.offer === 'apple' ? 'com.fideora.premium.monthly' : 'hotmart_fideora_monthly_e792z6va',
     offer_price: value.offer === 'book' ? 39 : 7.99, currency: 'EUR',
     ...(value.is_test === true ? { test_type: 'qa_study_order' } : {}),
   };
@@ -58,9 +60,16 @@ export function capturePayload(value = {}) {
 export function checkoutContactURL(target, kind, contact, attribution = {}) {
   if (!target) return null;
   const url = new URL(target);
-  const host = kind === 'book' ? 'checkout.mundpay.com' : kind === 'apple' ? 'apps.apple.com' : '';
+  const host = kind === 'book' ? 'checkout.mundpay.com' : kind === 'apple' ? 'apps.apple.com' : kind === 'android' ? 'pay.hotmart.com' : '';
   if (url.protocol !== 'https:' || !host || url.hostname !== host) throw new Error('invalid_checkout');
   for (const [key, value] of Object.entries(cleanAttribution(attribution))) url.searchParams.set(key, value);
+  if (kind === 'apple') {
+    url.searchParams.set('pt','129505215'); url.searchParams.set('mt','8');
+    url.searchParams.set('ct',campaignToken(url.searchParams.get('utm_source'),url.searchParams.get('utm_medium')));
+  }
+  if (kind === 'android') {
+    const details = normalizeContact(contact); url.searchParams.set('name', details.name); url.searchParams.set('email',details.email);
+  }
   if (kind === 'book') {
     const details = normalizeContact(contact);
     // Mundpay's public checkout reads these exact search parameters.

@@ -15,6 +15,36 @@
       "source": "/app",
       "destination": "/app/",
       "permanent": false
+    },
+    {
+      "source": "/mappa",
+      "destination": "/mappa-della-bibbia/",
+      "permanent": false
+    },
+    {
+      "source": "/mappa/",
+      "destination": "/mappa-della-bibbia/",
+      "permanent": false
+    },
+    {
+      "source": "/social/instagram",
+      "destination": "/mappa-della-bibbia/?utm_source=instagram&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "permanent": false
+    },
+    {
+      "source": "/social/facebook",
+      "destination": "/mappa-della-bibbia/?utm_source=facebook&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "permanent": false
+    },
+    {
+      "source": "/social/tiktok",
+      "destination": "/mappa-della-bibbia/?utm_source=tiktok&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "permanent": false
+    },
+    {
+      "source": "/social/youtube",
+      "destination": "/mappa-della-bibbia/?utm_source=youtube&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "permanent": false
     }
   ],
   "headers": [
@@ -124,6 +154,12 @@
       "maxDuration": 20
     },
     "api/study-capture.js": {
+      "maxDuration": 20
+    },
+    "api/study-events.js": {
+      "maxDuration": 10
+    },
+    "api/study-resume.js": {
       "maxDuration": 20
     }
   },

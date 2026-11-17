@@ -1,3 +1,5 @@
+import { detectedDevice, journeySession, track } from './tracking.mjs';
+import { appOffer } from './social-core.mjs';
 import { offer, purchaseURL, applePurchaseReady } from './offer.mjs';
 import { prefillContact, rememberContact, cleanAttribution, normalizeContact, contactKey, checkoutContactURL } from './order-core.mjs';
 const previewDialog = document.querySelector('.preview-dialog');
@@ -13,6 +15,7 @@ for (const dialog of [previewDialog, orderDialog]) {
 }
 document.querySelectorAll('[data-preview]').forEach(button => button.addEventListener('click', () => {
   setZoom(false);
+  track('preview_open');
   const surface = previewDialog.querySelector('.preview-surface'); surface.scrollTop = 0; surface.scrollLeft = 0;
   const img = previewDialog.querySelector('img'); img.src = button.dataset.preview; img.alt = button.dataset.caption;
   previewDialog.querySelector('p').textContent = button.dataset.caption; openDialog(previewDialog);
@@ -23,7 +26,17 @@ const emailInput = form.elements.email;
 const submitButton = document.querySelector('#order-submit');
 const paymentLink = document.querySelector('#order-payment-button');
 const errorText = document.querySelector('#order-error');
-const entryParams = new URLSearchParams(location.search);
+const urlParams = new URLSearchParams(location.search);
+const entryParams = new URLSearchParams(journeySession.attribution);
+let selectedPlatform = detectedDevice === 'ios' ? 'ios' : 'android';
+function choosePlatform(platform) {
+  selectedPlatform = platform;
+  document.querySelectorAll('[data-platform]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.platform===platform)));
+  document.querySelector('[data-app-compatibility]').textContent = platform==='ios'?'Fideora Premium per iPhone e iPad':'Fideora Premium su Android e Web';
+  document.querySelector('[data-app-route-note]').textContent = platform==='ios'?'Scarica Fideora dall’App Store e scegli il piano mensile da €7,99 dentro l’app. Apple mostra prezzo e rinnovo prima della conferma.':'Attiva il piano mensile su Hotmart: 3 giorni di prova gratuita, poi €7,99/mese salvo annullamento. Ricevi l’accesso via email e apri Fideora dal browser.';
+}
+document.querySelectorAll('[data-platform]').forEach(button=>button.addEventListener('click',()=>choosePlatform(button.dataset.platform)));
+choosePlatform(selectedPlatform);
 let storage;
 try { storage = localStorage; } catch { /* Private mode can disable storage. */ }
 const contact = prefillContact(location.search, storage);
@@ -49,19 +62,22 @@ function submitLabel() {
   return selectedOffer === 'apple' && !applePurchaseReady() ? 'Continua sull’App Store →' : 'Continua al pagamento →';
 }
 function openOrder(kind) {
+  if (kind === 'app') kind = appOffer(selectedPlatform);
   selectedOffer = kind;
+  track('capture_started',kind);
   submission++;
   setOrderStep(1);
   errorText.hidden = true;
   submitButton.disabled = false;
   submitButton.textContent = submitLabel();
-  const apple = kind === 'apple';
+  const apple = kind !== 'book';
+  const appleStore = kind === 'apple';
   document.querySelector('[data-order-name]').textContent = apple ? 'Fideora Premium' : 'Libro + biblioteca';
   document.querySelector('[data-order-included]').textContent = apple ? 'Libro + biblioteca completa gratis' : 'Cinque opere digitali complete';
   document.querySelector('[data-order-price]').textContent = apple ? '€7,99/mese' : '€39';
-  document.querySelector('#apple-device-note').hidden = !(apple && /Android/i.test(navigator.userAgent));
-  document.querySelector('#apple-plan-note').hidden = !apple || applePurchaseReady();
-  document.querySelector('[data-order-indicator="2"] [data-step-label]').textContent = apple && !applePurchaseReady() ? 'App Store' : 'Pagamento';
+  document.querySelector('#apple-device-note').hidden = !(appleStore && detectedDevice === 'android');
+  document.querySelector('#apple-plan-note').hidden = !appleStore || applePurchaseReady();
+  document.querySelector('[data-order-indicator="2"] [data-step-label]').textContent = appleStore && !applePurchaseReady() ? 'App Store' : 'Pagamento';
   openDialog(orderDialog);
   // The visitor confirms editable data; a URL or stored email never submits itself.
   (nameInput.value ? emailInput : nameInput).focus({ preventScroll: true });
@@ -88,7 +104,7 @@ form.addEventListener('submit', async event => {
     const response = await fetch('/api/study-capture', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
       body: JSON.stringify({ ...details, offer: chosen, company: form.elements.company.value,
-        attribution: cleanAttribution(entryParams), is_test: entryParams.get('fm_test') === '1' }),
+        attribution: cleanAttribution(entryParams), is_test: urlParams.get('fm_test') === '1', session_id: journeySession.id, platform: detectedDevice, followup_requested: true }),
       signal: AbortSignal.timeout(22000),
     });
     const data = await response.json();
@@ -105,11 +121,13 @@ form.addEventListener('submit', async event => {
       ? 'I tuoi dati sono salvati. Scarica o apri Fideora su iPhone o iPad e scegli un piano nell’app. Apple mostra prezzo e rinnovo prima della conferma. Se l’App Store non si apre, tocca il pulsante qui sotto.'
       : 'I tuoi dati sono salvati. Ti stiamo portando al pagamento sicuro. Se non si apre automaticamente, continua con il pulsante qui sotto.';
     paymentLink.href = target;
-    paymentLink.textContent = appDownload ? 'Apri Fideora sull’App Store →' : chosen === 'apple' ? 'Continua con Apple →' : 'Vai al pagamento di €39 →';
+    paymentLink.textContent = appDownload ? 'Apri Fideora sull’App Store →' : chosen === 'apple' ? 'Continua con Apple →' : chosen === 'android' ? 'Continua su Hotmart →' : 'Vai al pagamento di €39 →';
     paymentLink.focus({ preventScroll: true });
+    track(appDownload ? 'store_click' : 'checkout_click',chosen);
     location.assign(target);
   } catch {
     if (submission !== currentSubmission || !orderDialog.open) return;
+    track('capture_error',chosen);
     errorText.textContent = 'Non siamo riusciti a salvare i tuoi dati. Controlla la connessione e riprova: non è stato effettuato alcun addebito.';
     errorText.hidden = false;
   } finally {
@@ -132,3 +150,17 @@ gallery.after(switcher);
 const mobileStyle = document.createElement('style'); mobileStyle.textContent = '@media(max-width:740px){.preview-gallery:has(.mobile-selected) .page-preview{display:none}.preview-gallery .page-preview.mobile-selected{display:block}}'; document.head.append(mobileStyle);
 // No purchase state is inferred from URL parameters or a thank-you redirect.
 document.documentElement.dataset.offerStatus = offer.status;
+
+// Signed recovery links restore editable details; opening a link never submits an order.
+const resume = urlParams.get('resume');
+if (resume) {
+  fetch('/api/study-resume',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:resume}),signal:AbortSignal.timeout(12000)})
+    .then(response=>response.ok?response.json():null).then(data=>{
+      if(!data?.ok)return;
+      const details=normalizeContact(data);nameInput.value=details.name;emailInput.value=details.email;resetContact.hidden=false;
+      if(data.offer!=='book')choosePlatform(data.offer==='ios'?'ios':'android');
+      openOrder(data.offer==='book'?'book':data.offer==='ios'?'apple':'android');track('resume_open',selectedOffer);
+      const clean=new URL(location.href);clean.searchParams.delete('resume');history.replaceState(null,'',clean);
+    }).catch(()=>{ /* The normal editable order remains available if the link expires. */ });
+}
+paymentLink.addEventListener('click',()=>track(selectedOffer==='apple'?'store_click':'checkout_click',selectedOffer));

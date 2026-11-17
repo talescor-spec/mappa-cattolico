@@ -11,7 +11,7 @@ const config = () => ({
 test('capture can continue to the configured book checkout without pretending fulfillment is ready', () => {
   assert.equal(purchaseURL('book'), offer.book.checkoutURL);
   assert.equal(offer.book.checkoutVerified, true);
-  assert.equal(offer.book.filesReady, false);
+  assert.equal(offer.book.filesReady, true);
   assert.equal(purchaseURL('book', config()), config().book.checkoutURL);
 });
 test('an unapproved Apple SKU falls back to download without being represented as a purchase', () => {

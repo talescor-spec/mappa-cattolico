@@ -36,12 +36,12 @@ test('Mundpay receives encoded editable contact details while Apple never receiv
   assert.throws(()=>checkoutContactURL('https://evil.example','book',contact),/invalid_checkout/);
 });
 const makeRes=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},status(n){this.code=n;return this;},json(d){this.data=d;return this;}});
-const request=(patch={})=>({method:'POST',headers:{origin:'https://fideora.app','x-forwarded-for':'192.0.2.10'},body:{name:'Giulia Rossi',email:'USER@example.com',offer:'book',attribution:{utm_source:'brevo'}},...patch});
+const request=(patch={})=>({method:'POST',headers:{origin:'https://fideora.app','x-forwarded-for':'192.0.2.10'},body:{name:'Giulia Rossi',email:'USER@example.com',offer:'book',session_id:'91b61230-3c24-4f56-912f-34e3117aa129',platform:'ios',followup_requested:true,attribution:{utm_source:'brevo'}},...patch});
 test('only a validated submission is forwarded and confirmed; provider failures never look successful', async()=>{
   const seen=[];
-  const handle=createHandler({limits:new Map(),fetchImpl:async(url,init)=>{seen.push({url,payload:JSON.parse(init.body)});return {ok:true,json:async()=>({ok:true,funnel:'mdb-studio-it',listId:214})};}});
+  const handle=createHandler({limits:new Map(),fetchImpl:async(url,init)=>{seen.push({url,payload:JSON.parse(init.body)});return {ok:true,json:async()=>({ok:true,offer:'book',funnel:'mdb-studio-libro-it',listId:217,journeyId:'91b61230-3c24-4f56-912f-34e3117aa129'})};}});
   const res=makeRes();await handle(request(),res);
-  assert.equal(res.code,200);assert.deepEqual(res.data,{ok:true,offer:'book'});
+  assert.equal(res.code,200);assert.deepEqual(res.data,{ok:true,offer:'book',journeyId:'91b61230-3c24-4f56-912f-34e3117aa129'});
   assert.match(res.headers['Cache-Control'],/no-store/);assert.equal(seen.length,1);
   assert.equal(seen[0].payload.email,'user@example.com');assert.equal(seen[0].payload.selected_offer,'book');
   for(const response of [{ok:false,json:async()=>({ok:false})},{ok:true,json:async()=>({ok:true,funnel:'mdb-it',listId:55})}]){
@@ -57,7 +57,7 @@ test('invalid names, emails, origins, methods and honeypot requests cannot creat
   assert.equal(calls,0);
 });
 test('rapid duplicate submissions are limited before provider writes',async()=>{
-  let calls=0;const h=createHandler({now:()=>1000,limits:new Map(),fetchImpl:async()=>{calls++;return {ok:true,json:async()=>({ok:true,funnel:'mdb-studio-it',listId:214})};}});
+  let calls=0;const h=createHandler({now:()=>1000,limits:new Map(),fetchImpl:async()=>{calls++;return {ok:true,json:async()=>({ok:true,offer:'book',funnel:'mdb-studio-libro-it',listId:217,journeyId:'91b61230-3c24-4f56-912f-34e3117aa129'})};}});
   for(let i=0;i<11;i++){const r=makeRes();await h(request(),r);assert.equal(r.code,i<10?200:429);}
   assert.equal(calls,10);
 });
