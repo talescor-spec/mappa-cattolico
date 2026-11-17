@@ -1,6 +1,6 @@
 # Mappa della Bibbia — Studio collection
 
-Italian editorial preview at `/mappa-della-bibbia/`, thank-you information at `/mappa-della-bibbia/grazie/`. This is a separate path; the current Fideora landing, quiz, native billing and Android offers keep their existing behavior.
+Italian study collection at `/mappa-della-bibbia/`, thank-you information at `/mappa-della-bibbia/grazie/`. This is a separate path; the current Fideora landing, quiz, native billing and Android offers keep their existing behavior.
 
 ## Assets and original sample pages
 
@@ -14,7 +14,7 @@ Sample plates can be opened, enlarged to native width, panned, and closed. The m
 
 ## Payment state · 2026-11-16 Brazil
 
-The page explicitly presents the new collection as in preparation and is `noindex,nofollow`. `offer.mjs` is the single routing guard: preview mode never navigates to a paid checkout. Neither URL query parameters nor the thank-you URL can grant content access. Both full files and provider-specific verification must be ready before payment links can activate.
+The public copy presents the five digital works as complete for the planned launch, following the publisher’s confirmation that final ebooks will be supplied before traffic starts. The page remains `noindex,nofollow`; external billing availability is still separately guarded. `offer.mjs` is the single routing guard: preview mode never navigates to a paid checkout. Neither URL query parameters nor the thank-you URL can grant content access. Both full files and provider-specific verification must be ready before payment links can activate.
 
 - Book: **created** on Mundpay at EUR 39, Single payment, E-books category and Ebook/book/PDF delivery. Support-email verification completed in the live UI before final registration. Product ID `3891abcc-aaa1-4bae-bd7b-b316a853f717`; checkout `https://checkout.mundpay.com/01a1e740-380f-71d4-b88f-e8c4124b323f?ref=`. The new cover is uploaded; sales and thank-you URLs point to this page and `/grazie/`; support uses `support@fideora.app` and the same WhatsApp as the existing MDB product. **Product sale is switched off and saved.** The public checkout was opened and correctly reports “Product inactive”. No final PDF is uploaded. The offer price is verified in the admin UI; final buyer-side currency/tax and fulfillment verification remain pending while sales are paused.
 - Apple: a separate subscription was created under the existing Fideora Premium group `22500299`: reference `Fideora Studio e Biblioteca Mensile`, Product ID `com.fideora.studio.monthly`, Apple ID `6835682414`, duration one month. The Italian price point was selected and saved as **EUR 9.90**, with Italy as the initial available storefront. Italian display name `Fideora Studio + Biblioteca`; description `Studio, preghiera e biblioteca digitale inclusa.` No introductory offer was created. The product remains **Prepare for Submission**; it is not an approved/purchasable subscription.
@@ -32,4 +32,15 @@ The future rule for keeping downloaded bonus files after cancellation and delive
 
 ## Validation
 
-Build: `npm run build:website`. Full suite: 85 tests passed. `tests/study-offer.test.mjs` checks preview payment blocking, Apple approval/fulfillment requirements and exact HTTPS provider hosts. Browser QA verified the public deployed page at `https://fideora.app/mappa-della-bibbia/`, desktop layout, sample enlargement/close, offer dialog, and a 390×844 mobile viewport. Mobile document width equals viewport width (390 px), with no horizontal overflow; switching to sample 2 and opening/closing it works. The Apple offer button correctly shows pre-launch information rather than routing to an unapproved subscription. Temporary viewport overrides were reset. Vercel production deployment from commit `58e1b5912e415b9d3c8e0a2aacc7cf6122fcc17b` was READY before this checkout-status update.
+Build: `npm run build:website`. Full suite: 85 tests passed. `tests/study-offer.test.mjs` checks preview payment blocking, Apple approval/fulfillment requirements and exact HTTPS provider hosts. Browser QA verified the public deployed page at `https://fideora.app/mappa-della-bibbia/`, desktop layout, sample enlargement/close, offer dialog, and a 390×844 mobile viewport. Mobile document width equals viewport width (390 px), with no horizontal overflow; switching to sample 2 and opening/closing it works. The Apple purchase route remains disabled until the new SKU and delivery are verified. Temporary viewport overrides were reset. Vercel production deployment from commit `58e1b5912e415b9d3c8e0a2aacc7cf6122fcc17b` was READY before this checkout-status update.
+
+
+## Order capture · 2026-11-17
+
+The former preparation popup is replaced with step 1 of the order: editable full name and email, the selected offer, and a two-step progress indicator. Prefill supports personalized URL parameters (`name`/`nome`/`firstname` and `email`, including Brevo-style uppercase aliases), native browser autocomplete, and a dedicated 30-day local contact record. No URL or stored identity automatically submits a form. Invalid or expired values are ignored; values are assigned as form values, never HTML.
+
+`POST /api/study-capture` validates and forwards only the intended data to the existing Funnel Metrics capture service (`dashboard-daily-leads?action=capture`). The dedicated `mdb-studio-it` funnel ID is **298117** and Brevo list **214 — Captura MDB Studio IT**. Both the book/app choice and safe attribution are saved in the capture payload. A new list was created without attaching an email sequence or campaign. No credentials are exposed in the page. Server validation, request limits, a honeypot, no-store responses, provider timeouts and strict success checking prevent a false success or silent failed capture.
+
+Marketing names/emails are not sent to Apple. No arbitrary query parameter can choose a checkout or make the offer live. Provider routing still uses `offer.mjs`. When billing is ready, a successful capture continues to that provider; while paused, step 2 confirms only the saved contact and accurately says payment is being activated. It never confirms a paid order or starts a subscription. The public page no longer says the books are incomplete or in preparation.
+
+Once the guarded book checkout is live, name/email and safe attribution continue to Mundpay through its verified `name`/`email` parameters. The public checkout bundle was inspected at `/_next/static/chunks/app/%5Bid%5D/page-7d8e8526cd63ed96.js` and reads these exact search parameters. An actual buyer-side rendered checkout test remains pending while the product is paused. No name/email is sent to Apple.

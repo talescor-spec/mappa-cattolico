@@ -122,6 +122,9 @@
     },
     "api/web-access.js": {
       "maxDuration": 20
+    },
+    "api/study-capture.js": {
+      "maxDuration": 20
     }
   },
   "rewrites": [
