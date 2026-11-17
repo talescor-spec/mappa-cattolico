@@ -2,6 +2,7 @@ import { detectedDevice, journeySession, track } from './tracking.mjs';
 import { appOffer } from './social-core.mjs';
 import { offer, purchaseURL, applePurchaseReady } from './offer.mjs';
 import { prefillContact, rememberContact, cleanAttribution, normalizeContact, contactKey, checkoutContactURL } from './order-core.mjs';
+import { initMetaPixel } from './meta-pixel.mjs';
 const previewDialog = document.querySelector('.preview-dialog');
 const orderDialog = document.querySelector('.order-dialog');
 const zoomButton = previewDialog.querySelector('.preview-zoom');
@@ -41,6 +42,8 @@ let storage;
 try { storage = localStorage; } catch { /* Private mode can disable storage. */ }
 const contact = prefillContact(location.search, storage);
 nameInput.value = contact.name; emailInput.value = contact.email;
+// Read editable prefills before stripping personal URL parameters for the vendor.
+const metaPixel = initMetaPixel();
 const resetContact = document.querySelector('#order-reset');
 resetContact.hidden = !(contact.name || contact.email);
 resetContact.addEventListener('click', () => {
@@ -109,6 +112,7 @@ form.addEventListener('submit', async event => {
     });
     const data = await response.json();
     if (!response.ok || data.ok !== true || data.offer !== chosen) throw new Error('capture_failed');
+    metaPixel.lead(chosen,data.journeyId);
     if (submission !== currentSubmission || !orderDialog.open) return;
     const target = checkoutContactURL(purchaseURL(chosen), chosen, details, entryParams);
     if (!target) throw new Error('checkout_unavailable');
@@ -124,6 +128,7 @@ form.addEventListener('submit', async event => {
     paymentLink.textContent = appDownload ? 'Apri Fideora sull’App Store →' : chosen === 'apple' ? 'Continua con Apple →' : chosen === 'android' ? 'Continua su Hotmart →' : 'Vai al pagamento di €39 →';
     paymentLink.focus({ preventScroll: true });
     track(appDownload ? 'store_click' : 'checkout_click',chosen);
+    metaPixel.outbound(chosen);
     location.assign(target);
   } catch {
     if (submission !== currentSubmission || !orderDialog.open) return;
@@ -163,4 +168,4 @@ if (resume) {
       const clean=new URL(location.href);clean.searchParams.delete('resume');history.replaceState(null,'',clean);
     }).catch(()=>{ /* The normal editable order remains available if the link expires. */ });
 }
-paymentLink.addEventListener('click',()=>track(selectedOffer==='apple'?'store_click':'checkout_click',selectedOffer));
+paymentLink.addEventListener('click',()=>{track(selectedOffer==='apple'?'store_click':'checkout_click',selectedOffer);metaPixel.outbound(selectedOffer);});
