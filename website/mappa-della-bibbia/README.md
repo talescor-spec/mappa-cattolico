@@ -4,7 +4,13 @@ Italian editorial preview at `/mappa-della-bibbia/`, thank-you information at `/
 
 ## Assets and original sample pages
 
-The approved main cover and four new generated companion covers are stored as optimized WebP assets (combined approximately 1.24 MB). The three SVG sample pages contain original, selectable text and actual Scripture references: Luke overview, Emmaus reading guide and personal study notebook. Regenerate with `python3 scripts/generate-study-previews.py`. These are samples, not the complete promised books or licensed translations. The app section uses the existing unaltered production screenshot.
+The approved main cover and four generated companion covers remain optimized WebP assets. The three new landscape SVG plates replace the previous text-led examples: **La terra dei Vangeli**, **Il primo viaggio di Paolo**, and **La mappa dei 73 libri**. They use precise SVG typography, original commentary, real Natural Earth coastlines/lakes/Jordan river, and SRTM-derived relief. City locations and connections are indicative; modern geography is clearly distinguished from reconstructed ancient borders or exact itineraries. No source book pages or maps were copied. DK and Zondervan atlas publications informed the editorial hierarchy only.
+
+Regenerate with `python scripts/generate-study-atlas.py`. Cropped public-domain data and source notes are retained in `scripts/study-map-data/`. To reimport the full Natural Earth data, pass `--source PATH`; see the script docstring. Pillow is needed for reimport only. These are sample plates, not the complete promised books.
+
+The header now contains only the nonsticky Fideora wordmark. The hero illustration follows the subheadline and precedes the first CTA. The actual app screenshot follows its section headline. Both offer cards display a collection mockup made from the exact cover assets; the Apple card also includes the actual app screenshot. The book's €145 stack is explicitly a **proposed editorial valuation**, not a past sale or available individual prices. The bundle price remains €39. The Apple offer foregrounds the entire collection included free with the planned €9.90/month subscription. Payment gating is unchanged.
+
+Sample plates can be opened, enlarged to native width, panned, and closed. The mobile sample selector reaches all three plates.
 
 ## Payment state · 2026-11-16 Brazil
 

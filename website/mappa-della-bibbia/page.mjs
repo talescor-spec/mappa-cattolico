@@ -1,6 +1,9 @@
 import { offer, purchaseURL } from './offer.mjs';
 const previewDialog = document.querySelector('.preview-dialog');
 const launchDialog = document.querySelector('.launch-dialog');
+const zoomButton = previewDialog.querySelector('.preview-zoom');
+function setZoom(active) { previewDialog.classList.toggle('zoomed', active); zoomButton.setAttribute('aria-pressed', String(active)); zoomButton.textContent = active ? 'Riduci tavola −' : 'Ingrandisci dettagli +'; }
+zoomButton.addEventListener('click', () => setZoom(!previewDialog.classList.contains('zoomed')));
 function openDialog(dialog) { dialog.showModal(); document.body.classList.add('dialog-open'); }
 for (const dialog of [previewDialog, launchDialog]) {
   dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
@@ -8,6 +11,8 @@ for (const dialog of [previewDialog, launchDialog]) {
   dialog.addEventListener('click', event => { if (event.target !== dialog) return; const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); });
 }
 document.querySelectorAll('[data-preview]').forEach(button => button.addEventListener('click', () => {
+  setZoom(false);
+  const surface = previewDialog.querySelector('.preview-surface'); surface.scrollTop = 0; surface.scrollLeft = 0;
   const img = previewDialog.querySelector('img'); img.src = button.dataset.preview; img.alt = button.dataset.caption;
   previewDialog.querySelector('p').textContent = button.dataset.caption; openDialog(previewDialog);
 }));
