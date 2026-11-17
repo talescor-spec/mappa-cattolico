@@ -108,7 +108,7 @@
       ]
     },
     {
-      "source": "/mappa-della-bibbia/:path*",
+      "source": "/mappa-della-bibbia/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
