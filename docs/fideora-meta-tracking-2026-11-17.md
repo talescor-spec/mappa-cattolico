@@ -21,7 +21,7 @@ Assinatura Hotmart: Fideora Premium – Mappa della Bibbia; checkout `X108495940
 
 Em 17/11, o Pixel RLG foi salvo no produto Hotmart `8973641`. A tela confirmou **Evento via Web — Configurado**, com **Vendas realizadas** e **Visitas na Página de pagamento**, todos os métodos e valor real da transação. O envio CAPI não foi configurado; depende de token válido.
 
-Em 17/11, a tela da Mundpay não permitiu salvar o novo pixel sem preencher **Conversion API token**. O ID e os três eventos foram preenchidos no formulário, mas salvar exige uma credencial válida. Não reutilizar um token de leitura de anúncios como se fosse um token CAPI. Nenhum token é armazenado neste repositório.
+Em 17/11, o Pixel RLG foi salvo no novo produto Mundpay com status **Active**. O token CAPI existente foi reutilizado do produto **Mappa della Bibbia MDB-IT** (`01a0961c-388c-7234-b58a-68908ac56515`), após orientação de Thales e confirmação de que ele usa o mesmo pixel `2184650478741381`. Os eventos `initiate_checkout`, `add_payment_info` e `purchase` foram habilitados. O produto original não foi alterado. Nenhum token é armazenado neste repositório. O status do cadastro não substitui uma validação de entrega de eventos à Meta com uma transação real.
 
 A integração UTMify não foi ativada nesta alteração. Preservar as UTMs existentes e validar separadamente a integração nativa de cada checkout. O pixel da Meta não comprova recebimento de pedidos pela UTMify.
 
