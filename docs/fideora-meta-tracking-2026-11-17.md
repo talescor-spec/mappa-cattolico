@@ -23,7 +23,15 @@ Em 17/11, o Pixel RLG foi salvo no produto Hotmart `8973641`. A tela confirmou *
 
 Em 17/11, o Pixel RLG foi salvo no novo produto Mundpay com status **Active**. O token CAPI existente foi reutilizado do produto **Mappa della Bibbia MDB-IT** (`01a0961c-388c-7234-b58a-68908ac56515`), após orientação de Thales e confirmação de que ele usa o mesmo pixel `2184650478741381`. Os eventos `initiate_checkout`, `add_payment_info` e `purchase` foram habilitados. O produto original não foi alterado. Nenhum token é armazenado neste repositório. O status do cadastro não substitui uma validação de entrega de eventos à Meta com uma transação real.
 
-A integração UTMify não foi ativada nesta alteração. Preservar as UTMs existentes e validar separadamente a integração nativa de cada checkout. O pixel da Meta não comprova recebimento de pedidos pela UTMify.
+## UTMify
+
+Em 17/11, foi encontrada uma integração Mundpay → UTMify ativa, mas o novo livro não estava entre os produtos selecionados. O produto `3891abcc-aaa1-4bae-bd7b-b316a853f717` foi incluído e salvo na integração existente. A seleção foi confirmada ao reabrir a edição, preservando os demais produtos, eventos e meios de pagamento.
+
+Na Hotmart, o webhook **Utmify** já estava ativo para **Todos os produtos**, incluindo o Fideora. Nenhum webhook duplicado foi criado.
+
+O painel UTMify exigiu login e depois confirmação 2FA; a verificação do recebimento e da atribuição fica pendente até o usuário concluir a confirmação. Não foi enviada compra fictícia para a integração de produção. Uma transação real não é necessária para testar o carregamento do pixel ou a montagem de URLs; uma compra aprovada confirma o fluxo financeiro completo.
+
+Preservar as UTMs existentes e validar separadamente a integração nativa de cada checkout. O script de UTMs da UTMify e seu pixel de otimização ainda não foram instalados nesta página; a navegação atual monta os links diretamente em JavaScript. Validar também `xcod` no fluxo Hotmart, pois os UTMs estruturados não são enviados no webhook Hotmart. O pixel da Meta não comprova recebimento de pedidos pela UTMify. Não declarar esta etapa completa antes da verificação do painel e dos parâmetros.
 
 ## Apple: implementação necessária
 
