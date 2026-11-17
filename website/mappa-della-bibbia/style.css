@@ -545,3 +545,37 @@ body.dialog-open{overflow:hidden}
 .order-reset{display:block;margin:0 0 3px auto;padding:2px 0;background:none;border:0;font:10px var(--sans);color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 
 .platform-choice{display:flex;justify-content:center;gap:9px;margin:16px 0 0}.platform-choice button{background:none;color:inherit;border:1px solid #bbaa7d88;border-radius:20px;padding:7px 12px;font:10px var(--sans);cursor:pointer}.platform-choice button[aria-pressed=true]{background:#f8f4eb;color:var(--forest);border-color:#f8f4eb}
+
+/* Purchase actions: fine gold framing and a quiet, slow pulse. */
+.offer-card .button[data-buy],#order-submit,#order-payment-button{
+ position:relative;isolation:isolate;min-height:58px;border:1px solid #c4a46a;
+ background:linear-gradient(150deg,#284f40,#18392f 75%);color:var(--ivory);
+ font-weight:600;letter-spacing:.015em;
+ box-shadow:0 7px 20px #142e2429,inset 0 1px 0 #ffffff1a;
+ transition:background .2s,transform .2s,box-shadow .2s,border-color .2s;
+}
+.offer-card .button[data-buy].ivory{
+ background:linear-gradient(145deg,#fffdf7,#eee3cf);color:var(--forest);
+ box-shadow:0 8px 24px #091d1740,inset 0 1px 0 #fff;
+}
+.offer-card .button[data-buy]::after,#order-submit::after,#order-payment-button::after{
+ content:'';position:absolute;inset:-5px;border:1px solid #c4a46a;border-radius:8px;
+ pointer-events:none;opacity:.55;
+}
+.offer-card .button[data-buy]::after{animation:purchase-halo 4.8s ease-in-out infinite}
+.offer-card .button[data-buy]:hover,#order-submit:not(:disabled):hover,#order-payment-button:hover{
+ border-color:#dec48d;box-shadow:0 10px 26px #142e243b,inset 0 1px 0 #ffffff26;
+ transform:translateY(-2px);
+}
+.offer-card .button[data-buy]:is(:hover,:focus-visible)::after{
+ animation:none;opacity:.85;transform:none;
+}
+.offer-card .button[data-buy]:active,#order-submit:not(:disabled):active,#order-payment-button:active{transform:translateY(0)}
+#order-submit:disabled::after{opacity:.2}
+@keyframes purchase-halo{
+ 0%,100%{opacity:.55;transform:scale(1)}
+ 50%{opacity:.14;transform:scale(1.018,1.075)}
+}
+@media(prefers-reduced-motion:reduce){
+ .offer-card .button[data-buy]::after{animation:none;transform:none;opacity:.55}
+}
