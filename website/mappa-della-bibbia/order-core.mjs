@@ -50,8 +50,8 @@ export function capturePayload(value = {}) {
   for (const [key, val] of Object.entries(attribution)) page.searchParams.set(key, val);
   return {
     ...contact, ...attribution, funnel: captureFunnel, page_url: page.href,
-    selected_offer: value.offer, offer_reference: value.offer === 'book' ? 'mdb_studio_library_39_eur' : 'com.fideora.studio.monthly',
-    offer_price: value.offer === 'book' ? 39 : 9.9, currency: 'EUR',
+    selected_offer: value.offer, offer_reference: value.offer === 'book' ? 'mdb_studio_library_39_eur' : 'com.fideora.premium.monthly',
+    offer_price: value.offer === 'book' ? 39 : 7.99, currency: 'EUR',
     ...(value.is_test === true ? { test_type: 'qa_study_order' } : {}),
   };
 }

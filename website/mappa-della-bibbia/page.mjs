@@ -58,7 +58,7 @@ function openOrder(kind) {
   const apple = kind === 'apple';
   document.querySelector('[data-order-name]').textContent = apple ? 'Fideora Premium' : 'Libro + biblioteca';
   document.querySelector('[data-order-included]').textContent = apple ? 'Libro + biblioteca completa gratis' : 'Cinque opere digitali complete';
-  document.querySelector('[data-order-price]').textContent = apple ? '€9,90/mese' : '€39';
+  document.querySelector('[data-order-price]').textContent = apple ? '€7,99/mese' : '€39';
   document.querySelector('#apple-device-note').hidden = !(apple && /Android/i.test(navigator.userAgent));
   document.querySelector('#apple-plan-note').hidden = !apple || applePurchaseReady();
   document.querySelector('[data-order-indicator="2"] [data-step-label]').textContent = apple && !applePurchaseReady() ? 'App Store' : 'Pagamento';
