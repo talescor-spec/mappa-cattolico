@@ -1,4 +1,4 @@
-import { offer, purchaseURL } from './offer.mjs';
+import { offer, purchaseURL, applePurchaseReady } from './offer.mjs';
 import { prefillContact, rememberContact, cleanAttribution, normalizeContact, contactKey, checkoutContactURL } from './order-core.mjs';
 const previewDialog = document.querySelector('.preview-dialog');
 const orderDialog = document.querySelector('.order-dialog');
@@ -21,6 +21,7 @@ const form = document.querySelector('#study-order-form');
 const nameInput = form.elements.name;
 const emailInput = form.elements.email;
 const submitButton = document.querySelector('#order-submit');
+const paymentLink = document.querySelector('#order-payment-button');
 const errorText = document.querySelector('#order-error');
 const entryParams = new URLSearchParams(location.search);
 let storage;
@@ -38,10 +39,14 @@ let selectedOffer = 'book', submission = 0;
 function setOrderStep(step) {
   document.querySelector('#order-details-step').hidden = step !== 1;
   document.querySelector('#order-payment-step').hidden = step !== 2;
+  orderDialog.setAttribute('aria-labelledby', step === 1 ? 'order-title' : 'order-payment-title');
   document.querySelectorAll('[data-order-indicator]').forEach(item => {
     if (Number(item.dataset.orderIndicator) === step) item.setAttribute('aria-current', 'step');
     else item.removeAttribute('aria-current');
   });
+}
+function submitLabel() {
+  return selectedOffer === 'apple' && !applePurchaseReady() ? 'Continua sull’App Store →' : 'Continua al pagamento →';
 }
 function openOrder(kind) {
   selectedOffer = kind;
@@ -49,12 +54,14 @@ function openOrder(kind) {
   setOrderStep(1);
   errorText.hidden = true;
   submitButton.disabled = false;
-  submitButton.innerHTML = 'Continua al pagamento <span aria-hidden="true">→</span>';
+  submitButton.textContent = submitLabel();
   const apple = kind === 'apple';
   document.querySelector('[data-order-name]').textContent = apple ? 'Fideora Premium' : 'Libro + biblioteca';
   document.querySelector('[data-order-included]').textContent = apple ? 'Libro + biblioteca completa gratis' : 'Cinque opere digitali complete';
   document.querySelector('[data-order-price]').textContent = apple ? '€9,90/mese' : '€39';
   document.querySelector('#apple-device-note').hidden = !(apple && /Android/i.test(navigator.userAgent));
+  document.querySelector('#apple-plan-note').hidden = !apple || applePurchaseReady();
+  document.querySelector('[data-order-indicator="2"] [data-step-label]').textContent = apple && !applePurchaseReady() ? 'App Store' : 'Pagamento';
   openDialog(orderDialog);
   // The visitor confirms editable data; a URL or stored email never submits itself.
   (nameInput.value ? emailInput : nameInput).focus({ preventScroll: true });
@@ -87,16 +94,20 @@ form.addEventListener('submit', async event => {
     const data = await response.json();
     if (!response.ok || data.ok !== true || data.offer !== chosen) throw new Error('capture_failed');
     if (submission !== currentSubmission || !orderDialog.open) return;
-    const target = purchaseURL(chosen);
-    if (target) {
-      location.assign(checkoutContactURL(target, chosen, details, entryParams));
-      return;
-    }
-    // Capturing a lead does not activate a paused checkout or unapproved Apple SKU.
+    const target = checkoutContactURL(purchaseURL(chosen), chosen, details, entryParams);
+    if (!target) throw new Error('checkout_unavailable');
+    // Prepare an actual link before navigating, so the visitor can also continue
+    // manually if an in-app browser or external App Store handoff stays here.
     setOrderStep(2);
-    document.querySelector('#order-payment-note').textContent = 'Il pagamento di questa offerta è in attivazione. I tuoi dati sono registrati; nessun addebito è stato effettuato.';
-    document.querySelector('#order-payment-button').textContent = chosen === 'apple' ? 'Pagamento Apple in attivazione' : 'Pagamento Mundpay in attivazione';
-    document.querySelector('.order-back').focus({ preventScroll: true });
+    const appDownload = chosen === 'apple' && !applePurchaseReady();
+    document.querySelector('#order-payment-title').textContent = appDownload ? 'Apri Fideora sull’App Store.' : 'Continua con il tuo ordine.';
+    document.querySelector('#order-payment-note').textContent = appDownload
+      ? 'I tuoi dati sono salvati. Scarica o apri Fideora su iPhone o iPad e scegli un piano nell’app. Apple mostra prezzo e rinnovo prima della conferma. Se l’App Store non si apre, tocca il pulsante qui sotto.'
+      : 'I tuoi dati sono salvati. Ti stiamo portando al pagamento sicuro. Se non si apre automaticamente, continua con il pulsante qui sotto.';
+    paymentLink.href = target;
+    paymentLink.textContent = appDownload ? 'Apri Fideora sull’App Store →' : chosen === 'apple' ? 'Continua con Apple →' : 'Vai al pagamento di €39 →';
+    paymentLink.focus({ preventScroll: true });
+    location.assign(target);
   } catch {
     if (submission !== currentSubmission || !orderDialog.open) return;
     errorText.textContent = 'Non siamo riusciti a salvare i tuoi dati. Controlla la connessione e riprova: non è stato effettuato alcun addebito.';
@@ -104,7 +115,7 @@ form.addEventListener('submit', async event => {
   } finally {
     if (submission === currentSubmission) {
       submitButton.disabled = false;
-      submitButton.innerHTML = 'Continua al pagamento <span aria-hidden="true">→</span>';
+      submitButton.textContent = submitLabel();
     }
   }
 });

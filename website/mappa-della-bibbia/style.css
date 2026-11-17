@@ -512,10 +512,10 @@ body.dialog-open{overflow:hidden}
 .order-toolbar .dialog-close{position:static;float:none;width:33px;height:33px;font-size:22px}
 .order-steps{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:0;margin:0 0 29px;border-bottom:1px solid var(--line)}
 .order-steps li{font-size:11px;display:flex;gap:8px;align-items:center;color:#8b8c7c;padding:0 0 15px;position:relative}
-.order-steps li>span{display:grid;place-items:center;width:22px;height:22px;border:1px solid var(--line);border-radius:50%;font-size:10px}
+.order-steps li>span:first-child{display:grid;place-items:center;width:22px;height:22px;border:1px solid var(--line);border-radius:50%;font-size:10px}
 .order-steps li[aria-current=step]{color:var(--forest)}
 .order-steps li[aria-current=step]:after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--forest)}
-.order-steps li[aria-current=step]>span{background:var(--forest);border-color:var(--forest);color:var(--ivory)}
+.order-steps li[aria-current=step]>span:first-child{background:var(--forest);border-color:var(--forest);color:var(--ivory)}
 .order-dialog .eyebrow{font-size:9px;letter-spacing:.16em;margin-bottom:12px}
 .order-dialog h2{font-size:46px;line-height:1.02;letter-spacing:-.025em}
 .order-dialog h2 em{color:#627054}
