@@ -11,6 +11,7 @@ Pixel solicitado por Thales: **Pixel RLG / 2184650478741381**. Não criar outro 
 - InitiateCheckout, AddPaymentInfo e Purchase pertencem à integração nativa do checkout. Não duplicar esses eventos na página com IDs diferentes.
 - Dados pessoais de prefill e tokens assinados de recuperação são removidos do URL depois da leitura dos campos e antes do carregamento da Meta. Preferências negativas existentes, DNT, GPC e `fm_test=1` impedem carregamento/envios.
 - A exceção CSP para a Meta é restrita ao caminho da nova coleção. A política web foi atualizada sem alterar as declarações do app nativo.
+- Publicação validada em 17/11: pixel `2184650478741381` com estado `loaded` na página canônica de vendas e na página de retorno, sem erros no console. Os dois caminhos permitem os domínios da Meta na CSP; `/app/` mantém a política anterior. Os 17 testes focados e o build do site passaram. Não foi feita compra real para validar Purchase de ponta a ponta.
 
 ## Produtos
 
@@ -18,7 +19,11 @@ Livro Mundpay: `3891abcc-aaa1-4bae-bd7b-b316a853f717` — Mappa della Bibbia —
 
 Assinatura Hotmart: Fideora Premium – Mappa della Bibbia; checkout `X108495940M`, oferta mensal `e792z6va`, 3 dias grátis e €7,99/mês na Itália.
 
+Em 17/11, o Pixel RLG foi salvo no produto Hotmart `8973641`. A tela confirmou **Evento via Web — Configurado**, com **Vendas realizadas** e **Visitas na Página de pagamento**, todos os métodos e valor real da transação. O envio CAPI não foi configurado; depende de token válido.
+
 Em 17/11, a tela da Mundpay não permitiu salvar o novo pixel sem preencher **Conversion API token**. O ID e os três eventos foram preenchidos no formulário, mas salvar exige uma credencial válida. Não reutilizar um token de leitura de anúncios como se fosse um token CAPI. Nenhum token é armazenado neste repositório.
+
+A integração UTMify não foi ativada nesta alteração. Preservar as UTMs existentes e validar separadamente a integração nativa de cada checkout. O pixel da Meta não comprova recebimento de pedidos pela UTMify.
 
 ## Apple: implementação necessária
 
