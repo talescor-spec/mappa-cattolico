@@ -54,10 +54,42 @@ resetContact.addEventListener('click', () => {
   resetContact.hidden = true; errorText.hidden = true; nameInput.focus();
 });
 let selectedOffer = 'book', submission = 0;
+// iOS Safari keeps the layout viewport tall when the virtual keyboard opens.
+// Anchor the order sheet to the visible viewport, not to the covered layout area.
+const compactOrderScreen = window.matchMedia('(max-width: 740px)');
+function keepFocusedFieldVisible() {
+  if (!orderDialog.open || !compactOrderScreen.matches) return;
+  const active = document.activeElement;
+  if (active !== nameInput && active !== emailInput) return;
+  const rect = active.getBoundingClientRect();
+  const dialogRect = orderDialog.getBoundingClientRect();
+  const viewport = window.visualViewport;
+  const visibleBottom = Math.min(dialogRect.bottom, (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight)) - 16;
+  const visibleTop = dialogRect.top + 12;
+  if (rect.bottom > visibleBottom) orderDialog.scrollTop += rect.bottom - visibleBottom + 10;
+  else if (rect.top < visibleTop) orderDialog.scrollTop -= visibleTop - rect.top + 10;
+}
+function syncOrderViewport() {
+  if (!orderDialog.open || !compactOrderScreen.matches) return;
+  const viewport = window.visualViewport;
+  orderDialog.style.setProperty('--order-visible-height', Math.round(viewport?.height ?? window.innerHeight) + 'px');
+  orderDialog.style.setProperty('--order-visible-top', Math.max(0, Math.round(viewport?.offsetTop ?? 0)) + 'px');
+  requestAnimationFrame(keepFocusedFieldVisible);
+}
+window.visualViewport?.addEventListener('resize', syncOrderViewport);
+window.visualViewport?.addEventListener('scroll', syncOrderViewport);
+window.addEventListener('resize', syncOrderViewport);
+form.addEventListener('focusin', event => {
+  if (event.target !== nameInput && event.target !== emailInput) return;
+  orderDialog.classList.add('field-focused');
+  syncOrderViewport();
+});
+
 function setOrderStep(step) {
   document.querySelector('#order-details-step').hidden = step !== 1;
   document.querySelector('#order-payment-step').hidden = step !== 2;
   orderDialog.setAttribute('aria-labelledby', step === 1 ? 'order-title' : 'order-payment-title');
+  if (step === 2) { orderDialog.classList.remove('field-focused'); orderDialog.scrollTop = 0; }
   document.querySelectorAll('[data-order-indicator]').forEach(item => {
     if (Number(item.dataset.orderIndicator) === step) item.setAttribute('aria-current', 'step');
     else item.removeAttribute('aria-current');
@@ -72,6 +104,8 @@ function openOrder(kind) {
   track('capture_started',kind);
   submission++;
   setOrderStep(1);
+  orderDialog.classList.remove('field-focused');
+  orderDialog.scrollTop = 0;
   errorText.hidden = true;
   submitButton.disabled = false;
   submitButton.textContent = submitLabel();
@@ -84,8 +118,13 @@ function openOrder(kind) {
   document.querySelector('#apple-plan-note').hidden = !appleStore || applePurchaseReady();
   document.querySelector('[data-order-indicator="2"] [data-step-label]').textContent = appleStore && !applePurchaseReady() ? 'App Store' : 'Pagamento';
   openDialog(orderDialog);
-  // The visitor confirms editable data; a URL or stored email never submits itself.
-  (nameInput.value ? emailInput : nameInput).focus({ preventScroll: true });
+  // On mobile the form must be visible before Safari opens its keyboard.
+  if (compactOrderScreen.matches) {
+    orderDialog.querySelector('.dialog-close').focus({ preventScroll: true });
+    syncOrderViewport();
+  } else {
+    (nameInput.value ? emailInput : nameInput).focus({ preventScroll: true });
+  }
 }
 document.querySelectorAll('[data-buy]').forEach(button => button.addEventListener('click', () => openOrder(button.dataset.buy)));
 document.querySelector('.order-back').addEventListener('click', () => openOrder(selectedOffer));
