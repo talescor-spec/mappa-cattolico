@@ -30,6 +30,8 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
+      - name: Build website fixtures used by HTTP regression tests
+        run: npm run build:website
       - run: npm test
       - run: npm run appstore:preflight
       - run: npm run cap:ios
