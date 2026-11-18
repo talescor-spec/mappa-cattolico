@@ -210,3 +210,55 @@ if (resume) {
     }).catch(()=>{ /* The normal editable order remains available if the link expires. */ });
 }
 paymentLink.addEventListener('click',()=>{track(selectedOffer==='apple'?'store_click':'checkout_click',selectedOffer);metaPixel.outbound(selectedOffer);});
+
+
+// Black Friday campaign deadline is 00:00 CET on November 25 (end of Nov 24 in Italy).
+// Never reset the countdown on refresh or use the visitor's timezone as the offer timezone.
+const bfBar = document.querySelector('#bf-promo');
+if (bfBar) {
+  const deadline = Date.parse('2026-11-25T00:00:00+01:00');
+  const counter = bfBar.querySelector('[data-bf-clock]');
+  let timer;
+  function refreshBfCountdown() {
+    const remaining = deadline - Date.now();
+    if (remaining <= 0) {
+      bfBar.hidden = true;
+      if (timer) clearInterval(timer);
+      return;
+    }
+    const d = Math.floor(remaining / 86400000);
+    const h = Math.floor(remaining / 3600000) % 24;
+    const m = Math.floor(remaining / 60000) % 60;
+    const s = Math.floor(remaining / 1000) % 60;
+    counter.textContent = d + 'g ' + String(h).padStart(2, '0') + 'h ' + String(m).padStart(2, '0') + 'm ' + String(s).padStart(2, '0') + 's';
+  }
+  refreshBfCountdown();
+  if (!bfBar.hidden) timer = window.setInterval(refreshBfCountdown, 1000);
+}
+
+// Swipeable testimonials on mobile, discreet arrow controls on larger screens.
+const reviewsTrack = document.querySelector('[data-reviews-track]');
+if (reviewsTrack) {
+  const previous = document.querySelector('[data-review-previous]');
+  const next = document.querySelector('[data-review-next]');
+  const updateReviewButtons = () => {
+    const maxScroll = Math.max(0, reviewsTrack.scrollWidth - reviewsTrack.clientWidth);
+    previous.disabled = reviewsTrack.scrollLeft < 5;
+    next.disabled = reviewsTrack.scrollLeft >= maxScroll - 5;
+  };
+  const moveReview = direction => {
+    const card = reviewsTrack.querySelector('.review-card');
+    if (!card) return;
+    const gap = parseFloat(getComputedStyle(reviewsTrack).gap) || 0;
+    const distance = card.getBoundingClientRect().width + gap;
+    reviewsTrack.scrollBy({
+      left: direction * distance,
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+    });
+  };
+  previous.addEventListener('click', () => moveReview(-1));
+  next.addEventListener('click', () => moveReview(1));
+  reviewsTrack.addEventListener('scroll', updateReviewButtons, { passive: true });
+  window.addEventListener('resize', updateReviewButtons);
+  requestAnimationFrame(updateReviewButtons);
+}
