@@ -629,3 +629,60 @@ body.dialog-open{overflow:hidden}
   .order-dialog.field-focused .order-summary span { display: none; }
   .order-dialog.field-focused #study-order-form label { margin-top: 6px; }
 }
+
+
+/* Black Friday campaign topbar: expires 24 Nov 2026, Italy. */
+.bf-bar{background:#e9deca;color:#234136;border-bottom:1px solid #c9b689}
+.bf-bar-inner{max-width:1200px;margin:auto;min-height:42px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 24px;padding:8px 22px;font-size:11px;line-height:1.45}
+.bf-bar-inner p{margin:0;display:flex;align-items:center;gap:10px}
+.bf-bar-inner p strong{font-size:10px;letter-spacing:.14em;font-weight:700}
+.bf-star{font-size:12px;color:#977439}
+.bf-clock{display:flex;align-items:center;gap:9px;color:#5e584a}
+.bf-clock b{font-variant-numeric:tabular-nums;letter-spacing:.035em;color:#18392f}
+.bf-bar-inner a{font-size:10px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.bf-bar-inner a:hover{text-decoration-thickness:2px}
+
+/* Marketplace-inspired reviews; native horizontal swipe on touch. */
+.reviews-section{background:#eee7d9}
+.reviews-header{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:25px}
+.reviews-header .eyebrow{margin-bottom:13px}
+.reviews-header h2{font-size:clamp(38px,4.2vw,58px)}
+.reviews-header h2 em{color:#657254}
+.reviews-lead{color:var(--muted);font-size:12px;line-height:1.7;margin-top:13px}
+.reviews-navigation{display:flex;align-items:center;gap:9px;padding-bottom:3px}
+.reviews-navigation button{width:39px;height:39px;border:1px solid #cab994;border-radius:50%;background:#fcf9f2;color:var(--forest);font-size:20px;line-height:1;display:grid;place-items:center}
+.reviews-navigation button:hover:not(:disabled){background:#e3d5bc}
+.reviews-navigation button:disabled{opacity:.35;cursor:default}
+.reviews-track{display:flex;gap:17px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding:4px 3px 13px}
+.reviews-track::-webkit-scrollbar{display:none}
+.reviews-track:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.review-card{flex:0 0 calc((100% - 34px)/3);min-width:0;min-height:255px;scroll-snap-align:start;display:flex;flex-direction:column;gap:10px;padding:24px 23px 20px;background:#fffdf8;border:1px solid #d8c9ac;border-radius:7px;box-shadow:0 3px 12px #29372d0a}
+.review-stars{font-size:17px;letter-spacing:.06em;line-height:1;color:#a7803d}
+.review-card h3{font:600 13px/1.5 var(--sans);letter-spacing:0}
+.review-card blockquote{margin:0;color:#555f54;font-size:12px;line-height:1.75;flex:1}
+.review-author{padding-top:12px;border-top:1px solid #e8deca;font-size:11px;font-weight:600;line-height:1.4;color:var(--forest)}
+.reviews-disclosure{font-size:10px;line-height:1.6;color:#6b6c5f;margin-top:10px;max-width:960px}
+@media (max-width: 900px) {
+  .review-card{flex-basis:calc((100% - 17px)/2)}
+}
+@media (max-width: 740px) {
+  .bf-bar-inner{gap:6px 12px;padding:8px 14px;font-size:10px}
+  .bf-clock{gap:6px}
+  .bf-bar-inner a{font-size:10px}
+  .reviews-section{padding-block:65px 70px}
+  .reviews-header{align-items:start;gap:15px;flex-wrap:wrap}
+  .reviews-header h2{font-size:37px}
+  .reviews-navigation{margin-left:auto}
+  .reviews-track{gap:12px;padding-bottom:15px}
+  .review-card{flex:0 0 min(82vw,340px);min-height:245px;padding:20px 19px}
+  .review-card blockquote{font-size:12px}
+  .reviews-disclosure{font-size:9px}
+}
+@media (max-width: 360px) {
+  .bf-bar-inner{justify-content:center;text-align:center}
+  .bf-bar-inner p{flex-wrap:wrap;justify-content:center}
+  .review-card{flex-basis:84vw}
+}
+@media (prefers-reduced-motion: reduce) {
+  .reviews-track{scroll-behavior:auto}
+}
