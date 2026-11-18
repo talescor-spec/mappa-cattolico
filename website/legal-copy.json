@@ -21,11 +21,15 @@
         ],
         [
           "Acquisti e tracciamento",
-          "Gli acquisti Premium nell’app iOS sono gestiti da Apple e RevenueCat. RevenueCat tratta un identificativo anonimo dell’installazione o, dopo l’accesso, l’UUID dell’account, dati di acquisto e abbonamento, prezzo/valuta, stato e scadenza e interazioni tecniche con il paywall per fornire il servizio, ripristinare gli acquisti e misurare l’offerta. Non inviamo a RevenueCat il testo di note o intenzioni, il nome o l’email. Le risposte iniziali su obiettivo e tempo restano sul dispositivo. Non sono integrati pubblicità, pixel di marketing o tracciamento tra app. Non raccogliamo dati di carte di pagamento. Apple e RevenueCat possono conservare i dati delle transazioni secondo obblighi contabili e le rispettive politiche anche dopo l’eliminazione dell’account Fideora."
+          "Gli acquisti Premium nell’app iOS sono gestiti da Apple e RevenueCat. RevenueCat tratta un identificativo anonimo dell’installazione o, dopo l’accesso, l’UUID dell’account, dati di acquisto e abbonamento, prezzo/valuta, stato e scadenza e interazioni tecniche con il paywall per fornire il servizio, ripristinare gli acquisti e misurare l’offerta. Non inviamo a RevenueCat il testo di note o intenzioni, il nome o l’email. Le risposte iniziali su obiettivo e tempo restano sul dispositivo. L’app non mostra annunci di terzi. Le versioni con la misurazione Meta attivata richiedono prima il consenso App Tracking Transparency di Apple. Non raccogliamo dati di carte di pagamento. Apple e RevenueCat possono conservare i dati delle transazioni secondo obblighi contabili e le rispettive politiche anche dopo l’eliminazione dell’account Fideora."
         ],
         [
           "Promemoria e richieste di valutazione",
           "Dalla versione 1.0.2 dell’app iOS, puoi programmare promemoria facoltativi sul dispositivo. Per misurare le richieste di valutazione, Fideora registra su Supabase tre tipi di evento: il raggiungimento della soglia d’uso, la richiesta di valutazione al sistema e il tocco del collegamento di valutazione nel Profilo. Ogni evento include il tipo, la lingua, un identificativo casuale per il singolo evento e l’orario di ricezione. Il progresso di lettura e preghiera usato per calcolare la soglia resta sul dispositivo."
+        ],
+        [
+          "Misurazione degli annunci facoltativa",
+          "Solo con l’autorizzazione ATT, il SDK Meta riceve segnali tecnici di attivazione e identificativi del dispositivo; RevenueCat riceve l’identificativo anonimo Meta e, quando disponibile, l’identificativo pubblicitario, lo stato ATT e dati tecnici necessari alla misurazione. RevenueCat può inviare a Meta avvii di prova, acquisti e rinnovi effettivi. Non inviamo nomi, email, note, intenzioni, preghiere o dettagli dei contenuti letti per pubblicità. Sono disattivate la raccolta automatica dei titoli delle schermate, dei collegamenti aperti e del layout. Rifiutare non limita acquisti, ripristino o accesso Premium. Puoi cambiare la scelta nelle Impostazioni iOS > Privacy e sicurezza > Tracciamento. I dati delle transazioni restano necessari al servizio; l’autorizzazione al tracking non è richiesta per l’acquisto."
         ],
         [
           "Contatti e diritti",
@@ -126,11 +130,15 @@
         ],
         [
           "Compras e rastreamento",
-          "As compras Premium no app iOS são gerenciadas pela Apple e RevenueCat. O RevenueCat trata um identificador anônimo da instalação ou, após login, o UUID da conta, dados de compra e assinatura, preço/moeda, status e vencimento e interações técnicas com o paywall para fornecer o serviço, restaurar compras e medir a oferta. Não enviamos ao RevenueCat o texto das notas ou intenções, nome ou email. As respostas iniciais sobre objetivo e tempo ficam no dispositivo. Não há anúncios, pixels de marketing ou rastreamento entre apps. Não coletamos dados de cartões. Apple e RevenueCat podem reter dados de transações por obrigações contábeis e suas políticas mesmo após a exclusão da conta Fideora."
+          "As compras Premium no app iOS são gerenciadas pela Apple e RevenueCat. O RevenueCat trata um identificador anônimo da instalação ou, após login, o UUID da conta, dados de compra e assinatura, preço/moeda, status e vencimento e interações técnicas com o paywall para fornecer o serviço, restaurar compras e medir a oferta. Não enviamos ao RevenueCat o texto das notas ou intenções, nome ou email. As respostas iniciais sobre objetivo e tempo ficam no dispositivo. O app não exibe anúncios de terceiros. As versões com medição Meta habilitada solicitam primeiro a autorização App Tracking Transparency da Apple. Não coletamos dados de cartões. Apple e RevenueCat podem reter dados de transações por obrigações contábeis e suas políticas mesmo após a exclusão da conta Fideora."
         ],
         [
           "Lembretes e pedidos de avaliação",
           "A partir da versão 1.0.2 do app iOS, você pode programar lembretes opcionais no dispositivo. Para medir os pedidos de avaliação, o Fideora registra no Supabase três tipos de evento: quando o app atinge o marco de uso, quando solicita a avaliação ao sistema e quando você toca no link de avaliação no Perfil. Cada evento inclui o tipo, o idioma, um código aleatório por evento e o horário de recebimento. O progresso de leitura e oração usado para calcular o marco fica no dispositivo."
+        ],
+        [
+          "Medição opcional dos anúncios",
+          "Somente com autorização ATT, o SDK Meta recebe sinais técnicos de ativação e identificadores do dispositivo; o RevenueCat recebe o identificador anônimo Meta e, quando disponível, o identificador publicitário, o estado ATT e dados técnicos necessários à medição. O RevenueCat pode enviar à Meta inícios de teste, compras e renovações reais. Não enviamos nomes, emails, notas, intenções, orações ou detalhes dos conteúdos lidos para publicidade. A coleta automática de títulos das telas, links abertos e layout está desativada. Recusar não limita compras, restauração ou acesso Premium. Você pode alterar a escolha em Ajustes do iOS > Privacidade e Segurança > Rastreamento. Dados das transações continuam necessários ao serviço; a autorização de rastreamento não é exigida para comprar."
         ],
         [
           "Contato e direitos",

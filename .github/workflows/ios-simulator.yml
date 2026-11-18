@@ -1,5 +1,7 @@
 name: iOS Simulator
 on:
+  pull_request:
+    paths: ["src/**", "ios/**", "package*.json", ".github/workflows/ios-simulator.yml"]
   push:
     branches: [fideora-v1-italiano]
     paths:
