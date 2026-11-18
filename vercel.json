@@ -17,6 +17,11 @@
       "permanent": false
     },
     {
+      "source": "/mappa-della-bibbia",
+      "destination": "/mappa-della-bibbia/",
+      "permanent": true
+    },
+    {
       "source": "/mappa",
       "destination": "/mappa-della-bibbia/",
       "permanent": false
