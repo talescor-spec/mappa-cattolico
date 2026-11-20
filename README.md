@@ -41,3 +41,7 @@ Read [V1 release report](docs/V1-RELEASE.md), [App Store package](docs/APP_STORE
 ## Content and licensing
 
 Scripture corpus: [midvash/bible-data](https://github.com/midvash/bible-data), Diodati 1649 and Almeida 1819, declared public domain by the source metadata. These historical 66-book editions do not include the seven Catholic deuterocanonical books and are not official liturgical editions. The app discloses this in Sources. Editorial guides, reflections and devotional tracks are original Fideora content. Lexical cards reference Strong identifiers and do not claim to be a complete interlinear or concordance.
+
+### Illustrated offer samples
+
+The three 1920 × 1440 interior samples for `/mappa-del-cattolico/` are generated with `python scripts/generate-cattolico-previews.py` (Pillow supplies font metrics). Their text, symbols, connections and figures are original SVG artwork. The faith map connects the four parts of the Catechism; the church plan follows twelve stages of the Roman rite; the Emmaus map joins Luke 24 to a practical lectio divina exercise. The plan and landscape are symbolic rather than architectural or geographical reconstructions. Vatican source URLs are recorded in the generator and SVG metadata; visible footnotes identify the relevant sections. These are sample plates, not a complete book manuscript. The gallery supports fit-to-screen and native-size detail views.

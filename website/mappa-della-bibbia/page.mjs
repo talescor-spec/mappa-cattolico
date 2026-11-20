@@ -8,7 +8,13 @@ const bookPrice = `€${offer.book.price}`;
 const previewDialog = document.querySelector('.preview-dialog');
 const orderDialog = document.querySelector('.order-dialog');
 const zoomButton = previewDialog.querySelector('.preview-zoom');
-function setZoom(active) { previewDialog.classList.toggle('zoomed', active); zoomButton.setAttribute('aria-pressed', String(active)); zoomButton.textContent = active ? 'Riduci tavola −' : 'Ingrandisci dettagli +'; }
+function setZoom(active) {
+  const image = previewDialog.querySelector('img');
+  previewDialog.style.setProperty('--preview-native-width', `${image.naturalWidth || 1920}px`);
+  previewDialog.classList.toggle('zoomed', active);
+  zoomButton.setAttribute('aria-pressed', String(active));
+  zoomButton.textContent = active ? 'Riduci tavola −' : 'Ingrandisci dettagli +';
+}
 zoomButton.addEventListener('click', () => setZoom(!previewDialog.classList.contains('zoomed')));
 function openDialog(dialog) { if (!dialog.open) dialog.showModal(); document.body.classList.add('dialog-open'); }
 for (const dialog of [previewDialog, orderDialog]) {
