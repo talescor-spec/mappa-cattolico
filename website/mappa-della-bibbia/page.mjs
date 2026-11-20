@@ -4,6 +4,7 @@ import { offer, purchaseURL, applePurchaseReady } from './offer.mjs';
 import { prefillContact, rememberContact, cleanAttribution, normalizeContact, contactKey, checkoutContactURL } from './order-core.mjs';
 import { initMetaPixel } from './meta-pixel.mjs';
 import { initUtmifyUTMs } from './utmify.mjs';
+const bookPrice = `€${offer.book.price}`;
 const previewDialog = document.querySelector('.preview-dialog');
 const orderDialog = document.querySelector('.order-dialog');
 const zoomButton = previewDialog.querySelector('.preview-zoom');
@@ -113,7 +114,7 @@ function openOrder(kind) {
   const appleStore = kind === 'apple';
   document.querySelector('[data-order-name]').textContent = apple ? 'Fideora Premium' : 'Libro + biblioteca';
   document.querySelector('[data-order-included]').textContent = apple ? 'Libro + biblioteca completa gratis' : 'Cinque opere digitali complete';
-  document.querySelector('[data-order-price]').textContent = apple ? '€7,99/mese' : '€39';
+  document.querySelector('[data-order-price]').textContent = apple ? '€7,99/mese' : bookPrice;
   document.querySelector('#apple-device-note').hidden = !(appleStore && detectedDevice === 'android');
   document.querySelector('#apple-plan-note').hidden = !appleStore || applePurchaseReady();
   document.querySelector('[data-order-indicator="2"] [data-step-label]').textContent = appleStore && !applePurchaseReady() ? 'App Store' : 'Pagamento';
@@ -166,7 +167,7 @@ form.addEventListener('submit', async event => {
       ? 'I tuoi dati sono salvati. Scarica o apri Fideora su iPhone o iPad e scegli un piano nell’app. Apple mostra prezzo e rinnovo prima della conferma. Se l’App Store non si apre, tocca il pulsante qui sotto.'
       : 'I tuoi dati sono salvati. Ti stiamo portando al pagamento sicuro. Se non si apre automaticamente, continua con il pulsante qui sotto.';
     paymentLink.href = target;
-    paymentLink.textContent = appDownload ? 'Apri Fideora sull’App Store →' : chosen === 'apple' ? 'Continua con Apple →' : chosen === 'android' ? 'Continua su Hotmart →' : 'Vai al pagamento di €39 →';
+    paymentLink.textContent = appDownload ? 'Apri Fideora sull’App Store →' : chosen === 'apple' ? 'Continua con Apple →' : chosen === 'android' ? 'Continua su Hotmart →' : `Vai al pagamento di ${bookPrice} →`;
     paymentLink.focus({ preventScroll: true });
     track(appDownload ? 'store_click' : 'checkout_click',chosen);
     metaPixel.outbound(chosen);

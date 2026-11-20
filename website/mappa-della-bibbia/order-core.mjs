@@ -1,5 +1,6 @@
 import { campaignToken } from './social-core.mjs';
 import { hotmartAttributionCode } from './utmify.mjs';
+import { offer } from './offer.mjs';
 export const contactKey = 'fideoraStudyContact:v1';
 export const contactMaxAge = 30 * 86400000;
 export const captureFunnel = 'mdb-studio-it';
@@ -53,8 +54,8 @@ export function capturePayload(value = {}) {
   return {
     ...contact, ...attribution, funnel: captureFunnel, page_url: page.href,
     session_id: value.session_id, platform: value.platform, followup_requested: value.followup_requested === true,
-    selected_offer: value.offer, offer_reference: value.offer === 'book' ? 'mdb_studio_library_39_eur' : value.offer === 'apple' ? 'com.fideora.premium.monthly' : 'hotmart_fideora_monthly_e792z6va',
-    offer_price: value.offer === 'book' ? 39 : 7.99, currency: 'EUR',
+    selected_offer: value.offer, offer_reference: value.offer === 'book' ? `mdb_studio_library_${offer.book.price}_eur` : value.offer === 'apple' ? 'com.fideora.premium.monthly' : 'hotmart_fideora_monthly_e792z6va',
+    offer_price: value.offer === 'book' ? offer.book.price : 7.99, currency: 'EUR',
     ...(value.is_test === true ? { test_type: 'qa_study_order' } : {}),
   };
 }
