@@ -1,7 +1,7 @@
 // Routing to a provider is separate from verifying payment and content delivery.
 export const offer = Object.freeze({
   status: 'checkout-routing',
-  book: Object.freeze({ price: 39, currency: 'EUR', productID: '3891abcc-aaa1-4bae-bd7b-b316a853f717', checkoutURL: 'https://checkout.mundpay.com/01a1e740-380f-71d4-b88f-e8c4124b323f?ref=', checkoutVerified: true, filesReady: true }),
+  book: Object.freeze({ price: 27, currency: 'EUR', productID: '3891abcc-aaa1-4bae-bd7b-b316a853f717', checkoutURL: 'https://checkout.mundpay.com/01a1e740-380f-71d4-b88f-e8c4124b323f?ref=', checkoutVerified: true, filesReady: true }),
   apple: Object.freeze({ price: 7.99, currency: 'EUR', interval: 'month', productID: 'com.fideora.premium.monthly', purchaseURL: '', approved: true, bonusDeliveryVerified: true }),
   android: Object.freeze({ price: 7.99, currency: 'EUR', interval: 'month', trialDays: 3, checkoutURL: 'https://pay.hotmart.com/X108495940M?off=e792z6va&showOnlyTrial=1' }),
   appStoreURL: 'https://apps.apple.com/it/app/fideora/id6825337165',
