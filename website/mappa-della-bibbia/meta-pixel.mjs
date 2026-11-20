@@ -1,6 +1,6 @@
 export const META_PIXEL_ID = '2184650478741381';
 const allowedParams = new Set(['utm_source','utm_medium','utm_campaign','utm_content','utm_term','src','sck','fbclid','gclid','ttclid','ct','lang','fm_test']);
-const offers = Object.freeze({book:'studio_collection',apple:'premium_ios',android:'premium_web'});
+const offers = Object.freeze({book:'mappa_del_cattolico_bundle',apple:'premium_ios',android:'premium_web'});
 
 // The vendor must never receive personalized prefills or signed recovery links.
 export function metaPageURL(value) {
@@ -42,7 +42,7 @@ export function createMetaTracker({win,doc,nav,storage} = {}) {
   catch { return false; } // A blocked marketing vendor must not block checkout.
  }
  send('PageView');
- if (!win.location.pathname.includes('/grazie/')) send('ViewContent',{content_ids:['studio_collection'],content_type:'product'});
+ if (!win.location.pathname.includes('/grazie/')) send('ViewContent',{content_ids:['mappa_del_cattolico_bundle'],content_type:'product'});
  if (!doc.querySelector('script[data-mdb-meta-pixel]')) {
   const script = doc.createElement('script'); script.async = true; script.referrerPolicy = 'no-referrer';
   script.src = 'https://connect.facebook.net/en_US/fbevents.js'; script.dataset.mdbMetaPixel = META_PIXEL_ID;

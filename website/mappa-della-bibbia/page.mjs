@@ -112,8 +112,8 @@ function openOrder(kind) {
   submitButton.textContent = submitLabel();
   const apple = kind !== 'book';
   const appleStore = kind === 'apple';
-  document.querySelector('[data-order-name]').textContent = apple ? 'Fideora Premium' : 'Libro + biblioteca';
-  document.querySelector('[data-order-included]').textContent = apple ? 'Libro + biblioteca completa gratis' : 'Cinque opere digitali complete';
+  document.querySelector('[data-order-name]').textContent = apple ? 'Fideora Premium' : 'La Mappa del Cattolico';
+  document.querySelector('[data-order-included]').textContent = apple ? 'Libro e sei volumi bonus gratis' : 'Libro + Bibbia e Radici + Catechismo + Messa';
   document.querySelector('[data-order-price]').textContent = apple ? '€7,99/mese' : bookPrice;
   document.querySelector('#apple-device-note').hidden = !(appleStore && detectedDevice === 'android');
   document.querySelector('#apple-plan-note').hidden = !appleStore || applePurchaseReady();

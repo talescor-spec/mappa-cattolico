@@ -1,3 +1,17 @@
+# La Mappa del Cattolico — offer revision, 20 November 2026
+
+The main book is now **La Mappa del Cattolico**. The four existing companion volumes are grouped as **Pacchetto Bibbia e Radici** (Didachè, I Vangeli con i Padri, Con sant’Agostino, Il mondo dei Vangeli). **La Mappa del Catechismo** and **La Mappa della Messa** are two additional bonus books: one main book and six bonus volumes in total. The one-time price is €27. The existing Fideora subscription route is preserved with the updated collection presentation.
+
+The canonical route is `/mappa-del-cattolico/`. The old sales path and existing `/mappa` and social aliases redirect there without dropping query attribution. The build publishes the existing physical source directory to both paths so historical asset and module links remain valid. The new path has the same scoped tracking CSP. Capture retains the existing funnel/provider IDs and adds the new `mdc_bundle_27_eur` offer reference and `mdc_it_v1` default campaign.
+
+Three coordinated covers are project assets. The old Bible-only samples are replaced by original faith, Mass, and prayer sample plates, reproducible with `python scripts/generate-cattolico-previews.py`. These are explicitly illustrative editorial samples. Source structure references: the Vatican’s Italian Catechism Compendium and General Instruction of the Roman Missal. New covers and these samples are not the complete deliverable book PDFs. The main book and two new bonuses still need final content and fulfillment verification. The old publisher-confirmed readiness flag below applies to the former collection only, not an independent verification of this new seven-volume package.
+
+The new offer does not reuse testimonials written for Mappa della Bibbia. The price stack lists the included components without inventing new individual prices or an increased valuation.
+
+Validation: focused study routing, capture, social, Meta and UTMify tests; production website build; asset existence check. The historical implementation notes below describe the prior edition and are retained for provider/funnel provenance.
+
+---
+
 # Mappa della Bibbia — Studio collection
 
 Italian study collection at `/mappa-della-bibbia/`, thank-you information at `/mappa-della-bibbia/grazie/`. This is a separate path; the current Fideora landing, quiz, native billing and Android offers keep their existing behavior.

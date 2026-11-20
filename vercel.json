@@ -2,6 +2,16 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/mappa-del-cattolico",
+      "destination": "/mappa-del-cattolico/",
+      "permanent": true
+    },
+    {
+      "source": "/mappa-della-bibbia/",
+      "destination": "/mappa-del-cattolico/",
+      "permanent": false
+    },
+    {
       "source": "/it",
       "destination": "/",
       "permanent": true
@@ -18,37 +28,37 @@
     },
     {
       "source": "/mappa-della-bibbia",
-      "destination": "/mappa-della-bibbia/",
+      "destination": "/mappa-del-cattolico/",
       "permanent": true
     },
     {
       "source": "/mappa",
-      "destination": "/mappa-della-bibbia/",
+      "destination": "/mappa-del-cattolico/",
       "permanent": false
     },
     {
       "source": "/mappa/",
-      "destination": "/mappa-della-bibbia/",
+      "destination": "/mappa-del-cattolico/",
       "permanent": false
     },
     {
       "source": "/social/instagram",
-      "destination": "/mappa-della-bibbia/?utm_source=instagram&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "destination": "/mappa-del-cattolico/?utm_source=instagram&utm_medium=organic_bio&utm_campaign=mdc_it_v1",
       "permanent": false
     },
     {
       "source": "/social/facebook",
-      "destination": "/mappa-della-bibbia/?utm_source=facebook&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "destination": "/mappa-del-cattolico/?utm_source=facebook&utm_medium=organic_bio&utm_campaign=mdc_it_v1",
       "permanent": false
     },
     {
       "source": "/social/tiktok",
-      "destination": "/mappa-della-bibbia/?utm_source=tiktok&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "destination": "/mappa-del-cattolico/?utm_source=tiktok&utm_medium=organic_bio&utm_campaign=mdc_it_v1",
       "permanent": false
     },
     {
       "source": "/social/youtube",
-      "destination": "/mappa-della-bibbia/?utm_source=youtube&utm_medium=organic_bio&utm_campaign=mdb_studio_v1",
+      "destination": "/mappa-del-cattolico/?utm_source=youtube&utm_medium=organic_bio&utm_campaign=mdc_it_v1",
       "permanent": false
     }
   ],
@@ -153,6 +163,15 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/mappa-del-cattolico/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://connect.facebook.net https://cdn.utmify.com.br; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://kgyqpedwgilotlwyhmnb.supabase.co https://sysuottboucultzzaagv.supabase.co wss://sysuottboucultzzaagv.supabase.co; media-src 'self'; manifest-src 'self'; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         }
       ]
     }

@@ -686,3 +686,27 @@ body.dialog-open{overflow:hidden}
 @media (prefers-reduced-motion: reduce) {
   .reviews-track{scroll-behavior:auto}
 }
+
+/* The Cattolico collection: main guide, four Bibbia e Radici volumes, two guides. */
+.bonus-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:56px}
+.bonus-volume{display:grid;grid-template-columns:.7fr 1fr;align-items:center;gap:28px;padding-top:30px;border-top:1px solid var(--line);min-width:0}
+.bonus-cover img{width:100%;box-shadow:8px 13px 20px #25332624;transform:rotate(-3deg)}
+.bonus-volume:nth-child(2) .bonus-cover img{transform:rotate(3deg)}
+.bonus-volume .eyebrow{font-size:11px;letter-spacing:.1em;margin-bottom:13px}
+.bonus-volume h3{font-size:34px;line-height:1.08}
+.bonus-volume p:not(.eyebrow){font-size:14px;color:var(--muted);margin-top:17px}
+.bonus-volume .check-list{margin:20px 0}.bonus-volume .check-list li{font-size:13px;margin-top:10px}
+.bundle-inclusions li{gap:18px;align-items:start}.included-label{font-size:12px;color:#7d683b;white-space:nowrap;padding-top:2px}
+.bundle-mockup{height:270px}.bundle-book{width:18%}
+.bundle-book.b1{left:0;bottom:78px}.bundle-book.b2{left:21%;bottom:96px}.bundle-book.b3{left:60%;bottom:96px}.bundle-book.b4{left:81%;bottom:78px}
+.bundle-book.b5{left:17%;bottom:23px;width:25%;z-index:3;transform:perspective(600px) rotateY(-10deg) rotateZ(-5deg)}
+.bundle-book.b6{left:60%;bottom:23px;width:25%;z-index:3;transform:perspective(600px) rotateY(-10deg) rotateZ(5deg)}
+.bundle-book.main{width:31%;left:35%;bottom:9px;z-index:4}
+.with-app .bundle-books{left:25%;top:20px}
+.with-app .bundle-book.b1,.with-app .bundle-book.b4{bottom:74px}
+.with-app .bundle-book.b2,.with-app .bundle-book.b3{bottom:92px}
+.with-app .bundle-book.main{width:33%;left:34%;bottom:9px}
+.price{white-space:nowrap}.hero-open-page img{object-fit:contain}
+@media(max-width:1050px){.bonus-grid{gap:32px}.bonus-volume{grid-template-columns:1fr;align-content:start}.bonus-cover{max-width:200px;margin:0 auto 22px}.bundle-mockup{height:245px}}
+@media(max-width:740px){.bonus-grid{grid-template-columns:1fr;gap:42px;margin-top:38px}.bonus-volume{grid-template-columns:.7fr 1fr;gap:23px}.bonus-cover{margin:0;max-width:none}.bonus-volume h3{font-size:30px}.bonus-volume .check-list{display:none}.bonus-volume p:not(.eyebrow){font-size:14px}.bundle-mockup{height:240px}.with-app .bundle-books{left:25%;top:20px}.benefit-strip{font-size:19px}.library-grid{row-gap:38px}}
+@media(max-width:390px){.bonus-volume{grid-template-columns:1fr}.bonus-cover{max-width:170px;margin:0 auto 12px}.bundle-mockup{height:220px}}

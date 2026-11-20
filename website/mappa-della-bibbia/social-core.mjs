@@ -1,4 +1,4 @@
-export const socialCampaign='mdb_studio_v1';
+export const socialCampaign='mdc_it_v1';
 export const socialSessionKey='fideoraStudySession:v1';
 export function detectDevice(nav={}){const ua=nav.userAgent||'';if(/Android/i.test(ua)||/Android/i.test(nav.userAgentData?.platform||''))return 'android';if(/iPhone|iPad|iPod/i.test(ua)||(nav.platform==='MacIntel'&&nav.maxTouchPoints>1))return 'ios';return 'desktop';}
 export function appOffer(platform){return platform==='ios'?'apple':'android';}

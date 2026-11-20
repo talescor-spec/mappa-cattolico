@@ -20,10 +20,10 @@ test('capture attribution cannot leak personalized URLs or change price, funnel,
   const payload=capturePayload({name:'Giulia Rossi',email:'user@example.com',offer:'apple',funnel:'mdb-it',price:1,listId:55,page_url:'https://evil.example/?email=private',attribution:{utm_source:'brevo',utm_content:'book_1',email:'private',access_token:'secret',redirect:'https://evil.example'}});
   assert.equal(payload.funnel,'mdb-studio-it');assert.equal(payload.offer_price,7.99);
   assert.equal(payload.selected_offer,'apple');assert.equal(payload.offer_reference,'com.fideora.premium.monthly');
-  assert.equal(payload.page_url,'https://fideora.app/mappa-della-bibbia/?utm_source=brevo&utm_content=book_1');
+  assert.equal(payload.page_url,'https://fideora.app/mappa-del-cattolico/?utm_source=brevo&utm_content=book_1');
   assert.equal(payload.access_token,undefined);assert.equal(payload.listId,undefined);
   const book=capturePayload({name:'Giulia Rossi',email:'user@example.com',offer:'book',price:1});
-  assert.equal(book.offer_price,27);assert.equal(book.offer_reference,'mdb_studio_library_27_eur');assert.equal(book.currency,'EUR');
+  assert.equal(book.offer_price,27);assert.equal(book.offer_reference,'mdc_bundle_27_eur');assert.equal(book.currency,'EUR');
   assert.throws(()=>capturePayload({name:'Giulia Rossi',email:'invalid',offer:'book'}),/invalid_email/);
   assert.throws(()=>capturePayload({name:'Giulia Rossi',email:'user@example.com',offer:'lifetime'}),/invalid_offer/);
 });

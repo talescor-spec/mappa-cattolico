@@ -49,12 +49,12 @@ export function capturePayload(value = {}) {
   const contact = normalizeContact(value);
   if (!['book', 'apple', 'android'].includes(value.offer)) throw new Error('invalid_offer');
   const attribution = cleanAttribution(value.attribution);
-  const page = new URL('https://fideora.app/mappa-della-bibbia/');
+  const page = new URL('https://fideora.app/mappa-del-cattolico/');
   for (const [key, val] of Object.entries(attribution)) page.searchParams.set(key, val);
   return {
     ...contact, ...attribution, funnel: captureFunnel, page_url: page.href,
     session_id: value.session_id, platform: value.platform, followup_requested: value.followup_requested === true,
-    selected_offer: value.offer, offer_reference: value.offer === 'book' ? `mdb_studio_library_${offer.book.price}_eur` : value.offer === 'apple' ? 'com.fideora.premium.monthly' : 'hotmart_fideora_monthly_e792z6va',
+    selected_offer: value.offer, offer_reference: value.offer === 'book' ? `mdc_bundle_${offer.book.price}_eur` : value.offer === 'apple' ? 'com.fideora.premium.monthly' : 'hotmart_fideora_monthly_e792z6va',
     offer_price: value.offer === 'book' ? offer.book.price : 7.99, currency: 'EUR',
     ...(value.is_test === true ? { test_type: 'qa_study_order' } : {}),
   };
