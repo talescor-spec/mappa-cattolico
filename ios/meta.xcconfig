@@ -1,0 +1,5 @@
+// No App Secret, access token or server credential belongs in an iOS binary.
+// Client SDK settings are deliberately empty until the correct Meta app exists.
+FIDEORA_META_APP_ID =
+FIDEORA_META_CLIENT_TOKEN =
+#include? "meta.xcconfig.local"

@@ -1,0 +1,3 @@
+// Copy as meta.xcconfig.local. Use ONLY the SDK Client Token, never a CAPI token.
+FIDEORA_META_APP_ID =
+FIDEORA_META_CLIENT_TOKEN =

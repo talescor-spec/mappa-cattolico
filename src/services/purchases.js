@@ -4,6 +4,7 @@ import { RevenueCatUI } from "@revenuecat/purchases-capacitor-ui";
 import { createPurchasesClient } from "./purchasesClient.js";
 import { getDevelopmentEnvironment } from "./development";
 import { PUBLIC_IOS_SDK_KEY } from "../config/purchases.js";
+import { createNativeAttribution } from "./attribution.js";
 export const ENTITLEMENT_ID =
   import.meta.env.VITE_REVENUECAT_ENTITLEMENT_ID || "premium";
 export const isIOSNative = () =>
@@ -22,4 +23,5 @@ export const billing = createPurchasesClient({
   apiKey,
   entitlement: ENTITLEMENT_ID,
   canPreviewPaywall: async () => (await getDevelopmentEnvironment()).allowed,
+  attribution: createNativeAttribution(Purchases, isIOSNative()),
 });
