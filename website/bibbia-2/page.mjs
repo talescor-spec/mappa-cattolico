@@ -1,3 +1,4 @@
+import { initReviewCarousel } from './reviews-carousel.mjs';
 import { release } from './release.mjs';
 import { attributionFor, checkoutFor, variantForPath, experiment } from './experiment.mjs';
 import { createMetaTracker, metaPageURL } from '../mappa-della-bibbia/meta-pixel.mjs';
@@ -48,3 +49,5 @@ if(release.fulfillmentVerified){
 collect('page_view');
 const offer=document.querySelector('#offerta');
 if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){collect('offer_view');observer.disconnect();}},{threshold:.25});observer.observe(offer);}
+
+initReviewCarousel();
