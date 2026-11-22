@@ -28,7 +28,7 @@ export function attributionFor(url, variant, campaign) {
 
 export function checkoutFor(baseURL, attribution) {
   const target = new URL(baseURL);
-  if (target.protocol !== 'https:' || target.hostname !== 'pay.mycheckoutt.com' || target.username || target.password) return null;
+  if (target.protocol !== 'https:' || !['pay.mycheckoutt.com','checkout.mundpay.com'].includes(target.hostname) || target.username || target.password) return null;
   for (const [key, value] of Object.entries(attribution)) target.searchParams.set(key, value);
   return target.href;
 }

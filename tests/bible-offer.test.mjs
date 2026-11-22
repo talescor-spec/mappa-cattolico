@@ -77,7 +77,7 @@ test('route determines the variant, and checkout attribution preserves campaign 
     assert.equal(safe.ct,`mdb20_name_cover_v1_${v.id}`);
     assert.ok(!('email' in safe));assert.ok(!('name' in safe));assert.ok(!('token' in safe));
     const target=new URL(checkoutFor(release.checkoutURL,safe));
-    assert.equal(target.origin,'https://pay.mycheckoutt.com');
+    assert.equal(target.origin,'https://checkout.mundpay.com');
     assert.equal(target.searchParams.get('sck'),safe.sck);
     assert.equal(target.searchParams.get('utm_content'),'AD173');
   }
@@ -91,7 +91,8 @@ test('checkout stays closed until the exact principal book and both bonuses are 
     assert.ok(renderBibleOffer(v.id).includes('data-checkout href="#anteprime"'));
   }
   const code=fs.readFileSync(new URL('../website/bibbia-2/page.mjs',import.meta.url),'utf8');
-  assert.ok(code.includes('if(release.fulfillmentVerified)'));
+  const capture=fs.readFileSync(new URL('../website/bibbia-2/capture.mjs',import.meta.url),'utf8');
+  assert.ok(capture.includes('!release.fulfillmentVerified'));
   assert.ok(!/track\w*\([^\n]*['"]Purchase['"]/.test(code));
   assert.ok(code.includes('navigator.globalPrivacyControl'));
 });

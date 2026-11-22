@@ -27,3 +27,18 @@ export function captureContact(body){
 }
 export const successful=name=>['purchase_confirmed','trial_started','subscription_started','subscription_renewed'].includes(name);
 export function safeResumeTarget(offer){return Object.hasOwn(CHILDREN,offer)?PAGE:null;}
+
+
+// Route only this edition's fixed experiment identifiers to the new offer.
+export function editionFor(attribution={}) {
+ const variant=attribution.ct==='mdb20_name_cover_v1_a'?'a':attribution.ct==='mdb20_name_cover_v1_b'?'b':null;
+ return variant?{variant,page:'https://fideora.app'+(variant==='a'?'/mappa-della-bibbia-2/':'/panorama-biblico/'),reference:'mdb20_bundle_27_eur',price:27}:null;
+}
+export function recoveryURL(journey,token,step) {
+ const edition=journey.offer==='book'?editionFor(journey.attribution):null;
+ const url=new URL(edition?.page||PAGE);
+ url.searchParams.set('resume',token);url.searchParams.set('utm_source','brevo');url.searchParams.set('utm_medium','order_recovery');
+ url.searchParams.set('utm_campaign',edition?'mdb_approfondita_natale_2026':'mdb_studio_v1');url.searchParams.set('utm_content',String(step));
+ if(edition){url.searchParams.set('ct',journey.attribution.ct);if(journey.attribution.sck)url.searchParams.set('sck',journey.attribution.sck);}
+ return url.href;
+}

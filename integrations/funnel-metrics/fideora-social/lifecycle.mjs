@@ -1,4 +1,4 @@
-import {CHILDREN,successful,email,validEmail} from './core.mjs';
+import {CHILDREN,successful,email,validEmail,recoveryURL} from './core.mjs';
 const bytes=s=>new TextEncoder().encode(s);
 export const digest=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes(s)))].map(x=>x.toString(16).padStart(2,'0')).join('');
 export async function signature(value,key){const k=await crypto.subtle.importKey('raw',bytes(key),{name:'HMAC',hash:'SHA-256'},false,['sign']);return [...new Uint8Array(await crypto.subtle.sign('HMAC',k,bytes(value)))].map(x=>x.toString(16).padStart(2,'0')).join('');}
@@ -80,7 +80,8 @@ export function createSocialLifecycle({db,secret,fetchImpl=fetch}){
    if((current.payments||[]).some(p=>p.status==='approved')||(current.trials||[]).length)return {eligible:false,reason:'purchase_or_activation_confirmed'};
   }
   const token=await resumeToken(journey.id,await secret('brevo_worker_token'));
-  return {eligible:true,ctaURL:'https://fideora.app/mappa-della-bibbia/?resume='+encodeURIComponent(token)+'&utm_source=brevo&utm_medium=order_recovery&utm_campaign=mdb_studio_v1&utm_content='+message.step};
+  return {eligible:true,ctaURL:recoveryURL(journey,token,message.step)};
  }
  return {tick,prepare,revenueCat,record};
 }
+

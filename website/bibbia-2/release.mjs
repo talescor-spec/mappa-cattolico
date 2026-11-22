@@ -7,6 +7,7 @@ export const release = Object.freeze({
   fulfillmentVerified: false,
   price: offer.price,
   currency: 'EUR',
-  checkoutURL: 'https://pay.mycheckoutt.com/01a0961c-38aa-70f7-ad46-7c26a7327e90?ref=',
+  productID: '6431fd73-6540-4714-9c04-c25f9078b7d4',
+  checkoutURL: 'https://checkout.mundpay.com/01a20583-6831-737e-a87c-c57efd6b478b?ref=',
   campaign: 'mdb_approfondita_natale_2026',
 });

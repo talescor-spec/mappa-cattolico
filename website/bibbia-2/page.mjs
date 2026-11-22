@@ -1,4 +1,5 @@
 import { initReviewCarousel } from './reviews-carousel.mjs';
+import { initCapture } from './capture.mjs';
 import { release } from './release.mjs';
 import { attributionFor, checkoutFor, variantForPath, experiment } from './experiment.mjs';
 import { createMetaTracker, metaPageURL } from '../mappa-della-bibbia/meta-pixel.mjs';
@@ -7,6 +8,7 @@ import { detectDevice } from '../mappa-della-bibbia/social-core.mjs';
 
 const variant=variantForPath(location.pathname);
 if(!variant)throw new Error('Unknown offer route');
+const incomingURL=new URL(location.href);
 // Clean the address before third-party attribution can read it.
 const cleaned=metaPageURL(location.href);
 if(cleaned!==location.href)history.replaceState(null,'',cleaned);
@@ -38,14 +40,7 @@ dialog.querySelector('.dialog-close').addEventListener('click',()=>dialog.close(
 dialog.addEventListener('close',()=>{document.body.classList.remove('dialog-open');opener?.focus();});
 dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
 
-if(release.fulfillmentVerified){
-  const target=checkoutFor(release.checkoutURL,safe);
-  if(target){
-    const button=document.querySelector('[data-checkout]');button.href=target;button.textContent=`Voglio ${variant.name} e i due bonus`;
-    button.addEventListener('click',()=>{collect('checkout_click');tracker?.outbound('book');});
-    document.querySelector('[data-release-note]').textContent='Pagamento sicuro con Mundpay. Libro e due bonus digitali inclusi. Ricevi le istruzioni di accesso dopo la conferma del pagamento.';
-  }
-}
+initCapture({variant,attribution:safe,sessionID,platform:detectDevice(navigator),tracker,collect,storage:local,incomingURL});
 collect('page_view');
 const offer=document.querySelector('#offerta');
 if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){collect('offer_view');observer.disconnect();}},{threshold:.25});observer.observe(offer);}

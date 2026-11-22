@@ -2,7 +2,7 @@ import { capturePayload } from '../website/mappa-della-bibbia/order-core.mjs';
 
 const endpoint = 'https://kgyqpedwgilotlwyhmnb.supabase.co/functions/v1/dashboard-daily-leads?social=1&action=capture';
 const requests = new Map();
-export function createHandler({ fetchImpl = fetch, now = Date.now, limits = requests } = {}) {
+export function createHandler({ fetchImpl = fetch, now = Date.now, limits = requests, payloadBuilder = capturePayload } = {}) {
   return async function handler(req, res) {
     res.setHeader('Cache-Control', 'private, no-store, max-age=0');
     res.setHeader('CDN-Cache-Control', 'no-store');
@@ -22,7 +22,7 @@ export function createHandler({ fetchImpl = fetch, now = Date.now, limits = requ
       if (value.company) return res.status(400).json({ ok: false, error: 'invalid_request' });
     } catch { return res.status(400).json({ ok: false, error: 'invalid_request' }); }
     let payload;
-    try { payload = capturePayload(value); } catch (error) { return res.status(400).json({ ok: false, error: error.message }); }
+    try { payload = payloadBuilder(value); } catch (error) { return res.status(400).json({ ok: false, error: error.message }); }
     const time = now();
     const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
     if (ip) {
@@ -34,7 +34,7 @@ export function createHandler({ fetchImpl = fetch, now = Date.now, limits = requ
     try {
       const response = await fetchImpl(endpoint, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, offer: value.offer, attribution: value.attribution, is_test: value.is_test === true, company: value.company || '' }), signal: AbortSignal.timeout(18000),
+        body: JSON.stringify({ ...payload, offer: value.offer, attribution: payload.attribution || value.attribution, is_test: value.is_test === true, company: value.company || '' }), signal: AbortSignal.timeout(18000),
       });
       const data = await response.json();
       const target = { book: ['mdb-studio-libro-it',217], apple: ['fideora-social-ios-it',218], android: ['fideora-social-android-it',219] }[value.offer];
