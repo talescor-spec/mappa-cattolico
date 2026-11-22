@@ -85,14 +85,16 @@ test('route determines the variant, and checkout attribution preserves campaign 
   assert.equal(checkoutFor('http://pay.mycheckoutt.com/',{}),null);
   assert.equal(checkoutFor('https://other.example/',{}),null);
 });
-test('checkout stays closed until the exact principal book and both bonuses are verified in delivery',()=>{
+test('checkout uses the dedicated product while delivery remains explicitly pending merchant upload',()=>{
   assert.equal(release.fulfillmentVerified,false);
+  assert.equal(release.checkoutConfigured,true);
+  assert.equal(release.productID,'6431fd73-6540-4714-9c04-c25f9078b7d4');
   for(const v of Object.values(variants)) {
     assert.ok(renderBibleOffer(v.id).includes('data-checkout href="#anteprime"'));
   }
   const code=fs.readFileSync(new URL('../website/bibbia-2/page.mjs',import.meta.url),'utf8');
   const capture=fs.readFileSync(new URL('../website/bibbia-2/capture.mjs',import.meta.url),'utf8');
-  assert.ok(capture.includes('!release.fulfillmentVerified'));
+  assert.ok(capture.includes('!release.checkoutConfigured'));
   assert.ok(!/track\w*\([^\n]*['"]Purchase['"]/.test(code));
   assert.ok(code.includes('navigator.globalPrivacyControl'));
 });

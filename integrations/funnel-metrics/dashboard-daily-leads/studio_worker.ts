@@ -91,7 +91,11 @@ export function createLifecycleWorker({db,secret,audience,linkGuard}:{db:any,sec
    let socialPrepared:any;
    if(socialDelivery){socialPrepared=await social.prepare(e,s,m);if(!socialPrepared.eligible){await cancel(row,e,socialPrepared.reason);return {id:row.id,skipped:socialPrepared.reason};}}
    // Guard actual destination just before contacting the provider.
-    if(linkGuard)await linkGuard.verifySend(s,m);
+    if(socialPrepared?.message)Object.assign(m,socialPrepared.message);
+    if(socialPrepared?.productName)s.product_name=socialPrepared.productName;
+    // Validate the actual offer route without logging a signed recovery token.
+    const inspectionMessage=socialPrepared?.ctaURL?{...m,cta_url:new URL(socialPrepared.ctaURL).origin+new URL(socialPrepared.ctaURL).pathname}:m;
+    if(linkGuard)await linkGuard.verifySend(s,inspectionMessage);
     if(socialPrepared?.ctaURL)m.cta_url=socialPrepared.ctaURL;
     const key=await secret("brevo_api_key");if(!key)throw Error("Brevo is not connected");
    // Recheck sender at send time; registrations may be disabled after template review.
@@ -147,6 +151,7 @@ export function createLifecycleWorker({db,secret,audience,linkGuard}:{db:any,sec
  }
  return {run,optOut};
 }
+
 
 
 

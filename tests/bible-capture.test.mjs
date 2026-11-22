@@ -4,7 +4,15 @@ import {editionCapture,editionCheckout} from '../website/bibbia-2/order-core.mjs
 import {createHandler} from '../api/study-capture.js';
 import {release} from '../website/bibbia-2/release.mjs';
 import {editionFor,recoveryURL} from '../integrations/funnel-metrics/fideora-social/core.mjs';
+import {editionRecoveryMessage} from '../integrations/funnel-metrics/fideora-social/edition-email.mjs';
 const contact={name:'Giulia Rossi',email:'GIULIA@example.com',offer:'book',variant:'a',platform:'ios',session_id:'f4a11692-458e-48b4-b235-f4582c364633',followup_requested:true,attribution:{utm_source:'instagram',utm_content:'AD173',sck:'campaign-id',email:'secret@example.com'}};
+test('updated-edition recovery describes the selected book, two bonuses and the current price',()=>{
+ for(const variant of ['a','b'])for(const step of [1,2,3]){
+  const m=editionRecoveryMessage({variant},step);assert.ok(m.productName.includes(variant==='a'?'Mappa della Bibbia':'Panorama Biblico'));
+  assert.ok(m.message.body_html.includes('€27'));assert.ok(m.message.body_html.includes('La Mappa del Catechismo'));assert.ok(m.message.body_html.includes('La Mappa della Messa'));assert.ok(!m.message.body_html.includes('€39'));assert.ok(!m.message.body_html.includes('Biblioteca delle Origini'));
+ }
+ assert.equal(editionRecoveryMessage(null,1),null);assert.equal(editionRecoveryMessage({variant:'a'},4),null);
+});
 test('both captures retain campaign IDs and their own fixed edition, price and route',()=>{
  for(const variant of ['a','b']){
   const p=editionCapture({...contact,variant,offer_price:1,offer_reference:'wrong',page_url:'https://other.example'});

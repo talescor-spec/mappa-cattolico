@@ -1,14 +1,16 @@
 import { release } from './release.mjs';
 import { editionCheckout } from './order-core.mjs';
-import { cleanName,cleanEmail,prefillContact,rememberContact } from '../mappa-della-bibbia/order-core.mjs';
+import { cleanName,cleanEmail,prefillContact,rememberContact,contactKey } from '../mappa-della-bibbia/order-core.mjs';
 
 export function initCapture({variant,attribution,sessionID,platform,tracker,collect,storage,incomingURL}){
   const dialog=document.querySelector('.capture-dialog');
   const name=dialog.querySelector('[name="name"]'),email=dialog.querySelector('[name="email"]');
   const error=dialog.querySelector('[data-capture-error]'),submit=dialog.querySelector('[data-capture-submit]');
   const payment=dialog.querySelector('[data-payment-link]');
+  const reset=dialog.querySelector('[data-capture-reset]');
   const isTest=incomingURL.searchParams.get('fm_test')==='1';
   const saved=prefillContact(incomingURL.search,storage);name.value=saved.name||'';email.value=saved.email||'';
+  reset.hidden=!(saved.name||saved.email);
   let step=1,opener,request=0;
   const show=(next)=>{
     step=next;
@@ -21,6 +23,7 @@ export function initCapture({variant,attribution,sessionID,platform,tracker,coll
   document.querySelectorAll('[data-checkout]').forEach(button=>{button.href='#ordine';button.textContent=`Voglio ${variant.name} e i due bonus`;button.addEventListener('click',e=>{e.preventDefault();open(button);});});
   document.querySelector('[data-release-note]').textContent='Nome, email e pagamento sicuro. Libro e due bonus inclusi · €27, una sola volta.';
   dialog.querySelector('[data-capture-close]').addEventListener('click',()=>dialog.close());
+  reset.addEventListener('click',()=>{request++;try{storage?.removeItem(contactKey);}catch{}name.value='';email.value='';reset.hidden=true;show(1);name.focus({preventScroll:true});});
   dialog.addEventListener('close',()=>{request++;document.body.classList.remove('dialog-open');opener?.focus({preventScroll:true});});
   dialog.querySelector('[data-name-form]').addEventListener('submit',event=>{
     event.preventDefault();if(!name.reportValidity())return;
@@ -35,13 +38,13 @@ export function initCapture({variant,attribution,sessionID,platform,tracker,coll
     if(!cleanEmail(email.value)){email.setCustomValidity('Controlla il tuo indirizzo email.');email.reportValidity();return;}
     const current=++request;submit.disabled=true;submit.textContent='Un momento…';error.hidden=true;
     try{
-      if(!release.fulfillmentVerified&&!isTest)throw Error('preparing');
+      if(!release.checkoutConfigured)throw Error('preparing');
       const contact={name:cleanName(name.value),email:cleanEmail(email.value)};
       const response=await fetch('/api/bible-capture',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({...contact,offer:'book',variant:variant.id,attribution,session_id:sessionID,platform,is_test:isTest,followup_requested:true,company:dialog.querySelector('[name="company"]').value}),signal:AbortSignal.timeout(22000)});
       const data=await response.json();if(!response.ok||data.ok!==true||data.offer!=='book')throw Error('capture_failed');
-      rememberContact(storage,contact);
       if(!isTest)tracker?.lead('book',data.journeyId);
       if(current!==request||!dialog.open)return;
+      if(!isTest){rememberContact(storage,contact);reset.hidden=false;}
       payment.href=editionCheckout(release.checkoutURL,contact,attribution);
       dialog.querySelector('[data-contact-summary]').textContent=`${contact.name} · ${contact.email}`;
       show(3);payment.focus({preventScroll:true});
@@ -51,7 +54,7 @@ export function initCapture({variant,attribution,sessionID,platform,tracker,coll
     }finally{if(current===request){submit.disabled=false;submit.textContent='Continua';}}
   });
   email.addEventListener('input',()=>email.setCustomValidity(''));
-  payment.addEventListener('click',event=>{if(!release.fulfillmentVerified){event.preventDefault();error.textContent='Il nuovo checkout è in preparazione.';error.hidden=false;return;}collect('checkout_click');tracker?.outbound('book');});
+  payment.addEventListener('click',event=>{if(!release.checkoutConfigured){event.preventDefault();error.textContent='Il nuovo checkout è in preparazione.';error.hidden=false;return;}collect('checkout_click');tracker?.outbound('book');});
   const resume=incomingURL.searchParams.get('resume');
   if(resume){
     const cleaned=new URL(location.href);cleaned.searchParams.delete('resume');history.replaceState(null,'',cleaned);

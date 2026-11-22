@@ -1,7 +1,7 @@
 import { initReviewCarousel } from './reviews-carousel.mjs';
 import { initCapture } from './capture.mjs';
 import { release } from './release.mjs';
-import { attributionFor, checkoutFor, variantForPath, experiment } from './experiment.mjs';
+import { attributionFor, variantForPath, experiment } from './experiment.mjs';
 import { createMetaTracker, metaPageURL } from '../mappa-della-bibbia/meta-pixel.mjs';
 import { initUtmifyUTMs } from '../mappa-della-bibbia/utmify.mjs';
 import { detectDevice } from '../mappa-della-bibbia/social-core.mjs';
@@ -15,8 +15,8 @@ if(cleaned!==location.href)history.replaceState(null,'',cleaned);
 const safe=attributionFor(location.href,variant,release.campaign);
 let local;try{local=localStorage;}catch{}
 const trackingAllowed=navigator.doNotTrack!=='1'&&window.doNotTrack!=='1'&&navigator.globalPrivacyControl!==true;
-const tracker=release.fulfillmentVerified&&trackingAllowed?createMetaTracker({win:window,doc:document,nav:navigator,storage:local,contentID:`${experiment}_${variant.id}`}):null;
-if(release.fulfillmentVerified&&trackingAllowed)initUtmifyUTMs();
+const tracker=release.checkoutConfigured&&trackingAllowed?createMetaTracker({win:window,doc:document,nav:navigator,storage:local,contentID:`${experiment}_${variant.id}`}):null;
+if(release.checkoutConfigured&&trackingAllowed)initUtmifyUTMs();
 
 let sessionID;
 try{sessionID=sessionStorage.getItem('fideoraMdb2Session');if(!/^[a-f0-9-]{36}$/i.test(sessionID||'')){sessionID=crypto.randomUUID();sessionStorage.setItem('fideoraMdb2Session',sessionID);}}catch{sessionID=crypto.randomUUID();}
