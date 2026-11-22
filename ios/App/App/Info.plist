@@ -86,5 +86,25 @@
 			</array>
 		</dict>
 	</array>
+	<key>FacebookAppID</key>
+	<string>$(FIDEORA_META_APP_ID)</string>
+	<key>FacebookClientToken</key>
+	<string>$(FIDEORA_META_CLIENT_TOKEN)</string>
+	<key>FacebookDisplayName</key>
+	<string>Fideora</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<false/>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<false/>
+	<key>FBSDKAutoLogMetaDataEnabled</key>
+	<false/>
+	<key>FacebookCodelessDebugLogEnabled</key>
+	<false/>
+	<key>FacebookSKAdNetworkReportEnabled</key>
+	<false/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Con il tuo consenso, gli identificativi tecnici del dispositivo ci aiutano a misurare installazioni e abbonamenti provenienti dagli annunci. Note, preghiere e contenuti letti non vengono condivisi.</string>
+	<key>FBSDKAutoLogProductImprovementEnabled</key>
+	<false/>
 </dict>
 </plist>

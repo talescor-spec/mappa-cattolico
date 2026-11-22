@@ -7,6 +7,7 @@ export function createPurchasesClient({
   apiKey,
   entitlement = "premium",
   canPreviewPaywall = async () => false,
+  attribution,
 }) {
   let configured = false,
     identity,
@@ -43,10 +44,15 @@ export function createPurchasesClient({
     return true;
   }
   const info = async () => (await sdk.getCustomerInfo()).customerInfo;
+  const measure = async (identity, request = false) => {
+    try { await attribution?.sync({ identity: identity || null, request }); }
+    catch { /* Attribution must never block StoreKit or Premium access. */ }
+  };
   return {
     refresh: (user, lang) =>
       serial(async () => {
         if (!(await connect(user, lang))) return unavailable();
+        await measure(user);
         return { available: true, customerInfo: await info() };
       }),
     present: (user, lang, { hardPaywall = false } = {}) =>
@@ -68,6 +74,9 @@ export function createPurchasesClient({
           : offerings?.all?.mappa_v1;
         if (!offering?.availablePackages?.length)
           return { ...unavailable(), reason: "offering" };
+        // Onboarding/auth is already resolved before presenting this offering.
+        // The OS prompt is optional and never grants or denies entitlement.
+        await measure(user, true);
         const { result } = await ui.presentPaywall({
           offering,
           displayCloseButton: !hardPaywall,
