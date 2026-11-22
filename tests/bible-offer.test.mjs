@@ -4,11 +4,13 @@ import fs from 'node:fs';
 import { renderBibleOffer } from '../website/bibbia-2/render.mjs';
 import { variants, variantForPath, attributionFor, checkoutFor } from '../website/bibbia-2/experiment.mjs';
 import { release } from '../website/bibbia-2/release.mjs';
+import { offer, referenceTotal } from '../website/bibbia-2/offer.mjs';
 
 function normalize(html, v) {
   const quotes=[];
   return html.replace(/<blockquote>.*?<\/blockquote>/gs, q => {quotes.push(q);return `QUOTE_${quotes.length-1}`;})
     .replaceAll(v.name, 'BOOK_NAME').replaceAll(v.route, '/BOOK_ROUTE/')
+    .replaceAll(`copertina-${v.cover}-hd.`, 'COVER_HD.')
     .replaceAll(`copertina-${v.cover}.`, 'COVER.')
     .replace(`data-offer-variant="${v.id}"`, 'data-offer-variant="VARIANT"');
 }
@@ -26,6 +28,34 @@ test('A and B differ only by the book title, selected cover, route and measureme
     assert.ok(!html.includes('{{'));
   }
   assert.throws(()=>renderBibleOffer('c'));
+});
+test('all internal previews use the new portrait layout and the printed-book FAQ is removed',()=>{
+  for(const v of Object.values(variants)) {
+    const html=renderBibleOffer(v.id);
+    assert.ok(!html.includes('anteprima-'));
+    assert.ok(!html.includes('width="842" height="595"'));
+    const block=html.split('id="contenuto"')[1].split('id="anteprime"')[0];
+    assert.equal((block.match(/class="page-card"/g)||[]).length,5);
+    assert.equal((block.match(/width="1219" height="1829"/g)||[]).length,5);
+    assert.ok(!html.includes('Ricevo un libro cartaceo o un PDF?'));
+    assert.ok(!html.match(/class="hero-action"[^]*?class="micro">Libro digitale/));
+  }
+});
+test('both offers show the authorized 60-day guarantee and consistent reference values',()=>{
+  assert.equal(offer.guaranteeDays,60);
+  assert.equal(referenceTotal,75);
+  assert.equal(referenceTotal-offer.price,48);
+  for(const v of Object.values(variants)) {
+    const html=renderBibleOffer(v.id);
+    assert.ok(html.includes('Garanzia di 60 giorni'));
+    assert.ok(html.includes('Hai 60 giorni'));
+    assert.ok(!html.includes('sette giorni'));
+    assert.ok(!html.includes('Garanzia di 7'));
+    assert.ok(html.includes('Valore complessivo <del>€75</del>'));
+    assert.equal((html.match(/<del>€37<\/del>/g)||[]).length,1);
+    assert.equal((html.match(/<del>€19<\/del>/g)||[]).length,4);
+    assert.ok(html.includes('€48 in meno'));
+  }
 });
 test('all image, stylesheet and module references resolve in the marketing build',()=>{
   for(const v of Object.values(variants)) {
