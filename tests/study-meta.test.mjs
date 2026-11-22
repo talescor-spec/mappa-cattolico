@@ -40,3 +40,10 @@ test('a vendor exception after initialization does not prevent the checkout acti
  const c=context();const tracker=createMetaTracker(c);c.win.blockEvents=true;
  assert.doesNotThrow(()=>assert.equal(tracker.outbound('book'),false));
 });
+test('the revised MDB offer keeps its content identity without changing the existing Cattolico default',()=>{
+ const next=context('',{},null,'/mappa-della-bibbia-2/');const tracker=createMetaTracker({...next,contentID:'mdb_edizione_approfondita_2'});tracker.outbound('book');
+ assert.deepEqual(next.calls.filter(x=>x[2]==='ViewContent')[0][3].content_ids,['mdb_edizione_approfondita_2']);
+ assert.deepEqual(next.calls.filter(x=>x[2]==='CheckoutRedirect')[0][3].content_ids,['mdb_edizione_approfondita_2']);
+ const existing=context();createMetaTracker(existing);
+ assert.deepEqual(existing.calls.filter(x=>x[2]==='ViewContent')[0][3].content_ids,['mappa_del_cattolico_bundle']);
+});

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1350" viewBox="0 0 900 1350" role="img" aria-label="Mappa della Bibbia Edizione Approfondita 2.0">
+<defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#224a3a"/><stop offset="1" stop-color="#102e26"/></linearGradient></defs>
+<rect width="900" height="1350" fill="url(#g)"/><rect x="32" y="32" width="836" height="1286" fill="none" stroke="#c3a363" stroke-width="2"/><rect x="45" y="45" width="810" height="1260" fill="none" stroke="#c3a363" stroke-opacity=".35"/>
+<text x="450" y="130" text-anchor="middle" fill="#e1c58b" font-family="Arial,sans-serif" font-size="25" letter-spacing="9">FIDEORA</text>
+<path d="M270 180H630" stroke="#c3a363"/>
+<text x="450" y="285" text-anchor="middle" fill="#f7f0df" font-family="Georgia,serif" font-size="74">Mappa</text><text x="450" y="377" text-anchor="middle" fill="#f7f0df" font-family="Georgia,serif" font-size="74">della Bibbia</text>
+<text x="450" y="450" text-anchor="middle" fill="#e1c58b" font-family="Arial,sans-serif" font-size="20" letter-spacing="3">EDIZIONE APPROFONDITA 2.0</text>
+<g fill="none" stroke="#c3a363" stroke-width="3"><path d="M450 610C450 555 240 585 240 665M450 610C450 555 660 585 660 665M450 820C450 895 240 855 240 955M450 820C450 895 660 855 660 955"/><circle cx="450" cy="715" r="107"/><circle cx="450" cy="715" r="96" stroke-opacity=".35"/><path d="M396 704Q423 688 450 704Q477 688 504 704V760Q477 744 450 760Q423 744 396 760ZM450 704V760M408 716Q423 708 438 716M408 730Q423 722 438 730M462 716Q477 708 492 716M462 730Q477 722 492 730"/><path d="M450 635V673M435 650H465"/></g>
+<g fill="#f7f0df" font-family="Georgia,serif" font-size="30" text-anchor="middle"><text x="240" y="704">Contesto</text><text x="660" y="704">Promesse</text><text x="240" y="1001">Connessioni</text><text x="660" y="1001">Riflessione</text></g>
+<path d="M245 1063H655" stroke="#c3a363"/>
+<text x="450" y="1134" text-anchor="middle" fill="#f7f0df" font-family="Georgia,serif" font-size="35">73 libri, un filo da seguire</text><text x="450" y="1200" text-anchor="middle" fill="#e1c58b" font-family="Arial,sans-serif" font-size="18" letter-spacing="2">CON 24 LETTURE VERSO IL NATALE</text>
+</svg>

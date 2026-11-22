@@ -10,6 +10,7 @@ fs.cpSync('website/assets', `${out}/assets`, { recursive: true });
 fs.cpSync('website/mappa', `${out}/mappa`, { recursive: true });
 fs.cpSync('website/mappa-della-bibbia', `${out}/mappa-della-bibbia`, { recursive: true, filter: source => !source.endsWith('.png') && !source.endsWith('README.md') });
 fs.cpSync(`${out}/mappa-della-bibbia`, `${out}/mappa-del-cattolico`, { recursive: true });
+fs.cpSync('website/mappa-della-bibbia-2', `${out}/mappa-della-bibbia-2`, { recursive: true, filter: source => !source.endsWith('README.md') });
 for (const file of ['site.css', 'site.js', 'platform.mjs', 'growth.js', 'sw.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['obrigado-fideora.html', 'fideora-obrigado.js', 'app-thanks-tracking.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['icon.svg', 'icon-192.png']) fs.copyFileSync(`public/${file}`, `${out}/${file}`);

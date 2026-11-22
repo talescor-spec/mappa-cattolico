@@ -12,7 +12,8 @@ export function metaPageURL(value) {
  return url.href;
 }
 
-export function createMetaTracker({win,doc,nav,storage} = {}) {
+export function createMetaTracker({win,doc,nav,storage,contentID='mappa_del_cattolico_bundle'} = {}) {
+ const contentOffers={...offers,book:/^[a-z0-9_]{1,80}$/.test(contentID)?contentID:offers.book};
  const none = {enabled:false,lead:()=>false,outbound:()=>false};
  if (!win || !doc || !nav || !['https://fideora.app','https://www.fideora.app'].includes(win.location.origin)) return none;
  const params = new URLSearchParams(win.location.search);
@@ -42,7 +43,7 @@ export function createMetaTracker({win,doc,nav,storage} = {}) {
   catch { return false; } // A blocked marketing vendor must not block checkout.
  }
  send('PageView');
- if (!win.location.pathname.includes('/grazie/')) send('ViewContent',{content_ids:['mappa_del_cattolico_bundle'],content_type:'product'});
+ if (!win.location.pathname.includes('/grazie/')) send('ViewContent',{content_ids:[contentOffers.book],content_type:'product'});
  if (!doc.querySelector('script[data-mdb-meta-pixel]')) {
   const script = doc.createElement('script'); script.async = true; script.referrerPolicy = 'no-referrer';
   script.src = 'https://connect.facebook.net/en_US/fbevents.js'; script.dataset.mdbMetaPixel = META_PIXEL_ID;
@@ -52,13 +53,13 @@ export function createMetaTracker({win,doc,nav,storage} = {}) {
  }
  return {enabled:true,
   lead(kind,journeyID) {
-   if (!offers[kind] || !/^[a-f0-9-]{36}$/i.test(journeyID || '')) return false;
-   return send('Lead',{content_ids:[offers[kind]],content_type:'product'},'lead:'+journeyID);
+   if (!contentOffers[kind] || !/^[a-f0-9-]{36}$/i.test(journeyID || '')) return false;
+   return send('Lead',{content_ids:[contentOffers[kind]],content_type:'product'},'lead:'+journeyID);
   },
   outbound(kind) {
-   if (!offers[kind]) return false;
+   if (!contentOffers[kind]) return false;
    // Checkouts own InitiateCheckout and Purchase. A store click is not a purchase.
-   return send(kind==='apple'?'AppStoreClick':'CheckoutRedirect',{content_ids:[offers[kind]]},'outbound:'+kind,true);
+   return send(kind==='apple'?'AppStoreClick':'CheckoutRedirect',{content_ids:[contentOffers[kind]]},'outbound:'+kind,true);
   },
  };
 }
