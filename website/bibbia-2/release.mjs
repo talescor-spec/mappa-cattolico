@@ -1,4 +1,5 @@
-// Enable only after the exact 98-page PDF is attached to the MDB product delivery.
+// Enable only after the selected cover editions and BOTH bonus PDFs are attached
+// to this product's delivery, and the final reader format has been verified.
 // The checkout was verified for Italy at EUR 27 on 22 November 2026.
 export const release = Object.freeze({
   fulfillmentVerified: false,
