@@ -30,7 +30,7 @@ if(release.fulfillmentVerified){
   const target=new URL(release.checkoutURL);
   if(target.protocol==='https:'&&target.hostname==='pay.mycheckoutt.com'&&!target.username&&!target.password){
     for(const [key,value] of Object.entries(safe))target.searchParams.set(key,value);
-    const button=document.querySelector('[data-checkout]');button.href=target.href;button.innerHTML='Scelgo la nuova Mappa della Bibbia <span aria-hidden="true">→</span>';
+    const button=document.querySelector('[data-checkout]');button.href=target.href;button.textContent='Voglio la nuova Mappa della Bibbia';
     button.addEventListener('click',()=>{collect('checkout_click');tracker?.outbound('book');});
     document.querySelector('[data-release-note]').textContent='Pagamento sicuro con Mundpay. Ricevi le istruzioni di accesso dopo la conferma del pagamento.';
   }
