@@ -23,7 +23,7 @@ Alternativa para genealogias:
 CTA de bio quando não houver entrega por DM confirmada:
 «Vuoi vedere le mappe e le pagine? Trovi la nuova Mappa della Bibbia nel link in bio. 📖»
 
-MAPPA e BIBBIA são aceitas nos dois fluxos existentes da mLabs. Não prometer DM em canais sem automação validada. Não prometer livro grátis, envio físico, frete, entrega de exemplar impresso ou app gratuito. A chamada oferece o link para conhecer/folhear a oferta. Não usar urgência, prova social ou depoimentos inventados.
+Os dois fluxos ativos da mLabs (Instagram e Facebook) aceitam 17 termos, sem distinguir maiúsculas e minúsculas: BIBBIA, FIDEORA, APP, VOGLIO, MAPPA, LINK, LIBRO, LIBRI, MAPPE, INFO, INFORMAZIONI, PREZZO, COSTO, COME ACQUISTARE, DOVE COMPRARE, VOGLIO IL LIBRO e BIBBIA 2.0. Não prometer DM em canais sem automação validada. Não prometer livro grátis, envio físico, frete, entrega de exemplar impresso ou app gratuito. A chamada oferece o link para conhecer/folhear a oferta. Não usar urgência, prova social ou depoimentos inventados.
 
 ## Links e atribuição
 Instagram bio: https://fideora.app/social/instagram
@@ -41,5 +41,5 @@ Clara: revisar italiano, exatidão bíblica, alinhamento entre promessa, página
 
 ## Estado da execução
 Bio: redirecionamento publicado e destino novo validado.
-mLabs: mensagens, botão e palavra MAPPA atualizados nos fluxos ativos Instagram e Facebook.
-OpenBot: servidor offline durante a execução; este arquivo registra a orientação, mas não comprova envio ou recebimento pelos agentes.
+mLabs: mensagens e botão atualizados; 12 palavras-chave adicionais salvas nos dois fluxos ativos Instagram e Facebook, totalizando 17. Gravação confirmada pela interface; lista do Facebook reconferida após recarregar.
+OpenBot: reconectado em 23/11/2026. Orientação enviada às conversas de Léo — Coordenação e Maya — Social Media, com os 17 gatilhos e os CTAs da oferta 2.0. Maya respondeu que estava lendo os arquivos vigentes e incorporando a diretriz ao briefing. Mensagens enviadas e recebimento por Maya confirmados na interface; conclusão do registro persistente e aplicação aos próximos vídeos ainda em andamento no momento da conferência.
