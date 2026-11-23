@@ -87,7 +87,9 @@
     }
 
     for (const link of document.querySelectorAll('[data-store] a')) {
-      const store = link.closest('[data-store]').dataset.store === 'ios' ? 'apple' : 'google';
+      const target = new URL(link.href);
+      const store = target.hostname === 'apps.apple.com' ? 'apple' : target.hostname === 'play.google.com' ? 'google' : '';
+      const isCheckout = target.hostname === 'pay.hotmart.com';
       if (store === 'apple') {
         const target = new URL(link.href);
         if (target.hostname === 'apps.apple.com' && target.pathname.endsWith(`id${config.appleId}`)) {
@@ -98,9 +100,19 @@
         }
       }
       link.addEventListener('click', () => {
-        if (!link.hasAttribute('href') || !track('store_click', store)) return;
-        if (hotjarActive) window.hj('event', `thanks_${store}_click`);
-        if (metaActive) window.fbq('trackSingleCustom', pixel, store === 'apple' ? 'AppStoreClick' : 'GooglePlayClick');
+        if (!link.hasAttribute('href')) return;
+        // Hotmart activation and web access are not Google Play downloads.
+        if (store && !track('store_click', store)) return;
+        const action = store || (isCheckout ? 'hotmart' : 'web_access');
+        if (!store) {
+          if (sent.has(`outbound:${action}`)) return;
+          sent.add(`outbound:${action}`);
+        }
+        if (hotjarActive) window.hj('event', `thanks_${action}_click`);
+        if (metaActive) {
+          const event = store === 'apple' ? 'AppStoreClick' : store === 'google' ? 'GooglePlayClick' : isCheckout ? 'CheckoutRedirect' : 'AppAccessClick';
+          window.fbq('trackSingleCustom', pixel, event);
+        }
       });
     }
     track('page_view');
@@ -223,3 +235,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
 })();
+

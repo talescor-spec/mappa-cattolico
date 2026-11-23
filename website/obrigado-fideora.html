@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it" data-device="desktop" data-play-ready="false">
+<html lang="it" data-device="desktop">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,9 +7,8 @@
   <meta name="theme-color" content="#f5f2e9">
   <meta name="description" content="Grazie per il tuo acquisto. Scopri la prova gratuita di Fideora e continua il tuo cammino di fede.">
   <meta name="fideora-default-funnel" content="">
-  <meta name="fideora-google-play-url" content="">
   <title>Grazie per il tuo acquisto — Fideora</title>
-  <script src="./fideora-obrigado.js"></script>
+  <script src="./fideora-obrigado.js?v=20261123-android"></script>
   <style>
     :root { color-scheme: light; --ink:#183d31; --muted:#65736a; --cream:#f5f2e9; --green:#244f3d; }
     *, *::before, *::after { box-sizing:border-box; }
@@ -57,16 +56,11 @@
     .download-copy span { font-size:12px; line-height:1.35; }
     .download-copy strong { font-size:18px; line-height:1.15; font-weight:600; letter-spacing:-.35px; }
     .arrow { width:18px; height:18px; margin-left:12px; flex:0 0 18px; }
+    .web-access { display:inline-block; margin-top:12px; padding:5px 2px; color:var(--green); font-size:12px; line-height:1.5; text-underline-offset:3px; }
     .compatibility { margin:10px 0 0; color:#7c857d; font-size:11px; line-height:1.5; }
-    .download--pending { background:#eef1eb; color:#657467; border-color:#e2e7de; box-shadow:none; }
-    .download--pending:hover { background:#eef1eb; transform:none; }
     .activation { max-width:420px; margin:20px auto 0; color:#60715f; font-size:12px; line-height:1.6; }
     .eligibility { max-width:440px; margin:9px auto 0; color:#879083; font-size:11px; line-height:1.55; }
     .independence { margin:21px 0 0; padding-top:18px; border-top:1px solid #ebeee5; color:#72806e; font-size:12px; line-height:1.6; }
-    html[data-device="android"][data-play-ready="false"] .activation { display:none; }
-    html[data-device="android"][data-play-ready="false"] .activation-callout { display:none; }
-    html[data-device="android"][data-play-ready="false"] .step--pending { background:#f3f3ed; border-color:#b4bcab; }
-    html[data-device="android"][data-play-ready="false"] .step--pending .step-status { color:#657467; }
     @media(max-width:420px) {
       body { padding:14px 12px; }
       main { padding:25px 20px 22px; border-radius:23px; }
@@ -135,7 +129,7 @@
         <p class="gift-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="8" r="5"/><path d="m12.5 11.5-9 9H2v-3l3-3h3v-3h3"/></svg><span data-i18n="giftLabel">Il tuo prossimo passo</span></p>
         <h2 id="gift-title" data-i18n="giftTitle">La tua prova gratuita ti aspetta.</h2>
         <p class="gift-text" data-i18n="giftText">Trasforma la lettura in un’abitudine di fede con letture quotidiane, preghiere e il Rosario.</p>
-        <strong class="activation-prompt" data-i18n="activationPrompt">Scarica Fideora e attiva la tua prova gratuita nell’app per iniziare oggi.</strong>
+        <strong class="activation-prompt" data-i18n="activationPrompt">Su iPhone scarica l’app; su Android attiva la prova su Hotmart e accedi a Fideora.</strong>
       </div>
       <p class="store-help" data-i18n="choose">Scegli la versione per il tuo telefono.</p>
       <div class="store-options">
@@ -148,20 +142,21 @@
           <p class="compatibility" data-i18n="appleCompatibility">Per iPhone e iPad</p>
         </div>
         <div data-store="android">
-          <a id="google-play-download" class="download" aria-label="Scarica Fideora su Google Play" data-i18n-aria="googleAria" hidden>
-            <svg class="store-icon" viewBox="0 0 25 29" aria-hidden="true"><path d="M4 2v25l19-12.5L4 2Z"/></svg>
-            <span class="download-copy"><strong data-i18n="downloadCta">Scarica Fideora ora</strong><span data-i18n="googleDownload">Continua su Google Play</span></span>
+          <a id="android-checkout" class="download" href="https://pay.hotmart.com/X108495940M?off=e792z6va&amp;showOnlyTrial=1&amp;utm_source=fideora_thanks&amp;utm_medium=post_purchase&amp;utm_campaign=ty_mdb" aria-label="Attiva la prova Fideora per Android su Hotmart" data-i18n-aria="androidAria">
+            <svg class="store-icon" viewBox="0 0 24 28" fill="none" aria-hidden="true"><rect x="5" y="2" width="14" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 5h4M10 23h4M12 10v8M8 14h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span class="download-copy"><strong data-i18n="androidCta">Attiva la prova su Android</strong><span data-i18n="androidDownload">3 giorni di prova · Continua su Hotmart</span></span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
           </a>
-          <div id="google-play-pending" class="download download--pending" role="status"><svg class="store-icon" viewBox="0 0 25 29" fill="none" aria-hidden="true"><path d="M4 2v25l19-12.5L4 2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="download-copy"><span data-i18n="comingSoon">Prossimamente su</span><strong>Google Play</strong></span></div>
-          <p class="compatibility" id="android-compatibility" data-i18n="androidPending">La versione Android sarà disponibile a breve.</p>
+          <p class="compatibility" id="android-compatibility" data-i18n="androidReady">Accesso web su Android dopo l’attivazione su Hotmart.</p>
+          <a class="web-access" id="android-access" href="/app/?lang=it" data-i18n="androidAccess">Hai già attivato? Accedi a Fideora</a>
         </div>
       </div>
-      <p class="activation" data-i18n="activation">Scarica l’app, apri Fideora e scegli la prova disponibile per il tuo account.</p>
-      <p class="eligibility" data-i18n="eligibility">Prova gratuita soggetta ai requisiti di idoneità dello store. Si attiva all’interno dell’app.</p>
+      <p class="activation" data-i18n="activation">Su iPhone attiva la prova nell’app. Su Android attivala su Hotmart, poi accedi a Fideora con la stessa email.</p>
+      <p class="eligibility" data-i18n="eligibility">Su iPhone valgono le condizioni dell’App Store. Su Android la prova si attiva su Hotmart, dove prezzo, rinnovo e condizioni sono mostrati prima della conferma.</p>
     </section>
     <p class="independence" data-i18n="independence">Il libro è già tuo. La prova è facoltativa e non si attiva con l’acquisto del libro.</p>
   </main>
-  <script src="/app-thanks-tracking.js" defer></script>
+  <script src="/app-thanks-tracking.js?v=20261123-android" defer></script>
 </body>
 </html>
+

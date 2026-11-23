@@ -3,13 +3,8 @@
   var messages = {
   "it": {
     "download": "Continua su App Store",
-    "googleDownload": "Continua su Google Play",
     "appleAria": "Scarica Fideora su App Store",
     "appleCompatibility": "Per iPhone e iPad",
-    "googleAria": "Scarica Fideora su Google Play",
-    "comingSoon": "Prossimamente su",
-    "androidPending": "La versione Android sarà disponibile a breve.",
-    "androidReady": "Per telefoni e tablet Android",
     "choose": "Scegli la versione per il tuo telefono.",
     "pageTitle": "Grazie per il tuo acquisto — Fideora",
     "purchaseThanks": "Grazie per il tuo acquisto.",
@@ -39,13 +34,8 @@
   },
   "pt-BR": {
     "download": "Continuar na App Store",
-    "googleDownload": "Continuar no Google Play",
     "appleAria": "Baixar Fideora na App Store",
     "appleCompatibility": "Para iPhone e iPad",
-    "googleAria": "Baixar Fideora no Google Play",
-    "comingSoon": "Em breve no",
-    "androidPending": "A versão para Android estará disponível em breve.",
-    "androidReady": "Para celulares e tablets Android",
     "choose": "Escolha a versão para o seu celular.",
     "pageTitle": "Obrigado pela sua compra — Fideora",
     "purchaseThanks": "Obrigado pela sua compra.",
@@ -75,13 +65,8 @@
   },
   "pt-PT": {
     "download": "Continuar na App Store",
-    "googleDownload": "Continuar no Google Play",
     "appleAria": "Descarregar Fideora na App Store",
     "appleCompatibility": "Para iPhone e iPad",
-    "googleAria": "Descarregar Fideora no Google Play",
-    "comingSoon": "Em breve no",
-    "androidPending": "A versão para Android estará disponível em breve.",
-    "androidReady": "Para telemóveis e tablets Android",
     "choose": "Escolhe a versão para o teu telemóvel.",
     "pageTitle": "Obrigado pela tua compra — Fideora",
     "purchaseThanks": "Obrigado pela tua compra.",
@@ -111,13 +96,8 @@
   },
   "en": {
     "download": "Continue to the App Store",
-    "googleDownload": "Continue to Google Play",
     "appleAria": "Download Fideora on the App Store",
     "appleCompatibility": "For iPhone and iPad",
-    "googleAria": "Download Fideora on Google Play",
-    "comingSoon": "Coming soon to",
-    "androidPending": "The Android version is coming soon.",
-    "androidReady": "For Android phones and tablets",
     "choose": "Choose the version for your phone.",
     "pageTitle": "Thank you for your purchase — Fideora",
     "purchaseThanks": "Thank you for your purchase.",
@@ -147,13 +127,8 @@
   },
   "fr": {
     "download": "Continuer vers l’App Store",
-    "googleDownload": "Continuer vers Google Play",
     "appleAria": "Télécharger Fideora sur l’App Store",
     "appleCompatibility": "Pour iPhone et iPad",
-    "googleAria": "Télécharger Fideora sur Google Play",
-    "comingSoon": "Bientôt sur",
-    "androidPending": "La version Android sera bientôt disponible.",
-    "androidReady": "Pour téléphones et tablettes Android",
     "choose": "Choisissez la version pour votre téléphone.",
     "pageTitle": "Merci pour votre achat — Fideora",
     "purchaseThanks": "Merci pour votre achat.",
@@ -183,13 +158,8 @@
   },
   "es": {
     "download": "Continuar a la App Store",
-    "googleDownload": "Continuar a Google Play",
     "appleAria": "Descargar Fideora en App Store",
     "appleCompatibility": "Para iPhone y iPad",
-    "googleAria": "Descargar Fideora en Google Play",
-    "comingSoon": "Próximamente en",
-    "androidPending": "La versión para Android estará disponible pronto.",
-    "androidReady": "Para teléfonos y tabletas Android",
     "choose": "Elige la versión para tu teléfono.",
     "pageTitle": "Gracias por tu compra — Fideora",
     "purchaseThanks": "Gracias por tu compra.",
@@ -219,13 +189,8 @@
   },
   "de": {
     "download": "Weiter zum App Store",
-    "googleDownload": "Weiter zu Google Play",
     "appleAria": "Fideora im App Store herunterladen",
     "appleCompatibility": "Für iPhone und iPad",
-    "googleAria": "Fideora bei Google Play herunterladen",
-    "comingSoon": "Demnächst bei",
-    "androidPending": "Die Android-Version ist bald verfügbar.",
-    "androidReady": "Für Android-Smartphones und -Tablets",
     "choose": "Wähle die Version für dein Smartphone.",
     "pageTitle": "Vielen Dank für deinen Kauf — Fideora",
     "purchaseThanks": "Vielen Dank für deinen Kauf.",
@@ -254,6 +219,100 @@
     "downloadCta": "Fideora jetzt herunterladen"
   }
 };
+  var androidMessages = {
+  "it": {
+    "androidCta": "Attiva la prova su Android",
+    "androidDownload": "3 giorni di prova · Continua su Hotmart",
+    "androidAria": "Attiva la prova Fideora per Android su Hotmart",
+    "androidAccess": "Hai già attivato? Accedi a Fideora",
+    "androidPrompt": "Attiva 3 giorni di prova su Hotmart, poi accedi a Fideora dal tuo Android.",
+    "bothPrompt": "Su iPhone scarica l’app; su Android attiva la prova su Hotmart e accedi a Fideora.",
+    "androidActivation": "Dopo l’attivazione su Hotmart, accedi a Fideora con la stessa email usata nel checkout.",
+    "bothActivation": "Su iPhone attiva la prova nell’app. Su Android attivala su Hotmart, poi accedi a Fideora con la stessa email.",
+    "androidEligibility": "Piano mensile con 3 giorni di prova. Prezzo, rinnovo e condizioni sono indicati su Hotmart prima della conferma.",
+    "bothEligibility": "Su iPhone valgono le condizioni dell’App Store. Su Android la prova si attiva su Hotmart, dove prezzo, rinnovo e condizioni sono mostrati prima della conferma.",
+    "androidReady": "Accesso web su Android dopo l’attivazione su Hotmart."
+  },
+  "pt-BR": {
+    "androidCta": "Ativar teste no Android",
+    "androidDownload": "3 dias de teste · Continuar na Hotmart",
+    "androidAria": "Ativar teste do Fideora para Android na Hotmart",
+    "androidAccess": "Já ativou? Acessar o Fideora",
+    "androidPrompt": "Ative 3 dias de teste na Hotmart e depois acesse o Fideora pelo Android.",
+    "bothPrompt": "No iPhone, baixe o app; no Android, ative o teste na Hotmart e acesse o Fideora.",
+    "androidActivation": "Após ativar na Hotmart, acesse o Fideora com o mesmo e-mail usado no checkout.",
+    "bothActivation": "No iPhone, ative o teste no app. No Android, ative na Hotmart e depois acesse o Fideora com o mesmo e-mail.",
+    "androidEligibility": "Plano mensal com 3 dias de teste. Preço, renovação e condições são exibidos na Hotmart antes da confirmação.",
+    "bothEligibility": "No iPhone, valem as condições da App Store. No Android, ative na Hotmart, onde preço, renovação e condições aparecem antes da confirmação.",
+    "androidReady": "Acesso web no Android após a ativação na Hotmart."
+  },
+  "pt-PT": {
+    "androidCta": "Ativar teste no Android",
+    "androidDownload": "3 dias de teste · Continuar na Hotmart",
+    "androidAria": "Ativar teste do Fideora para Android na Hotmart",
+    "androidAccess": "Já ativaste? Aceder ao Fideora",
+    "androidPrompt": "Ativa 3 dias de teste na Hotmart e depois acede ao Fideora no Android.",
+    "bothPrompt": "No iPhone, descarrega a app; no Android, ativa o teste na Hotmart e acede ao Fideora.",
+    "androidActivation": "Após ativares na Hotmart, acede ao Fideora com o mesmo email usado no checkout.",
+    "bothActivation": "No iPhone, ativa o teste na app. No Android, ativa na Hotmart e depois acede ao Fideora com o mesmo email.",
+    "androidEligibility": "Plano mensal com 3 dias de teste. O preço, a renovação e as condições são apresentados na Hotmart antes da confirmação.",
+    "bothEligibility": "No iPhone, aplicam-se as condições da App Store. No Android, ativa na Hotmart, onde o preço, a renovação e as condições são apresentados antes da confirmação.",
+    "androidReady": "Acesso web no Android após a ativação na Hotmart."
+  },
+  "en": {
+    "androidCta": "Start your trial on Android",
+    "androidDownload": "3-day trial · Continue to Hotmart",
+    "androidAria": "Activate your Fideora Android trial on Hotmart",
+    "androidAccess": "Already activated? Open Fideora",
+    "androidPrompt": "Activate your 3-day trial on Hotmart, then open Fideora on your Android.",
+    "bothPrompt": "On iPhone, download the app; on Android, activate your trial on Hotmart and open Fideora.",
+    "androidActivation": "After activating on Hotmart, sign in to Fideora with the same email used at checkout.",
+    "bothActivation": "On iPhone, activate your trial in the app. On Android, activate on Hotmart, then sign in to Fideora with the same email.",
+    "androidEligibility": "Monthly plan with a 3-day trial. Hotmart shows the price, renewal and terms before you confirm.",
+    "bothEligibility": "App Store terms apply on iPhone. On Android, activate on Hotmart, which shows the price, renewal and terms before you confirm.",
+    "androidReady": "Web access on Android after activation on Hotmart."
+  },
+  "fr": {
+    "androidCta": "Activer l’essai sur Android",
+    "androidDownload": "3 jours d’essai · Continuer vers Hotmart",
+    "androidAria": "Activer l’essai Fideora pour Android sur Hotmart",
+    "androidAccess": "Déjà activé ? Ouvrir Fideora",
+    "androidPrompt": "Activez 3 jours d’essai sur Hotmart, puis ouvrez Fideora sur votre Android.",
+    "bothPrompt": "Sur iPhone, téléchargez l’app ; sur Android, activez l’essai sur Hotmart et ouvrez Fideora.",
+    "androidActivation": "Après l’activation sur Hotmart, connectez-vous à Fideora avec le même e-mail que lors du paiement.",
+    "bothActivation": "Sur iPhone, activez l’essai dans l’app. Sur Android, activez-le sur Hotmart, puis connectez-vous à Fideora avec le même e-mail.",
+    "androidEligibility": "Abonnement mensuel avec 3 jours d’essai. Hotmart affiche le prix, le renouvellement et les conditions avant confirmation.",
+    "bothEligibility": "Les conditions de l’App Store s’appliquent sur iPhone. Sur Android, activez sur Hotmart, qui affiche le prix, le renouvellement et les conditions avant confirmation.",
+    "androidReady": "Accès web sur Android après l’activation sur Hotmart."
+  },
+  "es": {
+    "androidCta": "Activar la prueba en Android",
+    "androidDownload": "3 días de prueba · Continuar a Hotmart",
+    "androidAria": "Activar la prueba de Fideora para Android en Hotmart",
+    "androidAccess": "¿Ya activaste? Abre Fideora",
+    "androidPrompt": "Activa 3 días de prueba en Hotmart y después abre Fideora en tu Android.",
+    "bothPrompt": "En iPhone, descarga la app; en Android, activa la prueba en Hotmart y abre Fideora.",
+    "androidActivation": "Después de activar en Hotmart, accede a Fideora con el mismo correo usado en el checkout.",
+    "bothActivation": "En iPhone, activa la prueba en la app. En Android, actívala en Hotmart y accede a Fideora con el mismo correo.",
+    "androidEligibility": "Plan mensual con 3 días de prueba. Hotmart muestra el precio, la renovación y las condiciones antes de confirmar.",
+    "bothEligibility": "En iPhone se aplican las condiciones de la App Store. En Android, activa en Hotmart, que muestra el precio, la renovación y las condiciones antes de confirmar.",
+    "androidReady": "Acceso web en Android tras la activación en Hotmart."
+  },
+  "de": {
+    "androidCta": "Testphase auf Android starten",
+    "androidDownload": "3 Tage testen · Weiter zu Hotmart",
+    "androidAria": "Fideora-Testphase für Android bei Hotmart aktivieren",
+    "androidAccess": "Bereits aktiviert? Fideora öffnen",
+    "androidPrompt": "Aktiviere 3 Testtage bei Hotmart und öffne danach Fideora auf deinem Android.",
+    "bothPrompt": "Lade auf dem iPhone die App herunter. Aktiviere auf Android die Testphase bei Hotmart und öffne Fideora.",
+    "androidActivation": "Melde dich nach der Aktivierung bei Hotmart mit derselben E-Mail-Adresse bei Fideora an, die du beim Checkout verwendet hast.",
+    "bothActivation": "Aktiviere die Testphase auf dem iPhone in der App. Aktiviere sie auf Android bei Hotmart und melde dich dann mit derselben E-Mail-Adresse bei Fideora an.",
+    "androidEligibility": "Monatsabo mit 3 Testtagen. Preis, Verlängerung und Bedingungen werden bei Hotmart vor der Bestätigung angezeigt.",
+    "bothEligibility": "Auf dem iPhone gelten die Bedingungen des App Store. Auf Android aktivierst du bei Hotmart; dort werden Preis, Verlängerung und Bedingungen vor der Bestätigung angezeigt.",
+    "androidReady": "Webzugang auf Android nach der Aktivierung bei Hotmart."
+  }
+};
+  Object.keys(messages).forEach(function (key) { Object.assign(messages[key], androidMessages[key]); });
   var books = {
   "mdb": {
     "titles": {
@@ -383,19 +442,28 @@
   var isIOS = /iPad|iPhone|iPod/i.test(ua) || /ios/i.test(platform) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var device = isAndroid ? 'android' : isIOS ? 'ios' : 'desktop';
-  var playMeta = document.querySelector('meta[name="fideora-google-play-url"]');
-  var playURL = '';
-  try {
-    if (playMeta && playMeta.content.trim()) {
-      var url = new URL(playMeta.content.trim());
-      if (url.protocol === 'https:' && url.hostname === 'play.google.com' &&
-          url.pathname === '/store/apps/details' && url.searchParams.get('id')) playURL = url.href;
-    }
-  } catch (error) {}
+  if (device !== 'ios') {
+    copy = Object.assign({}, copy, {
+      activationPrompt: device === 'android' ? copy.androidPrompt : copy.bothPrompt,
+      activation: device === 'android' ? copy.androidActivation : copy.bothActivation,
+      eligibility: device === 'android' ? copy.androidEligibility : copy.bothEligibility
+    });
+  }
+  var checkoutURL = new URL('https://pay.hotmart.com/X108495940M');
+  checkoutURL.searchParams.set('off', 'e792z6va');
+  checkoutURL.searchParams.set('showOnlyTrial', '1');
+  checkoutURL.searchParams.set('utm_source', 'fideora_thanks');
+  checkoutURL.searchParams.set('utm_medium', 'post_purchase');
+  checkoutURL.searchParams.set('utm_campaign', 'ty_' + (funnel || 'generic'));
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
+    var value = params.get(key);
+    if (value && value.length <= 150 && /^[\p{L}\p{N}_. :-]+$/u.test(value)) checkoutURL.searchParams.set(key, value);
+  });
+  var accessURL = new URL('/app/', window.location.origin);
+  accessURL.searchParams.set('lang', locale.indexOf('pt') === 0 ? 'pt' : 'it');
   root.setAttribute('lang', locale);
   root.setAttribute('data-device', device);
   root.setAttribute('data-funnel', funnel || 'generic');
-  root.setAttribute('data-play-ready', playURL ? 'true' : 'false');
   root.setAttribute('data-localizing', '');
   var revealTimer = window.setTimeout(function () {
     root.setAttribute('lang', 'it');
@@ -415,19 +483,8 @@
       document.getElementById('book-bridge').textContent = bridge;
       document.title = copy.pageTitle + (book ? ' · ' + title : '');
       document.querySelector('meta[name="description"]').setAttribute('content', copy.giftText);
-      if (device === 'android' && !playURL) {
-        document.getElementById('app-step-status').textContent = copy.androidPending;
-        var nextStep = document.getElementById('app-next-step');
-        nextStep.href = '#google-play-pending';
-        document.getElementById('google-play-pending').setAttribute('tabindex', '-1');
-      }
-      if (playURL) {
-        var link = document.getElementById('google-play-download');
-        link.href = playURL;
-        link.hidden = false;
-        document.getElementById('google-play-pending').hidden = true;
-        document.getElementById('android-compatibility').textContent = copy.androidReady;
-      }
+      document.getElementById('android-checkout').href = checkoutURL.href;
+      document.getElementById('android-access').href = accessURL.href;
     } finally {
       window.clearTimeout(revealTimer);
       root.removeAttribute('data-localizing');
@@ -437,3 +494,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply, { once: true });
   else apply();
 }());
+
