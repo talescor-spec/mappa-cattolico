@@ -42,3 +42,13 @@ Mundpay product 6431fd73-6540-4714-9c04-c25f9078b7d4 was duplicated from MDB-IT 
 The complete portrait reader now has 107 pages: all 98 manuscript pages reflowed vertically, the five approved plates, and four illustrated overview/tool pages. The paid PDFs and their private source archive are retained separately and never committed to this public repository.
 
 Delivery is not yet fully verified. The existing 60-page Messa PDF (10.14 MB) is attached and saved. The main book and final Catechismo PDF still require merchant upload; the merchant explicitly elected to add the final Catechismo later. A zero-byte cross-device upload was discarded without saving. The new product remains inactive for sale in Mundpay. `checkoutConfigured` enables the completed website integration; `fulfillmentVerified: false` records the outstanding delivery check. Once the merchant attaches the final files and activates the product in Mundpay, no page-code toggle is required. The original MDB-IT product was not edited.
+
+## Revised capture flow — 23 November 2026
+
+Step 1 now contains name and email together. Step 2 collects a validated billing address (country, street, house number, optional complement, postal code, province/region and city). Step 3 automatically redirects to Mundpay, with a normal fallback link if navigation fails. The modal adapts to the mobile visual viewport and retains editable back navigation.
+
+The address is validated again on the server and saved in the private lead record's billing_address field. It is excluded from marketing attribution, Meta payloads and persistent browser contact storage. Signed recovery links can restore the address into the editable capture form.
+
+Mundpay's current public checkout consumes name, email and country URL parameters, but its street-level address defaults come from its own customer storage, not URL parameters. Accordingly, the integration prefills the supported fields and does not pretend to prefill the street address. A purchaser may need to re-enter the billing address at payment. This platform limitation was communicated explicitly.
+
+During checkout QA, the active EUR 27 cloned offer was found to have zero selected payment methods. The original MDB-IT EUR 27 offer has all 65 selected; these same selections were restored on the updated product's EUR 27 offer.

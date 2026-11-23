@@ -1,3 +1,4 @@
+import {normalizeAddress} from './address.mjs';
 import {createClient} from 'npm:@supabase/supabase-js@2.116.0';
 import {CHILDREN,collectEvent,captureContact,attribution,editionFor} from './core.mjs';
 import {equal,verifyResume} from './lifecycle.mjs';
@@ -25,13 +26,16 @@ export async function handleFideoraSocial(req:Request){
   }
   if(action==='resume'){
    const id=await verifyResume(body.token,await secret('brevo_worker_token'));if(!id)return out({ok:false,error:'expired_link'},400);
-   const journey=await checked(db.from('fm_social_journeys_v1').select('email,contact_name,offer').eq('id',id).single());
-   return out({ok:true,name:journey.contact_name,email:journey.email,offer:journey.offer});
+   const journey=await checked(db.from('fm_social_journeys_v1').select('email,contact_name,offer,lead_id').eq('id',id).single());
+   const lead=journey.lead_id?await checked(db.from('lead_captures_v2').select('raw_payload').eq('id',journey.lead_id).maybeSingle()):null;
+   const address=lead?.raw_payload?.billing_address?normalizeAddress(lead.raw_payload.billing_address):null;
+   return out({ok:true,name:journey.contact_name,email:journey.email,offer:journey.offer,...(address?{address}: {})});
   }
   if(action==='capture'){
    if(body.company)return out({ok:false,error:'invalid_request'},400);
    const c=captureContact(body);
    const edition=c.offer==='book'?editionFor(c.attribution):null;
+   const address=edition&&body.address?normalizeAddress(body.address):null;
    const config=await checked(db.from('fm_social_config_v1').select('config').eq('id','mdb-studio-it').single());
    const f=await checked(db.from('funnels_v2').select('id,slug').eq('slug',CHILDREN[c.offer]).single());
    const mapping=await checked(db.from('brevo_capture_mappings_v2').select('list_id').eq('funnel_id',f.id).eq('active',true).single());
@@ -41,7 +45,7 @@ export async function handleFideoraSocial(req:Request){
    if(!response.ok)throw Error('capture_provider_failed');
    const journey=await checked(db.from('fm_social_journeys_v1').insert({session_id:c.session_id,email:c.email,contact_name:c.name,offer:c.offer,platform:c.platform,funnel_id:f.id,attribution:c.attribution,is_test:c.is_test}).select('id').single());
    const page=new URL(edition?.page||'https://fideora.app/mappa-della-bibbia/');for(const[k,v]of Object.entries(c.attribution))page.searchParams.set(k,String(v));
-   const lead=await checked(db.from('lead_captures_v2').insert({funnel_id:f.id,funnel_slug:f.slug,email:c.email,name:c.name,test_type:c.is_test?'qa_study_order':null,page_url:page.href,captured_at:new Date().toISOString(),...Object.fromEntries(Object.entries(c.attribution).filter(([k])=>k.startsWith('utm_'))),raw_payload:{...c,funnel:f.slug,parent_funnel:'mdb-studio-it',social_journey_id:journey.id,selected_offer:c.offer,offer_reference:edition?.reference||(c.offer==='book'?'mdb_studio_library_39_eur':c.offer==='ios'?'com.fideora.premium.monthly':'hotmart_fideora_monthly_e792z6va'),offer_price:edition?.price||(c.offer==='book'?39:7.99),currency:'EUR',consent_recorded_at:new Date().toISOString()}}).select('id').single());
+   const lead=await checked(db.from('lead_captures_v2').insert({funnel_id:f.id,funnel_slug:f.slug,email:c.email,name:c.name,test_type:c.is_test?'qa_study_order':null,page_url:page.href,captured_at:new Date().toISOString(),...Object.fromEntries(Object.entries(c.attribution).filter(([k])=>k.startsWith('utm_'))),raw_payload:{...c,...(address?{billing_address:address}:{}),funnel:f.slug,parent_funnel:'mdb-studio-it',social_journey_id:journey.id,selected_offer:c.offer,offer_reference:edition?.reference||(c.offer==='book'?'mdb_studio_library_39_eur':c.offer==='ios'?'com.fideora.premium.monthly':'hotmart_fideora_monthly_e792z6va'),offer_price:edition?.price||(c.offer==='book'?39:7.99),currency:'EUR',consent_recorded_at:new Date().toISOString()}}).select('id').single());
    await checked(db.from('fm_social_journeys_v1').update({lead_id:lead.id}).eq('id',journey.id));
    await checked(db.from('fm_social_events_v1').upsert({event_key:'capture:'+journey.id,session_id:c.session_id,journey_id:journey.id,event_name:'capture_success',platform:c.platform,offer:c.offer,source:'server',attribution:c.attribution,is_test:c.is_test},{onConflict:'event_key',ignoreDuplicates:true}));
    return out({ok:true,offer:body.offer,funnel:f.slug,listId:Number(mapping.list_id),journeyId:journey.id});
@@ -54,4 +58,5 @@ export async function handleFideoraSocial(req:Request){
   return out({ok:false,error:'invalid_action'},400);
  }catch(e){const message=e instanceof Error?e.message:'';return out({ok:false,error:message.startsWith('invalid_')?message:'service_unavailable'},message.startsWith('invalid_')?400:503);}
 }
+
 

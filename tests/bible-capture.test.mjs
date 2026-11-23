@@ -4,8 +4,10 @@ import {editionCapture,editionCheckout} from '../website/bibbia-2/order-core.mjs
 import {createHandler} from '../api/study-capture.js';
 import {release} from '../website/bibbia-2/release.mjs';
 import {editionFor,recoveryURL} from '../integrations/funnel-metrics/fideora-social/core.mjs';
+import {normalizeAddress} from '../website/bibbia-2/address.mjs';
 import {editionRecoveryMessage} from '../integrations/funnel-metrics/fideora-social/edition-email.mjs';
-const contact={name:'Giulia Rossi',email:'GIULIA@example.com',offer:'book',variant:'a',platform:'ios',session_id:'f4a11692-458e-48b4-b235-f4582c364633',followup_requested:true,attribution:{utm_source:'instagram',utm_content:'AD173',sck:'campaign-id',email:'secret@example.com'}};
+const address={street:'Via Roma',number:'10/A',complement:'Interno 2',postal_code:'00100',city:'Roma',state:'RM',country:'IT'};
+const contact={address,name:'Giulia Rossi',email:'GIULIA@example.com',offer:'book',variant:'a',platform:'ios',session_id:'f4a11692-458e-48b4-b235-f4582c364633',followup_requested:true,attribution:{utm_source:'instagram',utm_content:'AD173',sck:'campaign-id',email:'secret@example.com'}};
 test('updated-edition recovery describes the selected book, two bonuses and the current price',()=>{
  for(const variant of ['a','b'])for(const step of [1,2,3]){
   const m=editionRecoveryMessage({variant},step);assert.ok(m.productName.includes(variant==='a'?'Mappa della Bibbia':'Panorama Biblico'));
@@ -19,9 +21,9 @@ test('both captures retain campaign IDs and their own fixed edition, price and r
   assert.equal(p.email,'giulia@example.com');assert.equal(p.offer_price,27);assert.equal(p.offer_reference,'mdb20_bundle_27_eur');
   assert.equal(p.attribution.ct,`mdb20_name_cover_v1_${variant}`);assert.equal(p.attribution.utm_content,'AD173');assert.equal(p.attribution.email,undefined);
   assert.equal(new URL(p.page_url).pathname,variant==='a'?'/mappa-della-bibbia-2/':'/panorama-biblico/');
-  const checkout=new URL(editionCheckout(release.checkoutURL,contact,p.attribution));
+  const checkout=new URL(editionCheckout(release.checkoutURL,contact,p.attribution,address));
   assert.equal(checkout.hostname,'checkout.mundpay.com');assert.equal(checkout.pathname,'/01a20583-6831-737e-a87c-c57efd6b478b');
-  assert.equal(checkout.searchParams.get('email'),'giulia@example.com');assert.equal(checkout.searchParams.get('sck'),`campaign-id|fdb_mdb20_${variant}`);
+  assert.equal(checkout.searchParams.get('country'),'IT');assert.equal(checkout.searchParams.get('email'),'giulia@example.com');assert.equal(checkout.searchParams.has('street'),false);assert.deepEqual(p.address,address);assert.equal(checkout.searchParams.get('sck'),`campaign-id|fdb_mdb20_${variant}`);
  }
  for(const bad of [{variant:'c'},{offer:'android'},{email:'invalid'},{name:'x'}])assert.throws(()=>editionCapture({...contact,...bad}));
  assert.throws(()=>editionCheckout('https://untrusted.example/',contact,{}));
@@ -44,4 +46,12 @@ test('signed recovery returns each updated edition to its own offer without pers
  }
  assert.equal(editionFor({ct:'unknown'}),null);
  assert.equal(new URL(recoveryURL({offer:'book',attribution:{}},'signed-token',1)).pathname,'/mappa-della-bibbia/');
+});
+
+test('billing address validation preserves accents and leading postal zeros, rejects invalid or injected values',()=>{
+ assert.equal(normalizeAddress({...address,city:' Città di Castello ',country:'it'}).city,'Città di Castello');
+ assert.equal(normalizeAddress(address).postal_code,'00100');
+ for(const bad of [{street:'<script>'},{postal_code:'1234'},{number:''},{country:'ZZ'},{state:'\\n<bad>'}])assert.throws(()=>normalizeAddress({...address,...bad}));
+ assert.throws(()=>editionCapture({...contact,address:undefined}));
+ assert.equal(normalizeAddress({...address,country:'GB',postal_code:'SW1A 1AA'}).postal_code,'SW1A 1AA');
 });
