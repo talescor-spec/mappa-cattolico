@@ -9,6 +9,7 @@ const out = 'web-dist';
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
 fs.cpSync('website/assets', `${out}/assets`, { recursive: true });
+fs.cpSync('website/biblioteca-della-fede', `${out}/biblioteca-della-fede`, { recursive: true });
 fs.cpSync('website/mappa', `${out}/mappa`, { recursive: true });
 fs.cpSync('website/mappa-della-bibbia', `${out}/mappa-della-bibbia`, { recursive: true, filter: source => !source.endsWith('.png') && !source.endsWith('README.md') });
 fs.cpSync(`${out}/mappa-della-bibbia`, `${out}/mappa-del-cattolico`, { recursive: true });

@@ -211,6 +211,23 @@
           "value": "default-src 'self'; script-src 'self' https://connect.facebook.net https://cdn.utmify.com.br; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://kgyqpedwgilotlwyhmnb.supabase.co https://sysuottboucultzzaagv.supabase.co wss://sysuottboucultzzaagv.supabase.co; media-src 'self'; manifest-src 'self'; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         }
       ]
+    },
+    {
+      "source": "/biblioteca-della-fede/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://upsell.mundpay.com https://cdn.utmify.com.br https://static.hotjar.com https://script.hotjar.com https://t.contentsquare.net https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.hotjar.com https://*.hotjar.io https://www.facebook.com; connect-src 'self' https://*.mundpay.com https://pay.mycheckoutt.com https://*.utmify.com.br https://kgyqpedwgilotlwyhmnb.supabase.co https://sysuottboucultzzaagv.supabase.co wss://sysuottboucultzzaagv.supabase.co https://*.hotjar.com https://*.hotjar.io wss://*.hotjar.com https://t.contentsquare.net https://www.facebook.com https://connect.facebook.net; media-src 'self'; manifest-src 'self'; worker-src 'self' blob:; frame-src 'self' https://*.mundpay.com https://pay.mycheckoutt.com https://vars.hotjar.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     }
   ],
   "buildCommand": "npm run build:website",
