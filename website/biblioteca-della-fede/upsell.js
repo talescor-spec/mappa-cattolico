@@ -17,7 +17,7 @@ window.BIBLIOTECA_CONFIG = Object.freeze({
   const total=books.reduce((sum,b)=>sum+b.price,0);
   document.querySelectorAll('[data-total]').forEach(n=>n.textContent=total+' €');
   document.querySelectorAll('[data-price]').forEach(n=>n.textContent=cfg.price);
-  const paths={capire:['cattolicesimo','messa','atlante'],pregare:['salmi','preghiere','cammino'],famiglia:['natale','parabole'],coltivare:['segnalibri','cammino','germoglio']};
+  const paths={capire:['donne','salomone','atlante'],pregare:['salmi','preghiere','cammino'],famiglia:['natale','parabole'],coltivare:['segnalibri','cammino','germoglio']};
   let activePath='';
   document.querySelectorAll('[data-path]').forEach(button=>button.addEventListener('click',()=>{
     activePath=activePath===button.dataset.path?'':button.dataset.path;
