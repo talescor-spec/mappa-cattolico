@@ -32,7 +32,7 @@ export default function WebPremiumProvider({ children }) {
     can: (_feature, { existing = false } = {}) => existing || isPremium,
     request: () => { window.location.assign('/app/?plans=1'); }, close: () => {},
     subscribe: () => { window.location.assign('/app/?plans=1'); }, restore: refresh,
-    manage: () => { window.location.assign(snapshot?.billingProvider === 'mundpay' ? 'mailto:support@fideora.app?subject=Fideora%20web%20subscription' : 'https://consumer.hotmart.com/'); },
+    manage: () => { if (snapshot?.billingProvider === 'admin') return refresh(); window.location.assign(snapshot?.billingProvider === 'mundpay' ? 'mailto:support@fideora.app?subject=Fideora%20web%20subscription' : 'https://consumer.hotmart.com/'); },
     expiresAt: snapshot?.expiresAt, webError: error,
   }}>{children}</PremiumContext.Provider>;
 }
