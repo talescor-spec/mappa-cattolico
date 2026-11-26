@@ -52,6 +52,17 @@ test('billing address validation preserves accents and leading postal zeros, rej
  assert.equal(normalizeAddress({...address,city:' Città di Castello ',country:'it'}).city,'Città di Castello');
  assert.equal(normalizeAddress(address).postal_code,'00100');
  for(const bad of [{street:'<script>'},{postal_code:'1234'},{number:''},{country:'ZZ'},{state:'\\n<bad>'}])assert.throws(()=>normalizeAddress({...address,...bad}));
- assert.throws(()=>editionCapture({...contact,address:undefined}));
+ assert.equal(editionCapture({...contact,address:undefined}).address,undefined);
  assert.equal(normalizeAddress({...address,country:'GB',postal_code:'SW1A 1AA'}).postal_code,'SW1A 1AA');
+});
+
+test('contact-only orders reach the capture provider and checkout without address parameters',async()=>{
+ const payload={...contact,address:undefined,is_test:true};let forwarded;
+ const handler=createHandler({payloadBuilder:editionCapture,fetchImpl:async(_,req)=>{forwarded=JSON.parse(req.body);return{ok:true,json:async()=>({ok:true,offer:'book',funnel:'mdb-studio-libro-it',listId:217,journeyId:'contact-only-qa'})};}});
+ const res={setHeader(){},status(n){this.code=n;return this;},json(v){this.body=v;return this;}};
+ await handler({method:'POST',headers:{origin:'https://fideora.app'},body:payload},res);
+ assert.equal(res.code,200);assert.equal(res.body.journeyId,'contact-only-qa');assert.equal(forwarded.address,undefined);
+ const checkout=new URL(editionCheckout(release.checkoutURL,payload,forwarded.attribution));
+ assert.equal(checkout.searchParams.get('name'),contact.name);assert.equal(checkout.searchParams.get('email'),'giulia@example.com');
+ assert.equal(checkout.searchParams.has('country'),false);assert.equal(checkout.searchParams.get('utm_source'),'instagram');
 });
