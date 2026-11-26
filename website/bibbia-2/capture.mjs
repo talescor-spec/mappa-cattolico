@@ -1,6 +1,7 @@
 import { release } from './release.mjs';
 import { editionCheckout } from './order-core.mjs';
 import { captureOrder } from './capture-request.mjs';
+import { checkoutFor } from './experiment.mjs';
 import { cleanName,cleanEmail,prefillContact,rememberContact,contactKey } from '../mappa-della-bibbia/order-core.mjs';
 
 export function initCapture({variant,attribution,sessionID,platform,tracker,collect,storage,incomingURL}){
@@ -15,7 +16,7 @@ export function initCapture({variant,attribution,sessionID,platform,tracker,coll
  window.visualViewport?.addEventListener('resize',syncViewport);window.visualViewport?.addEventListener('scroll',syncViewport);window.addEventListener('resize',syncViewport);dialog.addEventListener('focusin',syncViewport);
  const show=next=>{clearTimeout(redirectTimer);step=next;dialog.dataset.captureStage=String(step);dialog.querySelectorAll('[data-capture-step]').forEach(el=>el.hidden=Number(el.dataset.captureStep)!==step);dialog.querySelectorAll('[data-capture-indicator]').forEach(el=>{if(Number(el.dataset.captureIndicator)===step)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});dialog.setAttribute('aria-labelledby',step===1?'capture-heading':'capture-payment-heading');error.hidden=true;dialog.scrollTop=0;dialog.querySelector('[data-capture-current]').textContent=`Passaggio ${step} di 2`;syncViewport();};
  const open=source=>{opener=source;request++;submit.disabled=false;submit.textContent='Continua al pagamento';show(1);dialog.showModal();document.body.classList.add('dialog-open');collect('capture_started');syncViewport();};
- document.querySelectorAll('[data-checkout]').forEach(button=>{button.href='#ordine';button.textContent=`Voglio ${variant.name} e i due bonus`;button.addEventListener('click',event=>{event.preventDefault();open(button);});});
+ document.querySelectorAll('[data-checkout]').forEach(button=>{button.href=checkoutFor(release.checkoutURL,attribution);button.addEventListener('click',event=>{if(event.button||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||typeof dialog.showModal!=='function')return;event.preventDefault();open(button);});});
  document.querySelector('[data-release-note]').textContent='Nome, email e pagamento sicuro. Libro e due bonus inclusi · €27, una sola volta.';
  dialog.querySelector('[data-capture-close]').addEventListener('click',()=>dialog.close());
  dialog.addEventListener('close',()=>{request++;clearTimeout(redirectTimer);document.body.classList.remove('dialog-open');opener?.focus({preventScroll:true});});

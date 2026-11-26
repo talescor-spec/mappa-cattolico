@@ -12,6 +12,9 @@ function normalize(html, v) {
     .replaceAll(v.name, 'BOOK_NAME').replaceAll(v.route, '/BOOK_ROUTE/')
     .replaceAll(`copertina-${v.cover}-hd.`, 'COVER_HD.')
     .replaceAll(`copertina-${v.cover}.`, 'COVER.')
+    .replaceAll(`mdb20_name_cover_v1_${v.id}`, 'mdb20_name_cover_v1_VARIANT')
+    .replaceAll(`fdb_mdb20_${v.id}`, 'fdb_mdb20_VARIANT')
+    .replace(/copertina-(?:mappa|panorama)-hd-[a-f0-9]{10}/g, 'COVER_HD')
     .replace(`data-offer-variant="${v.id}"`, 'data-offer-variant="VARIANT"');
 }
 test('A and B differ only by the book title, selected cover, route and measurement ID',()=>{
@@ -90,7 +93,9 @@ test('checkout uses the dedicated product while delivery remains explicitly pend
   assert.equal(release.checkoutConfigured,true);
   assert.equal(release.productID,'6431fd73-6540-4714-9c04-c25f9078b7d4');
   for(const v of Object.values(variants)) {
-    assert.ok(renderBibleOffer(v.id).includes('data-checkout href="#anteprime"'));
+    const links = [...renderBibleOffer(v.id).matchAll(/data-checkout href="([^"]+)"/g)];
+    assert.equal(links.length,4);
+    for(const [,href] of links){const url=new URL(href.replaceAll('&amp;','&'));assert.equal(url.origin,'https://checkout.mundpay.com');assert.equal(url.hash,'');assert.equal(url.searchParams.get('ct'),`mdb20_name_cover_v1_${v.id}`);}
   }
   const code=fs.readFileSync(new URL('../website/bibbia-2/page.mjs',import.meta.url),'utf8');
   const capture=fs.readFileSync(new URL('../website/bibbia-2/capture.mjs',import.meta.url),'utf8');

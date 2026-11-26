@@ -4,6 +4,9 @@ import { copy } from '../website/content.mjs';
 import { platformURL } from '../website/platform.mjs';
 import { renderBibleOffer } from '../website/bibbia-2/render.mjs';
 import { variants } from '../website/bibbia-2/experiment.mjs';
+import { media } from '../website/bibbia-2/media.mjs';
+import sharp from 'sharp';
+import { build } from 'vite';
 
 const out = 'web-dist';
 fs.rmSync(out, { recursive: true, force: true });
@@ -13,7 +16,10 @@ fs.cpSync('website/biblioteca-della-fede', `${out}/biblioteca-della-fede`, { rec
 fs.cpSync('website/mappa', `${out}/mappa`, { recursive: true });
 fs.cpSync('website/mappa-della-bibbia', `${out}/mappa-della-bibbia`, { recursive: true, filter: source => !source.endsWith('.png') && !source.endsWith('README.md') });
 fs.cpSync(`${out}/mappa-della-bibbia`, `${out}/mappa-del-cattolico`, { recursive: true });
-fs.cpSync('website/bibbia-2', `${out}/bibbia-2`, { recursive: true, filter: source => !['README.md', 'template.html', 'render.mjs'].includes(path.basename(source)) });
+fs.cpSync('website/bibbia-2', `${out}/bibbia-2`, { recursive: true, filter: source => !['README.md', 'template.html', 'render.mjs','media.mjs'].includes(path.basename(source)) });
+fs.mkdirSync(`${out}/bibbia-2/assets/fast`, {recursive:true});
+for (const item of media.values()) await Promise.all(item.outputs.map(({width,url}) => sharp(item.source).resize({width,withoutEnlargement:true}).webp({quality:82,effort:5}).toFile(out+url)));
+await build({configFile:false,publicDir:false,logLevel:'warn',build:{outDir:`${out}/bibbia-2`,emptyOutDir:false,minify:true,lib:{entry:path.resolve('website/bibbia-2/page.mjs'),name:'FideoraOffer',formats:['iife'],fileName:()=> 'page-fast.js'}}});
 for (const variant of Object.values(variants)) {
   const folder = path.join(out, variant.route);
   fs.mkdirSync(folder, { recursive: true });
