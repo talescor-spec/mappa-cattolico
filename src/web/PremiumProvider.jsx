@@ -28,11 +28,12 @@ export default function WebPremiumProvider({ children }) {
   }, [refresh]);
   const isPremium = Boolean(snapshot?.owner === owner && snapshot?.isPremium && Date.parse(snapshot.expiresAt) > clock);
   return <PremiumContext.Provider value={{ isPremium, checking: loading || checking,
-    busy: false, message: error ? 'error' : '', offer: null, preparing: false, refresh, billingProvider: 'hotmart',
+    busy: false, message: error ? 'error' : '', offer: null, preparing: false, refresh, billingProvider: snapshot?.billingProvider || 'web',
     can: (_feature, { existing = false } = {}) => existing || isPremium,
     request: () => { window.location.assign('/app/?plans=1'); }, close: () => {},
     subscribe: () => { window.location.assign('/app/?plans=1'); }, restore: refresh,
-    manage: () => { window.location.assign('https://consumer.hotmart.com/'); },
+    manage: () => { window.location.assign(snapshot?.billingProvider === 'mundpay' ? 'mailto:support@fideora.app?subject=Fideora%20web%20subscription' : 'https://consumer.hotmart.com/'); },
     expiresAt: snapshot?.expiresAt, webError: error,
   }}>{children}</PremiumContext.Provider>;
 }
+
