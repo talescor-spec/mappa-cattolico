@@ -14,10 +14,10 @@ Deno.serve(async req => {
     const { action } = await req.json();
     if (action === 'plans') {
       if (!Deno.env.get('HOTMART_HOTTOK')) return json({ plans: [] });
-      const { data, error } = await db.from('fideora_web_plans').select('plan_key,amount,currency,checkout_url,trial_days').eq('active', true).not('hotmart_product_ucode', 'is', null).not('hotmart_plan_id', 'is', null);
+      const { data, error } = await db.from('fideora_web_plans').select('plan_key,amount,currency,checkout_url,trial_days,intro_amount,intro_months').eq('active', true).eq('available_for_purchase', true).not('hotmart_product_ucode', 'is', null).not('hotmart_plan_id', 'is', null);
       if (error) return json({ error: 'unavailable' }, 503);
       const plans = (data || []).filter(p => { try { const u = new URL(p.checkout_url); return u.protocol === 'https:' && u.hostname === 'pay.hotmart.com' && !u.username && !u.password; } catch { return false; } });
-      return json({ plans: plans.map(p => ({ key: p.plan_key, amount: Number(p.amount), currency: p.currency, checkoutUrl: p.checkout_url, trialDays: p.trial_days })) });
+      return json({ plans: plans.map(p => ({ key: p.plan_key === 'monthly_intro' ? 'monthly' : p.plan_key, amount: Number(p.amount), currency: p.currency, checkoutUrl: p.checkout_url, introAmount: p.intro_amount == null ? null : Number(p.intro_amount), introMonths: p.intro_months, trialDays: p.trial_days })) });
     }
     if (action !== 'status') return json({ error: 'invalid_action' }, 400);
     const token = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
@@ -49,3 +49,4 @@ Deno.serve(async req => {
     return json({ userId: user.id, isPremium: Boolean(expiresAt), expiresAt });
   } catch { return json({ error: 'verification_unavailable' }, 503); }
 });
+

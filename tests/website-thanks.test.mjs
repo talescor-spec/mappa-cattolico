@@ -43,14 +43,16 @@ for (const lang of ['it', 'pt-BR', 'pt-PT', 'en', 'fr', 'es', 'de']) {
       const target = new URL(document.getElementById('android-checkout').href);
       assert.equal(target.origin, 'https://pay.hotmart.com');
       assert.equal(target.pathname, '/X108495940M');
-      assert.equal(target.searchParams.get('off'), 'e792z6va');
-      assert.equal(target.searchParams.get('showOnlyTrial'), '1');
+      assert.equal(target.searchParams.get('off'), 't8i2l9ha');
+      assert.equal(target.searchParams.has('showOnlyTrial'), false);
       assert.equal(target.searchParams.get('utm_campaign'), 'ty_mdb');
       assert.equal(document.getElementById('app-next-step').href, '#ativar-fideora');
       const access = new URL(document.getElementById('android-access').href);
       assert.equal(access.pathname, '/app/');
       assert.equal(access.searchParams.get('lang'), lang.startsWith('pt') ? 'pt' : 'it');
       assert.ok(window.FideoraThanks.copy.androidReady);
+      assert.match(window.FideoraThanks.copy.androidEligibility, /19[.,]90/);
+      assert.match(window.FideoraThanks.copy.androidCta, /1/);
       for (const element of elements.filter(el => el.attrs['data-i18n'])) assert.ok(element.textContent, `Missing copy: ${element.attrs['data-i18n']}`);
       if (device !== 'ios') assert.match(window.FideoraThanks.copy.activation, /Hotmart/);
       else assert.equal(window.FideoraThanks.copy.activation.includes('Hotmart'), false);
@@ -64,14 +66,14 @@ test('preserves campaign attribution without forwarding buyer data or arbitrary 
   assert.equal(target.searchParams.get('utm_source'), 'instagram');
   assert.equal(target.searchParams.get('utm_campaign'), 'mdb_v2');
   assert.equal(target.searchParams.get('utm_content'), 'thanks');
-  assert.equal(target.searchParams.get('off'), 'e792z6va');
-  assert.equal(target.searchParams.get('showOnlyTrial'), '1');
+  assert.equal(target.searchParams.get('off'), 't8i2l9ha');
+  assert.equal(target.searchParams.has('showOnlyTrial'), false);
   assert.equal(target.searchParams.has('email'), false);
   assert.equal(target.searchParams.has('token'), false);
 });
 
 test('renders a working Android checkout without JavaScript', () => {
-  assert.match(html, /id="android-checkout"[^>]+href="https:\/\/pay\.hotmart\.com\/X108495940M\?off=e792z6va&amp;showOnlyTrial=1/);
+  assert.match(html, /id="android-checkout"[^>]+href="https:\/\/pay\.hotmart\.com\/X108495940M\?off=t8i2l9ha/);
   assert.doesNotMatch(html, /google-play-pending|data-play-ready|Google Play/);
   assert.match(html, /html\[data-device="ios"\] \[data-store="android"\], html\[data-device="android"\] \[data-store="ios"\]/);
 });
