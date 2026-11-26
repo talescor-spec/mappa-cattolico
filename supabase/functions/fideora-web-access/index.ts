@@ -1,5 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.116.0';
 import { createHotmartApi, trialEntitlement } from '../_shared/hotmart-api.mjs';
+import { webAdminEntitlement } from '../_shared/web-roles.mjs';
 import { mundpayAccess } from '../_shared/mundpay-access.ts';
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 const mundpay = mundpayAccess(db, 'fideora', name => Deno.env.get(name));
@@ -27,6 +28,8 @@ Deno.serve(async req => {
     if (!token) return json({ error: 'authentication_required' }, 401);
     const { data: { user }, error: authError } = await db.auth.getUser(token);
     if (authError || !user?.email || !user.email_confirmed_at) return json({ error: 'authentication_required' }, 401);
+    const admin = webAdminEntitlement(user);
+    if (admin) return json(admin);
     const { data: grants, error: grantError } = await db.from('fideora_web_access_grants').select('expires_at').eq('user_id', user.id).gt('expires_at', new Date().toISOString()).limit(1);
     if (grantError) return json({ error: 'verification_unavailable' }, 503);
     if (grants?.length) return json({ userId: user.id, isPremium: true, expiresAt: grants[0].expires_at });

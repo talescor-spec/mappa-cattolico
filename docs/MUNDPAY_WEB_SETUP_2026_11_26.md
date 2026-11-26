@@ -27,3 +27,11 @@ The account was checked on 26 November: Payment Type currently offers only **Sin
 `node --test tests/mundpay-web.test.mjs` covers token checks, exact checkout host, verified €1/€19.90 periods, unrelated offers, email/currency/price mismatches, pending/refunded/chargeback orders, cancellation and expiry. These are contract fixtures; they do not replace live Mundpay sandbox/payment QA after the account is enabled.
 
 Official reference consulted: https://docs.mundpay.com/api-reference/webhooks/generic/payload and `/orders/retrieve-order`, `/subscriptions/retrieve-subscription`, `/subscriptions/list-subscription-cycles`, `/subscriptions/list-subscription-invoices` under `/api-reference`.
+
+## Authorized app administrators
+
+A confirmed app account with the protected boolean `auth.users.raw_app_meta_data.web_admin=true` receives full Premium access in the webapp. This is an application content entitlement; it does not grant Supabase project/database administration. Only trusted server administration can modify app metadata. Editable user metadata is ignored. The server rereads the user on every status request, so removing the protected role revokes access on the next refresh. Native store billing is unchanged.
+
+Use existing credentials or the app’s email-code flow. Fideora reviewers can also choose password access at `/app/?lang=it&review=mundpay`; Herbalia has a password option on `/app/account`. Never reset an existing user's password for a review. Temporary QA access uses the existing expiring `*_web_access_grants` table.
+
+Checks: `node --test tests/web-admin.test.mjs` verifies protected claims, confirmed identity, user-metadata spoofing and the bounded client entitlement.
