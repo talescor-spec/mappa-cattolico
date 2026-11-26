@@ -1,5 +1,6 @@
 import { release } from './release.mjs';
 import { editionCheckout } from './order-core.mjs';
+import { captureOrder } from './capture-request.mjs';
 import { cleanName,cleanEmail,prefillContact,rememberContact,contactKey } from '../mappa-della-bibbia/order-core.mjs';
 
 export function initCapture({variant,attribution,sessionID,platform,tracker,collect,storage,incomingURL}){
@@ -21,7 +22,7 @@ export function initCapture({variant,attribution,sessionID,platform,tracker,coll
  reset.addEventListener('click',()=>{request++;try{storage?.removeItem(contactKey);}catch{}contactForm.reset();submit.disabled=false;submit.textContent='Continua al pagamento';reset.hidden=true;redirectTarget=null;show(1);name.focus({preventScroll:true});});
  for(const field of [name,email])field.addEventListener('input',()=>field.setCustomValidity(''));
  dialog.querySelector('[data-capture-edit]').addEventListener('click',()=>{request++;submit.disabled=false;show(1);});
- const checkoutEvent=()=>{collect('checkout_click');if(!isTest)tracker?.outbound('book');};
+ const checkoutEvent=()=>{try{collect('checkout_click');}catch{}try{if(!isTest)tracker?.outbound('book');}catch{}};
  payment.addEventListener('click',event=>{if(!release.checkoutConfigured||!redirectTarget){event.preventDefault();return;}clearTimeout(redirectTimer);checkoutEvent();});
  contactForm.addEventListener('submit',async event=>{
   event.preventDefault();if(submit.disabled||!contactForm.reportValidity())return;
@@ -34,12 +35,11 @@ export function initCapture({variant,attribution,sessionID,platform,tracker,coll
   try{
    if(!release.checkoutConfigured)throw Error('preparing');
    const contact={name:cleanName(name.value),email:cleanEmail(email.value)};
-   const response=await fetch('/api/bible-capture',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({...contact,offer:'book',variant:variant.id,attribution,session_id:sessionID,platform,is_test:isTest,followup_requested:true,company:contactForm.elements.company.value}),signal:AbortSignal.timeout(22000)});
-   const data=await response.json();if(!response.ok||data.ok!==true||data.offer!=='book')throw Error('capture_failed');
-   if(!isTest)tracker?.lead('book',data.journeyId);
-   if(current!==request||!dialog.open)return;
-   if(!isTest){rememberContact(storage,contact);reset.hidden=false;}
    redirectTarget=editionCheckout(release.checkoutURL,contact,attribution);payment.href=redirectTarget;
+   const data=await captureOrder({...contact,offer:'book',variant:variant.id,attribution,session_id:sessionID,platform,is_test:isTest,followup_requested:true,company:contactForm.elements.company.value});
+   if(current!==request||!dialog.open)return;
+   try{if(data&&!isTest)tracker?.lead('book',data.journeyId);else if(!data)collect('capture_error');}catch{}
+   if(!isTest){rememberContact(storage,contact);reset.hidden=false;}
    dialog.querySelector('[data-contact-summary]').textContent=`${contact.name} · ${contact.email}`;show(2);
    redirectTimer=setTimeout(()=>{if(current!==request||!dialog.open||step!==2)return;checkoutEvent();location.assign(redirectTarget);},300);
   }catch(e){if(current!==request||!dialog.open)return;collect('capture_error');error.textContent=e.message==='preparing'?'Stiamo completando la nuova edizione. Torna a breve per proseguire con l’ordine.':'Non siamo riusciti a salvare i tuoi dati. Controlla la connessione e riprova. Nessun addebito è stato effettuato.';error.hidden=false;}
