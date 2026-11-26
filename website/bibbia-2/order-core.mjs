@@ -5,12 +5,12 @@ import { normalizeAddress } from './address.mjs';
 
 export function editionCapture(value={}) {
   if(value.offer!=='book'||!Object.hasOwn(variants,value.variant))throw Error('invalid_offer');
-  const variant=variants[value.variant],contact=normalizeContact(value),address=normalizeAddress(value.address);
+  const variant=variants[value.variant],contact=normalizeContact(value),address=value.address?normalizeAddress(value.address):null;
   const page=new URL('https://fideora.app'+variant.route);
   for(const [key,val] of Object.entries(cleanAttribution(value.attribution)))page.searchParams.set(key,val);
   const attribution=attributionFor(page.href,variant,'mdb_approfondita_natale_2026');
   for(const [key,val] of Object.entries(attribution))page.searchParams.set(key,val);
-  return {...contact,address,funnel:'mdb-studio-it',selected_offer:'book',offer_reference:'mdb20_bundle_27_eur',offer_price:offer.price,currency:'EUR',page_url:page.href,attribution,session_id:value.session_id,platform:value.platform,followup_requested:value.followup_requested===true};
+  return {...contact,...(address?{address}:{}),funnel:'mdb-studio-it',selected_offer:'book',offer_reference:'mdb20_bundle_27_eur',offer_price:offer.price,currency:'EUR',page_url:page.href,attribution,session_id:value.session_id,platform:value.platform,followup_requested:value.followup_requested===true};
 }
 export function editionCheckout(base,contact,attribution,address){
   const target=checkoutFor(base,cleanAttribution(attribution));
