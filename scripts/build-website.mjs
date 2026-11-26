@@ -7,6 +7,7 @@ import { variants } from '../website/bibbia-2/experiment.mjs';
 import { media } from '../website/bibbia-2/media.mjs';
 import sharp from 'sharp';
 import { build } from 'vite';
+import { renderLanding } from '../website/inizia/render.mjs';
 
 const out = 'web-dist';
 fs.rmSync(out, { recursive: true, force: true });
@@ -25,6 +26,11 @@ for (const variant of Object.values(variants)) {
   fs.mkdirSync(folder, { recursive: true });
   fs.writeFileSync(path.join(folder, 'index.html'), renderBibleOffer(variant.id));
 }
+fs.mkdirSync(`${out}/inizia`, {recursive:true});
+fs.cpSync('website/inizia/assets',`${out}/inizia/assets`,{recursive:true});
+fs.copyFileSync('website/inizia/style.css',`${out}/inizia/style.css`);
+fs.writeFileSync(`${out}/inizia/index.html`,renderLanding());
+await build({configFile:false,publicDir:false,logLevel:'warn',build:{outDir:`${out}/inizia`,emptyOutDir:false,minify:true,lib:{entry:path.resolve('website/inizia/page.mjs'),name:'FideoraEur1',formats:['iife'],fileName:()=> 'page-fast.js'}}});
 for (const file of ['site.css', 'site.js', 'platform.mjs', 'growth.js', 'sw.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['obrigado-fideora.html', 'fideora-obrigado.js', 'app-thanks-tracking.js']) fs.copyFileSync(`website/${file}`, `${out}/${file}`);
 for (const file of ['icon.svg', 'icon-192.png']) fs.copyFileSync(`public/${file}`, `${out}/${file}`);

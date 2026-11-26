@@ -70,6 +70,11 @@
       "source": "/panorama-biblico",
       "destination": "/panorama-biblico/",
       "permanent": true
+    },
+    {
+      "source": "/inizia",
+      "destination": "/inizia/",
+      "permanent": true
     }
   ],
   "headers": [
@@ -235,6 +240,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/inizia/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://connect.facebook.net https://cdn.utmify.com.br; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://kgyqpedwgilotlwyhmnb.supabase.co https://sysuottboucultzzaagv.supabase.co wss://sysuottboucultzzaagv.supabase.co; media-src 'self'; manifest-src 'self'; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         }
       ]
     }
