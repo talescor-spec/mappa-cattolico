@@ -1,6 +1,9 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.116.0';
 import { createHotmartApi, trialEntitlement } from '../_shared/hotmart-api.mjs';
+import { webAdminEntitlement } from '../_shared/web-roles.mjs';
+import { mundpayAccess } from '../_shared/mundpay-access.ts';
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+const mundpay = mundpayAccess(db, 'fideora', name => Deno.env.get(name));
 const hotmart = createHotmartApi((name: string) => Deno.env.get(name));
 const trialCache = new Map<string, { until: number; expiresAt: string | null }>();
 const origins = new Set(['https://fideora.app', 'https://www.fideora.app']);
@@ -13,23 +16,28 @@ Deno.serve(async req => {
   try {
     const { action } = await req.json();
     if (action === 'plans') {
-      if (!Deno.env.get('HOTMART_HOTTOK')) return json({ plans: [] });
+      const mundpayPlans = await mundpay.plans();
+      if (!Deno.env.get('HOTMART_HOTTOK')) return json({ plans: mundpayPlans });
       const { data, error } = await db.from('fideora_web_plans').select('plan_key,amount,currency,checkout_url,trial_days,intro_amount,intro_months').eq('active', true).eq('available_for_purchase', true).not('hotmart_product_ucode', 'is', null).not('hotmart_plan_id', 'is', null);
       if (error) return json({ error: 'unavailable' }, 503);
       const plans = (data || []).filter(p => { try { const u = new URL(p.checkout_url); return u.protocol === 'https:' && u.hostname === 'pay.hotmart.com' && !u.username && !u.password; } catch { return false; } });
-      return json({ plans: plans.map(p => ({ key: p.plan_key === 'monthly_intro' ? 'monthly' : p.plan_key, amount: Number(p.amount), currency: p.currency, checkoutUrl: p.checkout_url, introAmount: p.intro_amount == null ? null : Number(p.intro_amount), introMonths: p.intro_months, trialDays: p.trial_days })) });
+      return json({ plans: [...mundpayPlans, ...plans.filter(p => !mundpayPlans.some(m => m.key === (p.plan_key === 'monthly_intro' ? 'monthly' : p.plan_key))).map(p => ({ provider: 'hotmart', key: p.plan_key === 'monthly_intro' ? 'monthly' : p.plan_key, amount: Number(p.amount), currency: p.currency, checkoutUrl: p.checkout_url, introAmount: p.intro_amount == null ? null : Number(p.intro_amount), introMonths: p.intro_months, trialDays: p.trial_days }))] });
     }
     if (action !== 'status') return json({ error: 'invalid_action' }, 400);
     const token = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
     if (!token) return json({ error: 'authentication_required' }, 401);
     const { data: { user }, error: authError } = await db.auth.getUser(token);
     if (authError || !user?.email || !user.email_confirmed_at) return json({ error: 'authentication_required' }, 401);
+    const admin = webAdminEntitlement(user);
+    if (admin) return json(admin);
     const { data: grants, error: grantError } = await db.from('fideora_web_access_grants').select('expires_at').eq('user_id', user.id).gt('expires_at', new Date().toISOString()).limit(1);
     if (grantError) return json({ error: 'verification_unavailable' }, 503);
     if (grants?.length) return json({ userId: user.id, isPremium: true, expiresAt: grants[0].expires_at });
     const { data, error } = await db.from('fideora_web_payments').select('access_until').eq('buyer_email', user.email.trim().toLowerCase()).eq('status', 'approved').gt('access_until', new Date().toISOString()).order('access_until', { ascending: false }).limit(1);
     if (error) return json({ error: 'verification_unavailable' }, 503);
-    if (data?.length) return json({ userId: user.id, isPremium: true, expiresAt: data[0].access_until });
+    if (data?.length) return json({ userId: user.id, isPremium: true, billingProvider: 'hotmart', expiresAt: data[0].access_until });
+    const mundpayEntitlement = await mundpay.entitlement(user.email.trim().toLowerCase());
+    if (mundpayEntitlement) return json({ userId: user.id, isPremium: true, ...mundpayEntitlement });
     const email = user.email.trim().toLowerCase(), now = Date.now();
     const { data: terminal, error: terminalError } = await db.from('fideora_web_payments').select('subscription_code').eq('buyer_email', email).in('status', ['refunded', 'chargeback']);
     const { data: plans, error: planError } = await db.from('fideora_web_plans').select('*').eq('active', true).gt('trial_days', 0);
@@ -49,4 +57,5 @@ Deno.serve(async req => {
     return json({ userId: user.id, isPremium: Boolean(expiresAt), expiresAt });
   } catch { return json({ error: 'verification_unavailable' }, 503); }
 });
+
 

@@ -13,6 +13,7 @@ export async function webRequest(action, authenticated = true) {
   return response.json();
 }
 export function validCheckout(value) {
-  try { const u = new URL(value); return u.protocol === 'https:' && u.hostname === 'pay.hotmart.com' && !u.username && !u.password; }
+  try { const u = new URL(value); return u.protocol === 'https:' && ['pay.hotmart.com', 'checkout.mundpay.com'].includes(u.hostname) && !u.username && !u.password; }
   catch { return false; }
 }
+

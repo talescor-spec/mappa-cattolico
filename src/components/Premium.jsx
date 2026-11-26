@@ -64,7 +64,7 @@ export function PremiumMessage() {
   };
   return messages[message] ? (
     <p role="status" className="billing-message">
-      {billingProvider === 'hotmart' && message === 'error'
+      {['hotmart', 'mundpay', 'admin', 'web'].includes(billingProvider) && message === 'error'
         ? l('Non è stato possibile verificare l’accesso. Riprova con una connessione attiva.', 'Não foi possível verificar o acesso. Tente novamente com uma conexão ativa.')
         : l(...messages[message])}
     </p>
@@ -130,7 +130,8 @@ export function PremiumOffer() {
 }
 export function SubscriptionPanel() {
   const { isPremium, checking, busy, request, restore, manage, billingProvider } = usePremium();
-  const web = billingProvider === 'hotmart';
+  const web = ['hotmart', 'mundpay', 'admin', 'web'].includes(billingProvider);
+  const admin = billingProvider === 'admin';
   const { l } = useLanguage();
   return (
     <section className="card subscription-panel">
@@ -157,7 +158,7 @@ export function SubscriptionPanel() {
       </p>
       {isPremium && (
         <p className="caption">
-          {web ? l('L’accesso è associato alla stessa email verificata dell’acquisto Hotmart.', 'O acesso está associado ao mesmo e-mail verificado da compra na Hotmart.') : l(
+          {admin ? l('Accesso amministratore: Premium completo per la valutazione, senza addebiti.', 'Acesso de administrador: Premium completo para avaliação, sem cobranças.') : web ? l('L’accesso web è associato al tuo account e alla tua email verificata.', 'O acesso web está associado à sua conta e ao seu e-mail verificado.') : l(
             "L’abbonamento è associato al tuo account Apple. La sincronizzazione via email è facoltativa.",
             "A assinatura está associada à sua conta Apple. A sincronização por e-mail é opcional.",
           )}
@@ -180,23 +181,24 @@ export function SubscriptionPanel() {
         >
           {web ? l('Verifica accesso', 'Verificar acesso') : l("Ripristina acquisti", "Restaurar compras")}
         </button>
-        {isPremium && (
+        {isPremium && !admin && (
           <button className="text-button" disabled={busy} onClick={manage}>
             {l("Centro abbonamenti", "Central de assinaturas")}
           </button>
         )}
-        <a
-          href={web ? 'https://consumer.hotmart.com/' : "https://apps.apple.com/account/subscriptions"}
+        {!admin && <a
+          href={web ? (billingProvider === 'hotmart' ? 'https://consumer.hotmart.com/' : 'mailto:support@fideora.app?subject=Fideora%20web%20subscription') : "https://apps.apple.com/account/subscriptions"}
           target="_blank"
           rel="noreferrer"
         >
-          {web ? l('Gestisci o annulla su Hotmart', 'Gerenciar ou cancelar na Hotmart') : l(
+          {web ? (billingProvider === 'hotmart' ? l('Gestisci o annulla su Hotmart', 'Gerenciar ou cancelar na Hotmart') : l('Assistenza per il tuo abbonamento web', 'Suporte para sua assinatura web')) : l(
             "Gestisci o annulla con Apple",
             "Gerenciar ou cancelar com a Apple",
           )}
-        </a>
+        </a>}
       </div>
       <PremiumMessage />
     </section>
   );
 }
+
